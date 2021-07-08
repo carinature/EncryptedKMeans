@@ -1,6 +1,4 @@
-//
-// Created by karina on 23/06/2021.
-//
+
 
 #ifndef ENCRYPTEDKMEANS_LOGGER_H
 #define ENCRYPTEDKMEANS_LOGGER_H
@@ -8,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <chrono>
 
 /**
  * Logger Class

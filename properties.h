@@ -40,8 +40,8 @@ static const double epsilon = jsonConfig["data_properties"]["epsilon"];
 /*
  * Flags
  * */
-[[maybe_unused]] static const bool DBG = jsonConfig["data_properties"]["DBG"];
-[[maybe_unused]] static const bool VERBOSE = jsonConfig["data_properties"]["VERBOSE"];
+[[maybe_unused]] static const bool DBG = jsonConfig["flags"]["DBG"];
+[[maybe_unused]] static const bool VERBOSE = jsonConfig["flags"]["VERBOSE"];
 
 
 /*

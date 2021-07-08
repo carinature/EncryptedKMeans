@@ -1,0 +1,32 @@
+{
+  "data_properties": {
+    "number_of_points": 20,
+    "dim": 2,
+    "range_lim": 1,
+    "range_lim_comment": "for python, defines the range of the points (from BOTTOM_LIM to RANGE_LIM)",
+    "low_limit": 0,
+    "epsilon": 0.5,
+    "decimal_digits": 2,
+    "conversion_factor": "pow(10, DECIMAL_DIGITS)",
+    "conversion_factor_comment": "for conversion from double-type to long-type (helib compatibility)",
+    "bit_size": 5,
+    "N_Threads": 1
+  },
+  "flags": {
+    "dbg_flag": true,
+    "verbose_flag": false,
+    "DBG": true,
+    "VERBOSE": true
+  },
+  "files": {
+    "points_file": "/home/fares/CLionProjects/rbd/io/points",
+    "points_copy_file": "/home/fares/CLionProjects/rbd/io/points_copy",
+    "chosen_file": "/home/fares/CLionProjects/rbd/io/chosen",
+    "leftover_file": "/home/fares/CLionProjects/rbd/io/leftover",
+    "means_file": "/home/fares/CLionProjects/rbd/io/means",
+    "rands_file": "/home/fares/CLionProjects/rbd/io/rand_means",
+    "rands_bad_file": "/home/fares/CLionProjects/rbd/io/rands_bad_file",
+    "point_csv_file": "/home/fares/CLionProjects/rbd/point_csv"
+  },
+  "just_some_example_array": [0, "one", ""]
+}

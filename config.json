@@ -1,6 +1,6 @@
 {
   "data_properties": {
-    "number_of_points": 20,
+    "number_of_points": 40,
     "dim": 2,
     "range_lim": 1,
     "range_lim_comment": "for python, defines the range of the points (from BOTTOM_LIM to RANGE_LIM)",
@@ -9,7 +9,7 @@
     "decimal_digits": 2,
     "conversion_factor": "pow(10, DECIMAL_DIGITS)",
     "conversion_factor_comment": "for conversion from double-type to long-type (helib compatibility)",
-    "bit_size": 5,
+    "bitSize": 5,
     "N_Threads": 1
   },
   "flags": {
@@ -17,6 +17,10 @@
     "verbose_flag": false,
     "DBG": true,
     "VERBOSE": true
+  },
+  "helib_flags": {
+    "helib_bootstrap": true,
+    "helib_verbose": false
   },
   "files": {
     "points_file": "/home/fares/CLionProjects/rbd/io/points",

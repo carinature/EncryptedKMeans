@@ -30,7 +30,7 @@ private:
 public:
     explicit Logger(LogLevel minLevel = log_trace);
 
-    virtual ~Logger();
+    virtual ~Logger(); //todo whhy virtual??
 
     void log(LogLevel msgLevel, const std::string &msg);
 

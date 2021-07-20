@@ -12,10 +12,10 @@ FetchContent_Declare(json
         GIT_REPOSITORY https://github.com/nlohmann/json.git
         GIT_TAG v3.7.3)
 FetchContent_GetProperties(json)
-if(NOT json_POPULATED)
+if (NOT json_POPULATED)
     FetchContent_Populate(json)
     add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
-endif()
+endif ()
 
 # HElib
 find_package(helib REQUIRED)
@@ -23,17 +23,17 @@ find_package(helib REQUIRED)
 add_executable(EncryptedKMeans
         main.cpp
         properties.h
-##        utils/
         utils/aux.cpp
-#        utils/aux.h
         utils/Logger.cpp
-#        utils/Logger.h
-#        src/DataServer.cpp
-##        DataServer.h
-#        src/KeysServer.cpp
-##        KeysServer.h
-#        src/Client.cpp
-##        Client.h
+        #        utils/aux.h
+        #        utils/Logger.h
+        ##        utils/
+        #        src/DataServer.cpp
+        ##        DataServer.h
+                src/KeysServer.cpp
+        ##        KeysServer.h
+        #        src/Client.cpp
+        ##        Client.h
         )
 
 target_link_libraries(EncryptedKMeans PRIVATE nlohmann_json::nlohmann_json)

@@ -1,7 +1,7 @@
 
 
 #include "Logger.h"
-
+#include "../properties.h"
 
 /**
  * Logger Class
@@ -13,18 +13,19 @@ Logger::Logger(LogLevel level) {
 }
 
 Logger::~Logger() {
-#ifdef VERBOSE
-    for ( int l = this->level; l <= log_fatal; ++l ) {
-        std::cout << " \n---------- " << levelToString( LogLevel( l ) ) << " ---------- " << std::endl;
-        if ( log_error <= l ) {
-            std::cerr << this->logs[l].str();
-            std::cout << this->logs[l].str();
+//#if VERBOSE //todo consider for production version
+    if (VERBOSE)
+        for (int l = this->level; l <= log_fatal; ++l) {
+            std::cout << " \n---------- " << levelToString(LogLevel(l)) << " ---------- " << std::endl;
+            if (log_error <= l) {
+                std::cerr << this->logs[l].str();
+                std::cout << this->logs[l].str();
+            }
+            else std::cout << this->logs[l].str();
         }
-        else std::cout << this->logs[l].str();
-    }
-#else
-    std::cout << " ~Logger() " << std::endl;
-#endif
+    else std::cout << std::endl << "~Logger() " << std::endl;
+//#else //VERBOSE==flase
+//#endif //VERBOSE
 
 }
 

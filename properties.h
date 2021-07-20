@@ -28,7 +28,7 @@ static const short number_of_points = jsonConfig["data_properties"]["number_of_p
 static const short dim = jsonConfig["data_properties"]["dim"];
 static const short range_lim = jsonConfig["data_properties"]["range_lim"];
 static const short low_limit = jsonConfig["data_properties"]["low_limit"];
-static const short bit_size = jsonConfig["data_properties"]["bit_size"];
+static const short bitSize = jsonConfig["data_properties"]["bitSize"];
 static const short N_Threads = jsonConfig["data_properties"]["N_Threads"];
 static const short decimal_digits = jsonConfig["data_properties"]["decimal_digits"];
 static const short conversion_factor = pow(10, decimal_digits);
@@ -42,7 +42,10 @@ static const double epsilon = jsonConfig["data_properties"]["epsilon"];
  * */
 [[maybe_unused]] static const bool DBG = jsonConfig["flags"]["DBG"];
 [[maybe_unused]] static const bool VERBOSE = jsonConfig["flags"]["VERBOSE"];
-
+//// in productopn sould be `#define`d and not `statc const..`
+//#define VERBOSE true
+//#define DBG true //#define DBG false
+[[maybe_unused]] static const bool helib_bootstrap = jsonConfig["helib_flags"]["helib_bootstrap"];
 
 /*
  * Data-Files Names
@@ -57,7 +60,6 @@ static const std::string rands_bad_file = jsonConfig["files"]["rands_bad_file"];
 static const std::string point_csv_file = jsonConfig["files"]["point_csv_file"];
 
 
-#define DBG true //#define DBG false
 
 //string files{};
 

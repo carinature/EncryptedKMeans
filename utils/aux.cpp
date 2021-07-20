@@ -2,6 +2,9 @@
 
 #include "aux.h"
 #include "../properties.h"
+#include "Logger.h"
+
+#include <sstream>      // std::stringstream
 
 int check_DBG() {
     std::cout << "DBG is "; //ON" <<endl;
@@ -17,7 +20,7 @@ int check_DBG() {
 #endif
 
 #else
-    std::cout<< "NOT defined" <<std::endl;
+    std::cout << "NOT defined" << std::endl;
 #endif
 
     return -1;
@@ -28,11 +31,13 @@ std::chrono::time_point<std::chrono::system_clock> NowTime() {
     return std::chrono::high_resolution_clock::now();
 }
 
-void printDuration( const std::chrono::time_point<std::chrono::system_clock> & t1, const std::string & funcName ) {
+std::string printDuration(const std::chrono::time_point<std::chrono::system_clock> &t1, const std::string &funcName) {
     auto t2 = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::seconds>( t2 - t1 ).count();
-    std::cout << "\'" << funcName << "\' Finished in " << duration << " seconds." << std::endl;
-    fcout << "\'" << funcName << "\' Finished in " << duration << " seconds." << std::endl;
+    auto duration = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
+    std::string str = "\'" + funcName + "\' Finished in " + std::to_string(duration) + " seconds.";
+    std::cout << str << std::endl;
+    fcout << str << std::endl; //todo remove?
+    return str;
 }
 
 

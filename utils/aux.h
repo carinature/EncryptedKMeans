@@ -15,10 +15,8 @@
 
 #include "../src/KeysServer.h"
 
-//  print both the value and it's name. comfy for dgb  // best. macro. EVA!
-#define printNameVal(val)   std::cout << # val << ": " << (val) << std::endl
-
-int check_DBG(); // fixme remove
+//  print both the value and it's name. comfy for dgb  // best. macro. EVA! //TODO save this somewhere (list of useful tricks)
+#define printNameVal(val)   cout << # val << ": " << (val) << endl
 
 std::chrono::time_point<std::chrono::system_clock> NowTime();
 

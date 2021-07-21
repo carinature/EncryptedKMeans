@@ -14,6 +14,11 @@
 #include <helib/Context.h>
 #include <helib/keys.h>
 
+/**
+ * @class KeysServer
+ * @brief A wrapper for the Keys Server (CA)
+ * Creates the context and keys for the encryption services
+ * */
 class KeysServer {
 
 protected:
@@ -29,11 +34,11 @@ protected:
             // clang-format on
     };
 
-    const long prm;
-    const long bitSize;
-    const bool bootstrap;
-    const long seed;
-    const long nthreads;
+    const long prm; // parameter size (0-tiny,...,4-huge)
+    const long bitSize; // itSize of input integers (<=32)
+    const bool bootstrap; // comparison with bootstrapping (??)
+    const long seed; // PRG seed
+    const long nthreads; // number of threads
     const long *vals;
     const long p;
     const long m;
@@ -43,11 +48,17 @@ protected:
     const long c;
     const long L;
     helib::Context context;
-protected:
-    helib::SecKey secKey;
+    helib::SecKey secKey; //private?
+
 public:
-    KeysServer();
-    //    explicit KeysServer(const long prm=0);
+    //::Values(     prm,    bitSize,    bootstrap,  seed,   nthreads)
+    // Parameters(  1,      5,          false,      0,      1)            // SLOW
+    // Parameters(  0,      5,          false,      0,      1)            // FAST
+    explicit KeysServer(long prm = 0, // parameter size (0-tiny,...,4-huge)
+                        long bitSize = 5, // itSize of input integers (<=32)
+                        bool bootstrap = false, // comparison with bootstrapping (??)
+                        long seed = 0, // PRG seed
+                        long nthreads = 1); // number of threads
 
     // Getters
     [[nodiscard]] const helib::Context &getContext() const {
@@ -68,7 +79,8 @@ public:
 
 
 private:
-    // used for c'tor and "sys"/KeysServer bootstrapping
+    // Following are methods from helib
+    // All used for c'tor and "sys"/KeysServer bootstrapping
     static long validatePrm(long prm);
 
     static long correctBitSize(long minimum, long oldBitSize);

@@ -16,14 +16,14 @@ Logger::~Logger() {
 //#if VERBOSE //todo consider for production version
     if (VERBOSE)
         for (int l = this->level; l <= log_fatal; ++l) {
-            std::cout << " \n---------- " << levelToString(LogLevel(l)) << " ---------- " << std::endl;
+            cout << " \n---------- " << levelToString(LogLevel(l)) << " ---------- " << endl;
             if (log_error <= l) {
                 std::cerr << this->logs[l].str();
-                std::cout << this->logs[l].str();
+                cout << this->logs[l].str();
             }
-            else std::cout << this->logs[l].str();
+            else cout << this->logs[l].str();
         }
-    else std::cout << std::endl << "~Logger() " << std::endl;
+    else cout << endl << "~Logger() " << endl;
 //#else //VERBOSE==flase
 //#endif //VERBOSE
 
@@ -31,8 +31,8 @@ Logger::~Logger() {
 
 void Logger::log(LogLevel msgLevel, const std::string &msg) {
     for (int l = this->level; l <= msgLevel; ++l) {
-        this->logs[l] << "- " << msg << std::endl;
-        if (log_error <= msgLevel) std::cerr << msg << std::endl;
+        this->logs[l] << "- " << msg << endl;
+        if (log_error <= msgLevel) std::cerr << msg << endl;
     }
 }
 
@@ -50,14 +50,14 @@ Logger &Logger::operator<<(const std::string &msg) {
 void Logger::print_log(LogLevel msgLevel, bool all) {
     if (all) {
         for (int l = std::max(this->level, msgLevel); l <= log_fatal; ++l) {
-            std::cout << "  --- " << levelToString(LogLevel(l)) << " --- " << std::endl
-                      << this->logs[l].str() << std::endl;
+            cout << "  --- " << levelToString(LogLevel(l)) << " --- " << endl
+                      << this->logs[l].str() << endl;
             if (log_error <= msgLevel) std::cerr << this->logs[l].str();
 
         }
     } else {
-        std::cout << "  --- " << levelToString(msgLevel) << " --- " << std::endl
-                  << this->logs[msgLevel].str() << std::endl;
+        cout << "  --- " << levelToString(msgLevel) << " --- " << endl
+                  << this->logs[msgLevel].str() << endl;
         if (log_error <= msgLevel) std::cerr << this->logs[msgLevel].str();
     }
 }

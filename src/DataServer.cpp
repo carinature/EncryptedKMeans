@@ -10,10 +10,11 @@ void add_numbers();
 void mult_numbers();
 void cmp_numbers();
 
-using namespace std;
+//using std::cout;
+//using std::endl;
 
 int main2() {
-    std::cout << "Hello, World!" << std::endl;
+    cout << "Hello, World!" << endl;
 //    BGV_binary_arithmetic();
 //    BGV_packed_arithmetic();
 //    KT_packed_arithmetic();
@@ -54,22 +55,22 @@ void KT_packed_arithmetic() {
     unsigned long bits = 500;    // Number of bits of the modulus chain
     unsigned long c = 2;    // Number of columns of Key-Switching matrix (default = 2 or 3)
 
-    std::cout << "Initialising context object..." << std::endl;
+    cout << "Initialising context object..." << endl;
     // Initialize context
     // This object will hold information about the algebra created from the previously set parameters
     helib::Context context = helib::ContextBuilder<helib::BGV>().m(m).p(p).r(r).bits(bits).c(c).build();
 
     // Print the context
     context.printout();
-    std::cout << std::endl;
+    cout << endl;
     // Print the security level
-    std::cout << "Security: " << context.securityLevel() << std::endl;
+    cout << "Security: " << context.securityLevel() << endl;
 
     // Secret key management
-    std::cout << "Creating secret key..." << std::endl;
+    cout << "Creating secret key..." << endl;
     helib::SecKey secret_key(context);    // Create a secret key associated with the context
     secret_key.GenSecKey();    // Generate the secret key
-    std::cout << "Generating key-switching matrices..." << std::endl;
+    cout << "Generating key-switching matrices..." << endl;
     helib::addSome1DMatrices(secret_key);    // Compute key-switching matrices that we need
 
 
@@ -79,7 +80,7 @@ void KT_packed_arithmetic() {
     const helib::EncryptedArray &ea = context.getEA();    // Get the EncryptedArray of the context
 
     long nslots = ea.size();    // Get the number of slot (phi(m))
-    std::cout << "Number of slots: " << nslots << std::endl;
+    cout << "Number of slots: " << nslots << endl;
 
     // Create a vector of long with nslots elements
     helib::Ptxt<helib::BGV> ptxt(context);
@@ -91,7 +92,7 @@ void KT_packed_arithmetic() {
     }
 
     // Print the plaintext
-    std::cout << "Initial Plaintext: " << ptxt << std::endl;
+    cout << "Initial Plaintext: " << ptxt << endl;
 
     // Create a ciphertext object
     helib::Ctxt ctxt(public_key);
@@ -101,7 +102,7 @@ void KT_packed_arithmetic() {
     // Print the Ciphertext
     helib::Ptxt<helib::BGV> decrypted_ctxt(context);    // Create a plaintext for decryption
     secret_key.Decrypt(decrypted_ctxt, ctxt);    // Decrypt the modified ciphertext
-    std::cout << "Initial Ciphertext: " << decrypted_ctxt << std::endl;
+    cout << "Initial Ciphertext: " << decrypted_ctxt << endl;
 
     /********** Operations **********/
     // Ciphertext and plaintext operations are performed
@@ -116,7 +117,7 @@ void KT_packed_arithmetic() {
 
     // Print the Ciphertext
     secret_key.Decrypt(decrypted_ctxt, ctxt);    // Decrypt the modified ciphertext
-    std::cout << "ctxt.multiplyBy(ctxt): " << decrypted_ctxt << std::endl;
+    cout << "ctxt.multiplyBy(ctxt): " << decrypted_ctxt << endl;
 
     // Divide the ciphertext by itself
     // To do this we must calculate the multiplicative inverse using Fermat's
@@ -130,21 +131,21 @@ void KT_packed_arithmetic() {
     ctxt_divisor.power(2);
     // Print the Ciphertext
     secret_key.Decrypt(decrypted_ctxt, ctxt);    // Decrypt the modified ciphertext
-    std::cout << "ctxt_divisor.power(2): " << decrypted_ctxt << std::endl;
+    cout << "ctxt_divisor.power(2): " << decrypted_ctxt << endl;
 
     // a^{2}*a = a^{-1}*a = a / a = 1;
     ctxt.multiplyBy(ctxt_divisor);
     // Print the Ciphertext
     secret_key.Decrypt(decrypted_ctxt, ctxt);    // Decrypt the modified ciphertext
-    std::cout << "ctxt.multiplyBy(ctxt_divisor): " << decrypted_ctxt << std::endl;
+    cout << "ctxt.multiplyBy(ctxt_divisor): " << decrypted_ctxt << endl;
 
     // Plaintext version
     helib::Ptxt<helib::BGV> ptxt_divisor(ptxt);
     ptxt_divisor.power(2);
     ptxt.multiplyBy(ptxt_divisor);
-    std::cout << "ptxt.multiplyBy(ptxt_divisor): " << ptxt << std::endl;
+    cout << "ptxt.multiplyBy(ptxt_divisor): " << ptxt << endl;
 
-    std::cout << std::endl << std::endl;
+    cout << endl << endl;
 
     // Double it (using additions)
     // [0] [1] [1] ... [1] [1] -> [0] [2] [2] ... [2] [2]
@@ -163,12 +164,12 @@ void KT_packed_arithmetic() {
     // Decrypt the modified ciphertext
     secret_key.Decrypt(plaintext_result, ctxt);
 
-    std::cout << "Operation: 2(a*a)/(a*a) - 2(a*a)/(a*a) = 0" << std::endl;
+    cout << "Operation: 2(a*a)/(a*a) - 2(a*a)/(a*a) = 0" << endl;
     // Print the decrypted plaintext
     // Should be [0] [0] [0] ... [0] [0]
-    std::cout << "Decrypted Result: " << plaintext_result << std::endl;
+    cout << "Decrypted Result: " << plaintext_result << endl;
     // Print the plaintext version result, should be the same as the ctxt version
-    std::cout << "Plaintext Result: " << ptxt << std::endl;
+    cout << "Plaintext Result: " << ptxt << endl;
 
     // We can also add constants
     // [0] [0] [0] ... [0] [0] -> [1] [1] [1] ... [1] [1]
@@ -193,10 +194,10 @@ void KT_packed_arithmetic() {
     helib::Ptxt<helib::BGV> new_plaintext_result(context);
     secret_key.Decrypt(new_plaintext_result, ctxt);
 
-    std::cout << "Operation: Enc{(0 + 1)*1} + (0 + 1)*1" << std::endl;
+    cout << "Operation: Enc{(0 + 1)*1} + (0 + 1)*1" << endl;
     // Print the decrypted plaintext
     // Should be [2] [2] [2] ... [2] [2]
-    std::cout << "Decrypted Result: " << new_plaintext_result << std::endl;
+    cout << "Decrypted Result: " << new_plaintext_result << endl;
 
 }
 
@@ -215,19 +216,19 @@ void BGV_packed_arithmetic() {
     // Number of columns of Key-Switching matrix (default = 2 or 3)
     unsigned long c = 2;
 
-    std::cout << "\n*********************************************************";
-    std::cout << "\n*         Basic Mathematical Operations Example         *";
-    std::cout << "\n*         =====================================         *";
-    std::cout << "\n*                                                       *";
-    std::cout << "\n* This is a sample program for education purposes only. *";
-    std::cout << "\n* It attempts to show the various basic mathematical    *";
-    std::cout << "\n* operations that can be performed on both ciphertexts  *";
-    std::cout << "\n* and plaintexts.                                       *";
-    std::cout << "\n*                                                       *";
-    std::cout << "\n*********************************************************";
-    std::cout << std::endl;
+    cout << "\n*********************************************************";
+    cout << "\n*         Basic Mathematical Operations Example         *";
+    cout << "\n*         =====================================         *";
+    cout << "\n*                                                       *";
+    cout << "\n* This is a sample program for education purposes only. *";
+    cout << "\n* It attempts to show the various basic mathematical    *";
+    cout << "\n* operations that can be performed on both ciphertexts  *";
+    cout << "\n* and plaintexts.                                       *";
+    cout << "\n*                                                       *";
+    cout << "\n*********************************************************";
+    cout << endl;
 
-    std::cout << "Initialising context object..." << std::endl;
+    cout << "Initialising context object..." << endl;
     // Initialize context
     // This object will hold information about the algebra created from the
     // previously set parameters
@@ -241,18 +242,18 @@ void BGV_packed_arithmetic() {
 
     // Print the context
     context.printout();
-    std::cout << std::endl;
+    cout << endl;
 
     // Print the security level
-    std::cout << "Security: " << context.securityLevel() << std::endl;
+    cout << "Security: " << context.securityLevel() << endl;
 
     // Secret key management
-    std::cout << "Creating secret key..." << std::endl;
+    cout << "Creating secret key..." << endl;
     // Create a secret key associated with the context
     helib::SecKey secret_key(context);
     // Generate the secret key
     secret_key.GenSecKey();
-    std::cout << "Generating key-switching matrices..." << std::endl;
+    cout << "Generating key-switching matrices..." << endl;
     // Compute key-switching matrices that we need
     helib::addSome1DMatrices(secret_key);
 
@@ -265,7 +266,7 @@ void BGV_packed_arithmetic() {
 
     // Get the number of slot (phi(m))
     long nslots = ea.size();
-    std::cout << "Number of slots: " << nslots << std::endl;
+    cout << "Number of slots: " << nslots << endl;
 
     // Create a vector of long with nslots elements
     helib::Ptxt<helib::BGV> ptxt(context);
@@ -276,7 +277,7 @@ void BGV_packed_arithmetic() {
     }
 
     // Print the plaintext
-    std::cout << "Initial Plaintext: " << ptxt << std::endl;
+    cout << "Initial Plaintext: " << ptxt << endl;
 
     // Create a ciphertext object
     helib::Ctxt ctxt(public_key);
@@ -329,12 +330,12 @@ void BGV_packed_arithmetic() {
     // Decrypt the modified ciphertext
     secret_key.Decrypt(plaintext_result, ctxt);
 
-    std::cout << "Operation: 2(a*a)/(a*a) - 2(a*a)/(a*a) = 0" << std::endl;
+    cout << "Operation: 2(a*a)/(a*a) - 2(a*a)/(a*a) = 0" << endl;
     // Print the decrypted plaintext
     // Should be [0] [0] [0] ... [0] [0]
-    std::cout << "Decrypted Result: " << plaintext_result << std::endl;
+    cout << "Decrypted Result: " << plaintext_result << endl;
     // Print the plaintext version result, should be the same as the ctxt version
-    std::cout << "Plaintext Result: " << ptxt << std::endl;
+    cout << "Plaintext Result: " << ptxt << endl;
 
     // We can also add constants
     // [0] [0] [0] ... [0] [0] -> [1] [1] [1] ... [1] [1]
@@ -359,10 +360,10 @@ void BGV_packed_arithmetic() {
     helib::Ptxt<helib::BGV> new_plaintext_result(context);
     secret_key.Decrypt(new_plaintext_result, ctxt);
 
-    std::cout << "Operation: Enc{(0 + 1)*1} + (0 + 1)*1" << std::endl;
+    cout << "Operation: Enc{(0 + 1)*1} + (0 + 1)*1" << endl;
     // Print the decrypted plaintext
     // Should be [2] [2] [2] ... [2] [2]
-    std::cout << "Decrypted Result: " << new_plaintext_result << std::endl;
+    cout << "Decrypted Result: " << new_plaintext_result << endl;
 
 
 }
@@ -395,18 +396,18 @@ void BGV_binary_arithmetic() {/*  Example of binary arithmetic using the BGV sch
     // Orders of the previous generators.
     std::vector<long> ords = {6, 4, 6};
 
-    std::cout << "\n*********************************************************";
-    std::cout << "\n*            Basic Binary Arithmetic Example            *";
-    std::cout << "\n*            ===============================            *";
-    std::cout << "\n*                                                       *";
-    std::cout << "\n* This is a sample program for education purposes only. *";
-    std::cout << "\n* It attempts to demonstrate the use of the API for the *";
-    std::cout << "\n* binary arithmetic operations that can be performed.   *";
-    std::cout << "\n*                                                       *";
-    std::cout << "\n*********************************************************";
-    std::cout << std::endl;
+    cout << "\n*********************************************************";
+    cout << "\n*            Basic Binary Arithmetic Example            *";
+    cout << "\n*            ===============================            *";
+    cout << "\n*                                                       *";
+    cout << "\n* This is a sample program for education purposes only. *";
+    cout << "\n* It attempts to demonstrate the use of the API for the *";
+    cout << "\n* binary arithmetic operations that can be performed.   *";
+    cout << "\n*                                                       *";
+    cout << "\n*********************************************************";
+    cout << endl;
 
-    std::cout << "Initialising context object..." << std::endl;
+    cout << "Initialising context object..." << endl;
     // Initialize the context.
 // This object will hold information about the algebra created from the
 // previously set parameters.
@@ -424,13 +425,13 @@ void BGV_binary_arithmetic() {/*  Example of binary arithmetic using the BGV sch
 
     // Print the context.
     context.printout();
-    std::cout << std::endl;
+    cout << endl;
 
     // Print the security level.
-    std::cout << "Security: " << context.securityLevel() << std::endl;
+    cout << "Security: " << context.securityLevel() << endl;
 
     // Secret key management.
-    std::cout << "Creating secret key..." << std::endl;
+    cout << "Creating secret key..." << endl;
     // Create a secret key associated with the context.
     helib::SecKey secret_key(context);
     // Generate the secret key.
@@ -452,7 +453,7 @@ void BGV_binary_arithmetic() {/*  Example of binary arithmetic using the BGV sch
 
     // Get the number of slot (phi(m)).
     long nslots = ea.size();
-    std::cout << "Number of slots: " << nslots << std::endl;
+    cout << "Number of slots: " << nslots << endl;
 
     // Generate three random binary numbers a, b, c.
 // Encrypt them under BGV.
@@ -483,10 +484,10 @@ void BGV_binary_arithmetic() {/*  Example of binary arithmetic using the BGV sch
     long b_data = NTL::RandomBits_long(bitSize);
     long c_data = NTL::RandomBits_long(bitSize);
 
-    std::cout << "Pre-encryption data:" << std::endl;
-    std::cout << "a = " << a_data << std::endl;
-    std::cout << "b = " << b_data << std::endl;
-    std::cout << "c = " << c_data << std::endl;
+    cout << "Pre-encryption data:" << endl;
+    cout << "a = " << a_data << endl;
+    cout << "b = " << b_data << endl;
+    cout << "c = " << c_data << endl;
 
     // Use a scratch ciphertext to populate vectors.
     helib::Ctxt scratch(public_key);
@@ -547,7 +548,7 @@ void BGV_binary_arithmetic() {/*  Example of binary arithmetic using the BGV sch
     // Decrypt and print the result.
     std::vector<long> decrypted_result;
     helib::decryptBinaryNums(decrypted_result, result_wrapper, secret_key, ea);
-    std::cout << "a*b+c = " << decrypted_result.back() << std::endl;
+    cout << "a*b+c = " << decrypted_result.back() << endl;
 
     // Now calculate the sum of a, b and c using the addManyNumbers function.
     encrypted_result.clear();
@@ -564,7 +565,7 @@ void BGV_binary_arithmetic() {/*  Example of binary arithmetic using the BGV sch
 
     // Decrypt and print the result.
     helib::decryptBinaryNums(decrypted_result, result_wrapper, secret_key, ea);
-    std::cout << "a+b+c = " << decrypted_result.back() << std::endl;
+    cout << "a+b+c = " << decrypted_result.back() << endl;
 
     // This section calculates popcnt(a) using the fifteenOrLess4Four
 // function.
@@ -578,5 +579,5 @@ void BGV_binary_arithmetic() {/*  Example of binary arithmetic using the BGV sch
 
     // Decrypt and print the result.
     helib::decryptBinaryNums(decrypted_result, result_wrapper, secret_key, ea);
-    std::cout << "popcnt(a) = " << decrypted_result.back() << std::endl;
+    cout << "popcnt(a) = " << decrypted_result.back() << endl;
 }

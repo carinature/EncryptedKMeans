@@ -61,9 +61,6 @@ static const std::string point_csv_file = jsonConfig["files"]["point_csv_file"];
 
 
 
-//string files{};
-
-
 
 
 

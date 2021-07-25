@@ -4,6 +4,11 @@ project(EncryptedKMeans)
 ## Use -std=c++17 as default.
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_SOURCE_DIR "/home/karina/CLionProjects/EncryptedKMeans")
+# Includes Directory
+set(BASEPATH "${CMAKE_SOURCE_DIR}")
+include_directories("${BASEPATH}")
+
 # FetchContent can be used to automatically download the repository as a dependency at configure time.
 include(FetchContent)
 
@@ -28,11 +33,11 @@ add_executable(EncryptedKMeans
         #        utils/aux.h
         #        utils/Logger.h
         ##        utils/
-        #        src/DataServer.cpp
+                src/DataServer.cpp
         ##        DataServer.h
                 src/KeysServer.cpp
         ##        KeysServer.h
-        #        src/Client.cpp
+                src/Client.cpp
         ##        Client.h
         )
 

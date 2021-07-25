@@ -11,6 +11,7 @@ using std::endl;
 #include "properties.h"
 #include "utils/Logger.h"
 #include "utils/aux.h"
+#include "src/Client.h"
 
 //helib
 #include <helib/binaryArith.h>
@@ -23,55 +24,38 @@ int main() {
     //  loging
     auto t0_main = std::chrono::high_resolution_clock::now();
     Logger logger;
-    logger.log(log_trace, "Starting Protocol");
+    logger.log("Starting Protocol", log_trace);
     //  Keys Server
     KeysServer keysServer;
-    logger.log(log_trace, printDuration(t0_main, "KeysServer Initialization"));
+    logger.log(printDuration(t0_main, "KeysServer Initialization"), log_trace);
 
     const helib::EncryptedArray &ea = keysServer.getEA();    //    helib::Context context = keysServer.getContext();
 
     // Choose two random n-bit integers
     long pa = NTL::RandomBits_long(bitSize);
     long pb = NTL::RandomBits_long(bitSize + 1);
+
     long pMax = std::max(pa, pb);
     long pMin = std::min(pa, pb);
     bool pMu = pa > pb;
     bool pNi = pa < pb;
 
-    printNameVal(pa);
-    printNameVal(pb);
-    printNameVal(pMax);
-    printNameVal(pMin);
-    printNameVal(pMu);
-    printNameVal(pNi);
+    cout << "start client" << endl;
 
-    std::bitset<LONG_BIT> ba(pa);
-    std::bitset<LONG_BIT> bb(pb);
-    std::bitset<LONG_BIT> bMax(pMax);
-    std::bitset<LONG_BIT> bMin(pMin);
-    std::bitset<LONG_BIT> bMu(pMu);
-    std::bitset<LONG_BIT> bNi(pNi);
-    printNameVal(ba);
-    printNameVal(bb);
-    printNameVal(bMax);
-    printNameVal(bMin);
-    printNameVal(bMu);
-    printNameVal(bNi);
-    std::bitset<LONG_BIT> ba0((pa >> 0) & 1);
-    std::bitset<LONG_BIT> ba1((pa >> 1) & 1);
-    std::bitset<LONG_BIT> ba2((pa >> 2) & 1);
-    std::bitset<LONG_BIT> ba3((pa >> 3) & 1);
-    printNameVal(ba0);
-    printNameVal(ba1);
-    printNameVal(ba2);
-    printNameVal(ba3);
 
-    NTL::Vec<helib::Ctxt> eMax, eMin, enca, encb;
+    const long arr[] = {1L, 2l};
+    Client(keysServer, arr);
+
+    cout << "fin client" << endl;
+
     //// This part should be done in Client/Point
+    NTL::Vec<helib::Ctxt> eMax, eMin, enca, encb;
     const helib::SecKey &encryptionKey = keysServer.getSecKey();
     helib::Ctxt mu(encryptionKey), ni(encryptionKey);
     resize(enca, long(bitSize), mu);
     resize(encb, long(bitSize) + 1, ni);
+
+//    auto pv = helib::PtrVector<helib::Ctxt>(pa);
 
     // Encrypt the individual bits
     for (long i = 0; i <= bitSize; i++) {
@@ -85,6 +69,58 @@ int main() {
         //            encb[i].bringToSet(keysServer.getCtxtPrimes(5));
         //        }
     }
+#ifdef alt
+    // Each bit of the binary number is encoded into a single ciphertext. Thus
+  // for a 16 bit binary number, we will represent this as an array of 16
+  // unique ciphertexts.
+  // i.e. b0 = [0] [0] [0] ... [0] [0] [0]        ciphertext for bit 0
+  //      b1 = [1] [1] [1] ... [1] [1] [1]        ciphertext for bit 1
+  //      b2 = [1] [1] [1] ... [1] [1] [1]        ciphertext for bit 2
+  // These 3 ciphertexts represent the 3-bit binary number 110b = 6
+
+  // Note: several numbers can be encoded across the slots of each ciphertext
+  // which would result in several parallel slot-wise operations.
+  // For simplicity we place the same data into each slot of each ciphertext,
+  // printing out only the back of each vector.
+  // NB: fifteenOrLess4Four max is 15 bits. Later in the code we pop the MSB.
+  long bitSize = 16;
+  long outSize = 2 * bitSize;
+  long a_data = NTL::RandomBits_long(bitSize);
+  long b_data = NTL::RandomBits_long(bitSize);
+  long c_data = NTL::RandomBits_long(bitSize);
+
+    // Use a scratch ciphertext to populate vectors.
+  helib::Ctxt scratch(public_key);
+  std::vector<helib::Ctxt> encrypted_a(bitSize, scratch);
+  std::vector<helib::Ctxt> encrypted_b(bitSize, scratch);
+  std::vector<helib::Ctxt> encrypted_c(bitSize, scratch);
+  // Encrypt the data in binary representation.
+  for (long i = 0; i < bitSize; ++i) {
+    std::vector<long> a_vec(ea.size());
+    std::vector<long> b_vec(ea.size());
+    std::vector<long> c_vec(ea.size());
+    // Extract the i'th bit of a,b,c.
+    for (auto& slot : a_vec)
+      slot = (a_data >> i) & 1;
+    for (auto& slot : b_vec)
+      slot = (b_data >> i) & 1;
+    for (auto& slot : c_vec)
+      slot = (c_data >> i) & 1;
+    ea.encrypt(encrypted_a[i], public_key, a_vec);
+    ea.encrypt(encrypted_b[i], public_key, b_vec);
+    ea.encrypt(encrypted_c[i], public_key, c_vec);
+  }
+    // Although in general binary numbers are represented here as
+  // std::vector<helib::Ctxt> the binaryArith APIs for HElib use the PtrVector
+  // wrappers instead, e.g. helib::CtPtrs_vectorCt. These are nothing more than
+  // thin wrapper classes to standardise access to different vector types, such
+  // as NTL::Vec and std::vector. They do not take ownership of the underlying
+  // object but merely provide access to it.
+  //
+  // helib::CtPtrMat_vectorCt is a wrapper for
+  // std::vector<std::vector<helib::Ctxt>>, used for representing a list of
+  // encrypted binary numbers.
+#endif
 
 #ifdef HELIB_DEBUG
     decryptAndPrint((cout << " before comparison: "),
@@ -94,6 +130,8 @@ int main() {
                   0);
 #endif
 
+
+//// this should stay in main but use `Client` class compare
     std::vector<long> slotsMin, slotsMax, slotsMu, slotsNi;
     // comparison only
     compareTwoNumbers(mu, ni,
@@ -166,7 +204,54 @@ int main() {
     //-----------------------------------------------------------
 
     printDuration(t0_main, "Main");
-    logger.print_log(log_error, false);
+    logger.print_log(log_trace, false);
+//    logger.print_log(log_error, false);
+
+
+//    printNameVal(pa);
+//    printNameVal(pb);
+//    printNameVal(pMax);
+//    printNameVal(pMin);
+//    printNameVal(pMu);
+//    printNameVal(pNi);
+//
+//    std::bitset<LONG_BIT> ba(pa);
+//    std::bitset<LONG_BIT> bb(pb);
+//    std::bitset<LONG_BIT> bMax(pMax);
+//    std::bitset<LONG_BIT> bMin(pMin);
+//    std::bitset<LONG_BIT> bMu(pMu);
+//    std::bitset<LONG_BIT> bNi(pNi);
+//    printNameVal(ba);
+//    printNameVal(bb);
+//    printNameVal(bMax);
+//    printNameVal(bMin);
+//    printNameVal(bMu);
+//    printNameVal(bNi);
+//    std::bitset<LONG_BIT> ba0((pa >> 0) & 1);
+//    std::bitset<LONG_BIT> ba1((pa >> 1) & 1);
+//    std::bitset<LONG_BIT> ba2((pa >> 2) & 1);
+//    std::bitset<LONG_BIT> ba3((pa >> 3) & 1);
+//    printNameVal(ba0);
+//    printNameVal(ba1);
+//    printNameVal(ba2);
+//    printNameVal(ba3);
+//
+//    long pa0((pa >> 0) );
+//    long pa01((pa >> 0)& 1 );
+//    long pa1((pa >> 1) );
+//    long pa11((pa >> 1)& 1 );
+//    long pa2((pa >> 2) );
+//    long pa21((pa >> 2)& 1 );
+//    long pa3((pa >> 3) );
+//    long pa31((pa >> 3)& 1 );
+//    printNameVal(pa0);
+//    printNameVal(pa1);
+//    printNameVal(pa2);
+//    printNameVal(pa3);
+//    printNameVal(pa01);
+//    printNameVal(pa11);
+//    printNameVal(pa21);
+//    printNameVal(pa31);
 
 
     return 0;

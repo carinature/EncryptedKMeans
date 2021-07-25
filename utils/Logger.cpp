@@ -1,7 +1,10 @@
 
 
 #include "Logger.h"
-#include "../properties.h"
+#include "properties.h"
+
+using std::cout;
+using std::endl;
 
 /**
  * Logger Class
@@ -29,7 +32,7 @@ Logger::~Logger() {
 
 }
 
-void Logger::log(LogLevel msgLevel, const std::string &msg) {
+void Logger::log(const std::string &msg, LogLevel msgLevel) {
     for (int l = this->level; l <= msgLevel; ++l) {
         this->logs[l] << "- " << msg << endl;
         if (log_error <= msgLevel) std::cerr << msg << endl;
@@ -42,7 +45,7 @@ std::ostream &operator<<(std::ostream &os, const Logger &logger) {
 }
 
 Logger &Logger::operator<<(const std::string &msg) {
-    this->log(log_info, msg);
+    this->log(msg, log_info);
     return *this;
 }
 

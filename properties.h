@@ -60,8 +60,29 @@ static const std::string rands_bad_file = jsonConfig["files"]["rands_bad_file"];
 static const std::string point_csv_file = jsonConfig["files"]["point_csv_file"];
 
 
+#define CLIENT_CLASS_EXISTS true
 
-
-
+//namespace helib {
+//
+//    typedef PtrVector <Ctxt> CtPtrs;
+//
+//    // CtPtrs_VecCt(NTL::Vec<Ctxt>)
+//    typedef PtrVector_VecT <Ctxt> CtPtrs_VecCt;
+//    // CtPtrs_vectorCt(std::vector<Ctxt>)
+//    typedef PtrVector_vectorT <Ctxt> CtPtrs_vectorCt;
+//    // CtPtrs_VecPt(NTL::Vec<Ctxt*>)
+//    typedef PtrVector_VecPt <Ctxt> CtPtrs_VecPt;
+//    // CtPtrs_vectorPt(std::vector<Ctxt*>)
+//    typedef PtrVector_vectorPt <Ctxt> CtPtrs_vectorPt;
+//
+//    // struct PtrVector_VecT;    // constructed as PtrVector_VecT(NTL::Vec<T>)
+//    // struct PtrVector_VecPt;   // constructed as PtrVector_VecPt(NTL::Vec<T*>)
+//    // struct PtrVector_vectorT; // constructed as PtrVector_vectorT(std::vector<T>)
+//    // struct PtrVector_vectorPt;// constructed PtrVector_vectorPt(std::vector<T*>)
+//
+//    // A slice of CtPtrs
+//    typedef PtrVector_slice <Ctxt> CtPtrs_slice;
+//
+//}
 
 #endif //ENCKMEAN_PROPERTIES_H

@@ -1,7 +1,7 @@
 
 
 #include "aux.h"
-#include "../properties.h"
+#include "properties.h"
 #include "Logger.h"
 
 #include <sstream>      // std::stringstream

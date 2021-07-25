@@ -11,9 +11,10 @@
 #include <helib/binaryArith.h>
 #include <helib/intraSlot.h>
 
-//#include "../properties.h"
+#include "properties.h"
+#include "Logger.h"
 
-#include "../src/KeysServer.h"
+#include "src/KeysServer.h"
 
 //  print both the value and it's name. comfy for dgb  // best. macro. EVA! //TODO save this somewhere (list of useful tricks)
 #define printNameVal(val)   cout << # val << ": " << (val) << endl

@@ -4,9 +4,9 @@
 //
 
 #include "KeysServer.h"
-#include "../properties.h"
-#include "../utils/Logger.h"
-#include "../utils/aux.h"
+#include "properties.h"
+#include "utils/Logger.h"
+//#include "utils/aux.h"
 
 
 #include <iostream>
@@ -62,33 +62,33 @@ long KeysServer::calculateLevels(bool bootstrap, long bitSize) {
            : 30 * (7 + NTL::NumBits(bitSize + 2)); // that should be enough
 };
 
-helib::Context &KeysServer::prepareContext(helib::Context &context) {
+helib::Context &KeysServer::prepareContext(helib::Context &contxt) {
     if (VERBOSE) {
         cout << "input bitSize=" << bitSize << endl;
         if (nthreads > 1) cout << "  using " << NTL::AvailableThreads() << " threads\n";
         cout << "computing key-independent tables..." << std::flush;
     }
-    context.buildModChain(L, c, /*willBeBootstrappable=*/bootstrap);
-    if (bootstrap) context.enableBootStrapping(mvec);
+    contxt.buildModChain(L, c, /*willBeBootstrappable=*/bootstrap);
+    if (bootstrap) contxt.enableBootStrapping(mvec);
 
-    buildUnpackSlotEncoding(KeysServer::unpackSlotEncoding, context.getEA());
+    buildUnpackSlotEncoding(KeysServer::unpackSlotEncoding, contxt.getEA());
 
     if (VERBOSE) {
         cout << " done.\n";
-        context.printout();
+        contxt.printout();
     }
 
-    return context;
+    return contxt;
 }
 
-void KeysServer::prepareSecKey(helib::SecKey &secKey) const {
+void KeysServer::prepareSecKey(helib::SecKey &key) const {
     if (VERBOSE) {
         cout << "\ncomputing key-dependent tables..." << std::flush;
     }
-    secKey.GenSecKey();
-    addSome1DMatrices(secKey); // compute key-switching matrices
-    addFrbMatrices(secKey);
-    if (bootstrap) secKey.genRecryptData();
+    key.GenSecKey();
+    addSome1DMatrices(key); // compute key-switching matrices
+    addFrbMatrices(key);
+    if (bootstrap) key.genRecryptData();
     if (VERBOSE) cout << " done\n";
 };
 
@@ -121,7 +121,17 @@ KeysServer::KeysServer(long prm, long bitSize, bool bootstrap, long seed, long n
                         .ords(ords)
                         .buildModChain(false)
                         .build()),
-        secKey(prepareContext(context)) {
+        secKey(prepareContext(context)),
+        // In HElib, the SecKey class is actually a subclass if the PubKey class.  So
+        // one way to initialize a public key object is like this:
+
+        // TECHNICAL NOTE: Note the "&" in the declaration of publicKey. Since the
+        // SecKey class is a subclass of PubKey, this particular PubKey object is
+        // ultimately a SecKey object, and through the magic of C++ polymorphism,
+        // encryptions done via publicKey will actually use the secret key, which has
+        // certain advantages.  If one left out the "&", then encryptions done via
+        // publicKey will NOT use the secret key.
+        pubKey(secKey) {
 
     if (seed) NTL::SetSeed(NTL::ZZ(seed));
     if (nthreads > 1) NTL::SetNumThreads(nthreads);

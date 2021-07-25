@@ -32,7 +32,7 @@ public:
 
     virtual ~Logger(); //todo whhy virtual??
 
-    void log(LogLevel msgLevel, const std::string &msg);
+    void log(const std::string &msg, LogLevel msgLevel=log_trace);
 
     void print_log(LogLevel msgLevel = log_trace, bool all = true);
 

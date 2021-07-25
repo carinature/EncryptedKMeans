@@ -1,4 +1,4 @@
-#include "../utils/aux.h"
+#include "utils/aux.h"
 #include "DataServer.h"
 
 void BGV_binary_arithmetic();
@@ -10,8 +10,8 @@ void add_numbers();
 void mult_numbers();
 void cmp_numbers();
 
-//using std::cout;
-//using std::endl;
+using std::cout;
+using std::endl;
 
 int main2() {
     cout << "Hello, World!" << endl;

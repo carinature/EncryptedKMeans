@@ -51,6 +51,8 @@ protected:
     helib::SecKey secKey; //private?
 
 public:
+    const helib::PubKey& pubKey;
+
     //::Values(     prm,    bitSize,    bootstrap,  seed,   nthreads)
     // Parameters(  1,      5,          false,      0,      1)            // SLOW
     // Parameters(  0,      5,          false,      0,      1)            // FAST
@@ -73,7 +75,8 @@ public:
         return context.getCtxtPrimes(nprimes);
     }
 
-    [[nodiscard]] const helib::SecKey &getSecKey() const {
+//    [[nodiscard]] const helib::SecKey &getSecKey() const {
+    [[nodiscard]]const helib::SecKey getSecKey() const {
         return secKey;
     }
 
@@ -93,9 +96,9 @@ private:
 
     static long calculateLevels(bool bootstrap, long bitSize);
 
-    helib::Context &prepareContext(helib::Context &context);
+    helib::Context &prepareContext(helib::Context &contxt);
 
-    void prepareSecKey(helib::SecKey &secKey) const;
+    void prepareSecKey(helib::SecKey &key) const;
 
 };
 

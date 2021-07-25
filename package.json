@@ -1,0 +1,9 @@
+{
+  "name": "EncryptedKMeans",
+  "version": "1.0.0",
+  "dependencies": {
+    "a": 1,
+    "b": 2,
+    "c": 3
+  }
+}

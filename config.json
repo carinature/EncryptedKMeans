@@ -1,7 +1,7 @@
 {
   "data_properties": {
     "number_of_points": 40,
-    "dim": 2,
+    "dim": 1,
     "range_lim": 1,
     "range_lim_comment": "for python, defines the range of the points (from BOTTOM_LIM to RANGE_LIM)",
     "low_limit": 0,
@@ -16,11 +16,11 @@
     "dbg_flag": true,
     "verbose_flag": false,
     "DBG": true,
-    "VERBOSE": true
+    "VERBOSE": false
   },
   "helib_flags": {
-    "helib_bootstrap": true,
-    "helib_verbose": false
+    "helib_bootstrap": false,
+    "helib_verbose": true
   },
   "files": {
     "points_file": "/home/fares/CLionProjects/rbd/io/points",

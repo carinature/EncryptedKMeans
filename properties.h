@@ -25,7 +25,7 @@ static json jsonConfig = json::parse(config_json_file);
  * Global Constatns & Data Properties
  * */
 static const short number_of_points = jsonConfig["data_properties"]["number_of_points"];
-static const short dim = jsonConfig["data_properties"]["dim"];
+static const short DIM = jsonConfig["data_properties"]["DIM"];
 static const short range_lim = jsonConfig["data_properties"]["range_lim"];
 static const short low_limit = jsonConfig["data_properties"]["low_limit"];
 static const short bitSize = jsonConfig["data_properties"]["bitSize"];
@@ -58,6 +58,8 @@ static const std::string means_file = jsonConfig["files"]["means_file"];
 static const std::string rands_file = jsonConfig["files"]["rands_file"];
 static const std::string rands_bad_file = jsonConfig["files"]["rands_bad_file"];
 static const std::string point_csv_file = jsonConfig["files"]["point_csv_file"];
+
+#define HELIB_DEBUG
 
 
 #define CLIENT_CLASS_EXISTS true

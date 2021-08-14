@@ -3,14 +3,15 @@
 #ifndef ENCRYPTEDKMEANS_LOGGER_H
 #define ENCRYPTEDKMEANS_LOGGER_H
 
+/**
+ * @file Logger.h
+ * */
+
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <chrono>
 
-/**
- * Logger Class
- * */
 enum LogLevel {
     log_trace,
     log_debug,
@@ -20,24 +21,53 @@ enum LogLevel {
     log_fatal,
 };
 
+/**
+ * @class Logger
+ * @brief Logger class handles logging (instead of stdout).
+ * @param minLogLevel log all message from this level and up, discard all others.
+ * @note The data will be logged to all levels below and up to msgLevel,
+ * and discarded from the those above
+ * (e.g msgLevel=info will log the data to dbg as well as info but not to error).
+ * */
 class Logger {
 private:
-    LogLevel level = log_trace;
+    const LogLevel level = log_trace;
     std::ostringstream logs[log_fatal + 1];
 
     static std::string levelToString(LogLevel level);
 
 public:
-    explicit Logger(LogLevel minLevel = log_trace);
+    const std::string name;
 
-    virtual ~Logger(); //todo whhy virtual??
+    explicit Logger(
+            LogLevel minLogLevel = log_trace,
+            std::string name = "General Logger");
 
-    void log(const std::string &msg, LogLevel msgLevel=log_trace);
+    virtual ~Logger(); //todo why virtual??
 
-    void print_log(LogLevel msgLevel = log_trace, bool all = true);
+    /**
+     * @brief Log messages to the wanted level and all those below.
+     * @param msg The data to be loged .
+     * @param msgLevel The maximum level to which the data is logged.
+     * @note The data will be logged to all levels below and up to msgLevel,
+     * and discarded from the those above
+     * (e.g msgLevel=info will log the data to dbg as well as info but not to error).
+     * */
+    void log(const std::string &msg, LogLevel msgLevel = log_trace);
+
+    /**
+     * @brief Log messages to the wanted level and all those below.
+     * @param msg The data to be loged .
+     * @param msgLevel The maximum level to which the data is logged.
+     * @note The data will be logged to all levels below and up to msgLevel, and
+     * discarded from the those above (e.g msgLevel=info will print the data from error,
+     * as well as info if all=true, but not from dbg).
+     * */
+    void print_log(LogLevel msgLevel = log_trace, bool all = false);
 
     friend std::ostream &operator<<(std::ostream &os, const Logger &logger);
-    Logger& operator<<(const std::string & msg); //fixme change to work with ostream?
+
+    Logger &operator<<(const std::string &msg); //fixme change to work with ostream?
 
 };
 

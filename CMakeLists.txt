@@ -30,16 +30,22 @@ add_executable(EncryptedKMeans
         properties.h
         utils/aux.cpp
         utils/Logger.cpp
-        #        utils/aux.h
-        #        utils/Logger.h
-        ##        utils/
-                src/DataServer.cpp
-        ##        DataServer.h
-                src/KeysServer.cpp
-        ##        KeysServer.h
-                src/Client.cpp
-        ##        Client.h
+        src/DataServer.cpp
+        src/KeysServer.cpp
+        src/Client.cpp
         )
+
+# Testing
+add_executable(Tests
+        properties.h
+        utils/aux.cpp
+        utils/Logger.cpp
+        src/DataServer.cpp
+        src/KeysServer.cpp
+        src/Client.cpp
+        tests/TestClient.cpp tests/test.cpp)
+target_link_libraries(Tests PUBLIC helib)
+target_link_libraries(Tests PRIVATE nlohmann_json::nlohmann_json)
 
 target_link_libraries(EncryptedKMeans PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(EncryptedKMeans PUBLIC helib)

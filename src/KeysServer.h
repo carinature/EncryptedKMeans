@@ -51,7 +51,7 @@ protected:
     helib::SecKey secKey; //private?
 
 public:
-    const helib::PubKey& pubKey;
+    const helib::PubKey &pubKey;
 
     //::Values(     prm,    bitSize,    bootstrap,  seed,   nthreads)
     // Parameters(  1,      5,          false,      0,      1)            // SLOW
@@ -68,6 +68,7 @@ public:
     }
 
     [[nodiscard]] const helib::EncryptedArray &getEA() const {
+        std::cout << "getEA" << std::endl;
         return context.getEA();
     }
 
@@ -75,7 +76,7 @@ public:
         return context.getCtxtPrimes(nprimes);
     }
 
-//    [[nodiscard]] const helib::SecKey &getSecKey() const {
+    //    [[nodiscard]] const helib::SecKey &getSecKey() const {
     [[nodiscard]]const helib::SecKey getSecKey() const {
         return secKey;
     }

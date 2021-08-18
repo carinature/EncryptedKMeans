@@ -8,16 +8,25 @@ static Logger loggerTestDataServer(log_debug, "loggerTestDataServer");
 
 void TestDataServer::testConstructor() {
     loggerTestDataServer.log("testConstructor");
+    cout << " ------ testConstructor ------ " << endl;
     KeysServer keysServer;
     DataServer dataServer(keysServer);
+    cout << " ------ testConstructor finished ------ " << endl << endl;
 }
 
 void TestDataServer::testScratchPoint() {
     loggerTestDataServer.log("testEncryptScratchPoint");
+    cout << " ------ testEncryptScratchPoint ------ " << endl;
     KeysServer keysServer;
     DataServer dataServer(keysServer);
+    cout << "םמקםמק" << endl;
     Point scratchPoint = dataServer.scratchPoint();
-//    cCoordinates.emplace_back(bitSize, helib::Ctxt(public_key));
+    //    cCoordinates.emplace_back(bitSize, helib::Ctxt(public_key));
+    cout << " ------ testEncryptScratchPoint finished ------ " << endl << endl;
+}
+
+void TestDataServer::testCompareClients() {
+
 }
 
 //void TestDataServer::testDecryptCoordinates() {

@@ -7,7 +7,7 @@ class TestDataServer {
 public:
     static void testConstructor();
     static void testScratchPoint();
-//    static void testCompare();
+    static void testCompareClients();
 //    static void testAddiiton();
 //    static void testMultiplication();
 };

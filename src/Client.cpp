@@ -64,12 +64,21 @@ std::vector<long> Client::decryptCoordinates() {
 #endif
     clientLogger.log("decryptCoordiantes", log_debug);
     std::vector<std::vector<long>> decrypted_result(DIM);
-    std::vector<long> dCoordinates(DIM); // todo redundant, decide which of the two to keep
+    std::vector<long> dCoordinates(DIM), ddCoordinates(DIM); // todo redundant, decide which of the two to keep
+    if (!cCoordinatesStd[0][0].isEmpty())
     for (int i = 0; i < DIM; ++i) {
-        helib::decryptBinaryNums(decrypted_result[i],
-                                 helib::CtPtrs_vectorCt(cCoordinatesStd[i]),
-                                 encryptionKey, ea);
-        dCoordinates[i] = decrypted_result[i].back();
+//        helib::decryptBinaryNums(decrypted_result[i],
+//                                 helib::CtPtrs_vectorCt(cCoordinatesStd[i]),
+//                                 encryptionKey, ea);
+//        ddCoordinates[i] = decrypted_result[i].back();
+        NTL::ZZX pp;
+        cout << "------------------"<<endl;
+        for (int j = 0; j < bitSize; ++j) {
+            encryptionKey.Decrypt(pp, cCoordinatesStd[i][j]);
+            printNameVal(pp);
+            if (IsOne(pp)) dCoordinates[i]+=std::pow(2, j);
+            printNameVal(dCoordinates[i]);
+        }
     }
 #if VERBOSE
     for (auto dec_coordinate :decrypted_result) printNameVal(dec_coordinate.back());

@@ -10,10 +10,10 @@ int main(){
     TestClient::testEncryptCoordinates();
     TestClient::testDecryptCoordinates();
     TestClient::testEncryptScratchPoint();
-//    TestClient::testCompare();
 
     TestDataServer::testConstructor();
     TestDataServer::testScratchPoint();
+    TestDataServer::testCompareClients();
 
 
 }

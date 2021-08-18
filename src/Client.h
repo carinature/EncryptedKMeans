@@ -8,21 +8,50 @@
 class Point {
     std::vector<std::vector<helib::Ctxt> > cCoordinates;
     const helib::PubKey &public_key;// = encryptionKey;
+    friend class Client;
+    friend class KeysServer;
 
 public:
     Point(const helib::EncryptedArray &ea,
           const helib::PubKey &public_key,
           const long coordinates[] = nullptr) :
             public_key(public_key) {
+        cout << " Point"<< endl;
         std::vector<long> a_vec(ea.size());
-        for (int dim = 0; dim < DIM; ++dim) {
+        cout << "ehad" << endl;
+        if (coordinates)
+            for (int dim = 0; dim < DIM; ++dim) {
+            cout << "shtaim" << endl;
             cCoordinates.emplace_back(bitSize, helib::Ctxt(public_key));
+            cout << "shalosh" << endl;
             for (long bit = 0; bit < bitSize; ++bit) {
                 // Extract the i'th bit of coordinates[dim].
+                cout << "arba" << endl;
                 for (auto &slot : a_vec) slot = (coordinates[dim] >> bit) & 1;
+                cout << "hamesh" << endl;
                 if (coordinates) ea.encrypt(cCoordinates[dim][bit], public_key, a_vec);
             }
         }
+    }
+
+private:
+    std::vector<long> decrypt(const helib::EncryptedArray &ea,
+                              const helib::PubKey &public_key){
+        std::vector<std::vector<long>> decrypted_result(DIM);
+        std::vector<long> dCoordinates(DIM); // todo redundant, decide which of the two to keep
+        for (int i = 0; i < DIM; ++i) {
+//            helib::SecKey sk;
+//            sk.Decrypt()
+//            helib::decryptBinaryNums(decrypted_result[i],
+//                                     helib::CtPtrs_vectorCt(cCoordinates[i]),
+//                                     public_key, ea);
+//            dCoordinates[i] = decrypted_result[i].back();
+        }
+#if VERBOSE
+        for (auto dec_coordinate :decrypted_result) printNameVal(dec_coordinate.back());
+        cout << endl << endl;
+#endif
+        return dCoordinates;
     }
 };
 

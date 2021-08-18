@@ -18,6 +18,7 @@ DataServer::DataServer(KeysServer &keysServer) :
 }
 
 Point DataServer::scratchPoint() {
+    cout << " scratchPoint"<<endl;
     return Point(ea, encryptionKey, nullptr);
 }
 

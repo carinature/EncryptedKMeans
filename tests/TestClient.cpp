@@ -8,7 +8,7 @@
 
 void TestClient::testConstructor() {
     //    loggerTestClient.log("testConstructor");
-    cout << " ------ testConstructor ------ " << endl << endl;
+    cout << " ------ testConstructor ------ " << endl ;
     KeysServer server;// = KeysServer();
     Client client(server);
     //    loggerTestClient.print_log();
@@ -17,7 +17,7 @@ void TestClient::testConstructor() {
 
 void TestClient::testEncryptCoordinates() {
     //    loggerTestClient.log("testDecryptCoordinates");
-    cout << " ------ testEncryptCoordinates ------ " << endl << endl;
+    cout << " ------ testEncryptCoordinates ------ " << endl ;
     KeysServer server;// = KeysServer();
     const long arr[] = {12, 34};
     Client client(server);
@@ -28,7 +28,7 @@ void TestClient::testEncryptCoordinates() {
 
 void TestClient::testDecryptCoordinates() {
     //    loggerTestClient.log("testDecryptCoordinates");
-    cout << " ------ testDecryptCoordinates ------ " << endl << endl;
+    cout << " ------ testDecryptCoordinates ------ " << endl ;
     KeysServer server;// = KeysServer();
     const long arr[] = {12, 34};
     Client client(server);
@@ -52,7 +52,7 @@ void TestClient::testEncryptScratchPoint() {
 
 
 void TestClient::testCompare() {
-    //    loggerTestClient.log("testCompare");
+    //    loggerTestClient.log("testCompareClients");
     KeysServer server = KeysServer();
     Client client1(server);
     Client client2(server);
@@ -60,7 +60,7 @@ void TestClient::testCompare() {
     const long arr2[] = {2L, 2L};
     client1.encryptPoint(arr1);
     client2.encryptPoint(arr2);
-    //    client1.compare(client2);
+//        client1.compare(client2);
     //    helib::decryptBinaryNums();
     //    loggerTestClient.print_log();
 }

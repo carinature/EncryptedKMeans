@@ -1,6 +1,3 @@
-//
-// Created by karina on 25/07/2021.
-//
 
 #ifndef ENCRYPTEDKMEANS_TESTCLIENT_H
 #define ENCRYPTEDKMEANS_TESTCLIENT_H
@@ -9,9 +6,10 @@
 class TestClient {
 public:
     static void testConstructor();
+    static void testEncryptCoordinates();
     static void testDecryptCoordinates();
     static void testCompare();
-    static void testAddiiton();
+    static void testAddition();
     static void testMultiplication();
 };
 

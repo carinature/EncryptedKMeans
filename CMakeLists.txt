@@ -34,6 +34,8 @@ add_executable(EncryptedKMeans
         src/KeysServer.cpp
         src/Client.cpp
         )
+target_link_libraries(EncryptedKMeans PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(EncryptedKMeans PUBLIC helib)
 
 # Testing
 add_executable(Tests
@@ -43,10 +45,10 @@ add_executable(Tests
         src/DataServer.cpp
         src/KeysServer.cpp
         src/Client.cpp
-        tests/TestClient.cpp tests/test.cpp)
+#        tests
+        tests/TestClient.cpp
+        tests/test.cpp
+        tests/TestDataServer.cpp )
 target_link_libraries(Tests PUBLIC helib)
 target_link_libraries(Tests PRIVATE nlohmann_json::nlohmann_json)
-
-target_link_libraries(EncryptedKMeans PRIVATE nlohmann_json::nlohmann_json)
-target_link_libraries(EncryptedKMeans PUBLIC helib)
 

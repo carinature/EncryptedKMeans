@@ -1,17 +1,21 @@
-#include "utils/aux.h"
 #include "DataServer.h"
 
-void BGV_binary_arithmetic();
-
-void BGV_packed_arithmetic();
-
-void KT_packed_arithmetic();
-void add_numbers();
-void mult_numbers();
-void cmp_numbers();
+#include "utils/aux.h"
 
 using std::cout;
 using std::endl;
+static Logger dataServerLogger(log_debug, "dataServerLogger");
+
+DataServer::DataServer(KeysServer &keysServer) :
+        encryptionKey(keysServer.getSecKey()),
+//        public_key(keysServer.getPublicKey()),
+//        public_key(encryptionKey),
+        ea(keysServer.getEA()),
+        scratch(keysServer.getPublicKey()){
+
+    dataServerLogger.log("DataServer()");
+    cout << "DataServer()" << endl;
+}
 
 int main2() {
     cout << "Hello, World!" << endl;

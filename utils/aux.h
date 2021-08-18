@@ -1,8 +1,9 @@
 
-
 #ifndef ENCKMEAN_AUX_H
 #define ENCKMEAN_AUX_H
 
+/** @file aux
+ * */
 
 #include <iostream>
 
@@ -16,6 +17,10 @@
 
 #include "src/KeysServer.h"
 
+using std::cout;
+using std::endl;
+
+using helib::Ctxt;
 //  print both the value and it's name. comfy for dgb  // best. macro. EVA! //TODO save this somewhere (list of useful tricks)
 #define printNameVal(val)   cout << # val << ": " << (val) << endl
 

@@ -17,6 +17,8 @@
 using std::cout;
 using std::endl;
 
+Logger keysServerLogger(log_debug,"keysServerLogger");//todo change to log_trace
+
 // Validates the prm value, throwing if invalid
 // [prm] Corresponds to the number of entry in mValues table
 long KeysServer::validatePrm(long prm) {
@@ -142,8 +144,26 @@ KeysServer::KeysServer(long prm, long bitSize, bool bootstrap, long seed, long n
 
     helib::setupDebugGlobals(&secKey, context.shareEA());
 
-
 }
+
+//std::vector<long> KeysServer::decryptCtxt(helib::Ctxt ctxt) {
+//#if VERBOSE
+//    cout << "decryptCoordiantes" << endl;
+//#endif
+//    keysServerLogger.log("decryptCoordiantes", log_debug);
+//    std::vector<long> decrypted_result(); // todo redundant, decide which of the two to keep
+//    for (int i = 0; i < DIM; ++i) {
+//        helib::decryptBinaryNums(decrypted_result,
+//                                 helib::CtPtrs_vectorCt(ctxt),
+//                                 secKey, getEA());
+//        dCoordinates[i] = decrypted_result[i].back();
+//    }
+//#if VERBOSE
+//    for (auto dec_coordinate :decrypted_result) printNameVal(dec_coordinate.back());
+//        cout << endl << endl;
+//#endif
+//    return dCoordinates;
+//}
 
 
 

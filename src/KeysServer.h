@@ -17,7 +17,8 @@
 /**
  * @class KeysServer
  * @brief A wrapper for the Keys Server (CA)
- * Creates the context and keys for the encryption services
+ * Creates the context and keys for the encryption services.
+ * Manages protocols for creating Client and Data-Centers (DataServer) shared keys.
  * */
 class KeysServer {
 
@@ -51,7 +52,17 @@ protected:
     helib::SecKey secKey; //private?
 
 public:
+    // TECHNICAL NOTE: Note the "&" in the declaration of publicKey. Since the
+    // SecKey class is a subclass of PubKey, this particular PubKey object is
+    // ultimately a SecKey object, and through the magic of C++ polymorphism,
+    // encryptions done via publicKey will actually use the secret key, which has
+    // certain advantages.  If one left out the "&", then encryptions done via
+    // publicKey will NOT use the secret key.
     const helib::PubKey &pubKey;
+
+    helib::PubKey getPublicKey() {
+        return pubKey;
+    }
 
     //::Values(     prm,    bitSize,    bootstrap,  seed,   nthreads)
     // Parameters(  1,      5,          false,      0,      1)            // SLOW
@@ -68,7 +79,6 @@ public:
     }
 
     [[nodiscard]] const helib::EncryptedArray &getEA() const {
-        std::cout << "getEA" << std::endl;
         return context.getEA();
     }
 
@@ -77,9 +87,11 @@ public:
     }
 
     //    [[nodiscard]] const helib::SecKey &getSecKey() const {
-    [[nodiscard]]const helib::SecKey getSecKey() const {
+    [[nodiscard]] helib::SecKey getSecKey() const {
         return secKey;
     }
+
+    std::vector<long> decryptCtxt(helib::Ctxt);
 
 
 private:

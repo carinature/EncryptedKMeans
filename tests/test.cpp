@@ -3,10 +3,15 @@
 //
 
 #include "TestClient.h"
+#include "TestDataServer.h"
 
 int main(){
     TestClient::testConstructor();
+    TestClient::testEncryptCoordinates();
     TestClient::testDecryptCoordinates();
 //    TestClient::testCompare();
+
+    TestDataServer::testConstructor();
+
 
 }

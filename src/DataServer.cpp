@@ -17,6 +17,10 @@ DataServer::DataServer(KeysServer &keysServer) :
     cout << "DataServer()" << endl;
 }
 
+Point DataServer::scratchPoint() {
+    return Point(ea, encryptionKey, nullptr);
+}
+
 int main2() {
     cout << "Hello, World!" << endl;
 //    BGV_binary_arithmetic();

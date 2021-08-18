@@ -13,6 +13,7 @@
 #include <chrono>
 
 enum LogLevel {
+    log_default_level,
     log_trace,
     log_debug,
     log_info,

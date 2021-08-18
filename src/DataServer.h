@@ -45,6 +45,7 @@ public:
     //        cout << "onaes" << endl;
     //        return isBiggerFlag;
     //    }
+    Point scratchPoint();
 };
 
 

@@ -9,9 +9,11 @@ int main(){
     TestClient::testConstructor();
     TestClient::testEncryptCoordinates();
     TestClient::testDecryptCoordinates();
+    TestClient::testEncryptScratchPoint();
 //    TestClient::testCompare();
 
     TestDataServer::testConstructor();
+    TestDataServer::testScratchPoint();
 
 
 }

@@ -8,6 +8,7 @@ public:
     static void testConstructor();
     static void testEncryptCoordinates();
     static void testDecryptCoordinates();
+    static void testEncryptScratchPoint();
     static void testCompare();
     static void testAddition();
     static void testMultiplication();

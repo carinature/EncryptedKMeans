@@ -16,6 +16,7 @@
 #include "Logger.h"
 
 #include "src/KeysServer.h"
+#include "src/Point.h"
 
 using std::cout;
 using std::endl;

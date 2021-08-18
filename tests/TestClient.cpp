@@ -40,13 +40,24 @@ void TestClient::testDecryptCoordinates() {
 }
 
 
+void TestClient::testEncryptScratchPoint() {
+    cout << " ------ testEncryptScratchPoint ------ " << endl << endl;
+    KeysServer server = KeysServer();
+    Client client(server);
+    client.encryptPoint();
+    std::vector<long> decryptCoordinates = client.decryptCoordinates();
+    for (auto ds:decryptCoordinates) assert(0 == ds);
+    cout << " ------ testEncryptScratchPoint finished ------ " << endl << endl;
+}
+
+
 void TestClient::testCompare() {
     //    loggerTestClient.log("testCompare");
     KeysServer server = KeysServer();
-    const long arr1[] = {1L, 2L};
-    const long arr2[] = {2L, 2L};
     Client client1(server);
     Client client2(server);
+    const long arr1[] = {1L, 2L};
+    const long arr2[] = {2L, 2L};
     client1.encryptPoint(arr1);
     client2.encryptPoint(arr2);
     //    client1.compare(client2);

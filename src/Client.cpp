@@ -16,9 +16,9 @@ Client::Client(KeysServer &keysServer) :
         ea(keysServer.getEA()),
         scratch(encryptionKey)
 //        cCoordinatesStd(DIM)
-        {
-    clientLogger.log("Client()");
-    cout << "Client()" << endl;
+{
+    clientLogger.log("Initializing Client Protocol Finished");
+    cout << "Initializing Client Protocol Finished" << endl;
 }
 
 
@@ -44,13 +44,16 @@ std::vector<std::vector<helib::Ctxt>> Client::encryptPoint(const long coordinate
         for (int i = 0; i < DIM; ++i) printNameVal(coordinates[i]);
 #endif
     std::vector<long> a_vec(ea.size());
-    for (int dim = 0; dim < DIM; ++dim)
-        for (long bit = 0; bit < bitSize; ++bit) {
-            // Extract the i'th bit of coordinates[dim].
-            for (auto &slot : a_vec) slot = (coordinates[dim] >> bit) & 1;
-            cCoordinatesStd.emplace_back(bitSize, scratch);
-            ea.encrypt(cCoordinatesStd[dim][bit], encryptionKey, a_vec);
-        }
+    for (int dim = 0; dim < DIM; ++dim) {
+        cCoordinatesStd.emplace_back(bitSize, scratch);
+        if (coordinates)
+            for (long bit = 0; bit < bitSize; ++bit) {
+                // Extract the i'th bit of coordinates[dim].
+                for (auto &slot : a_vec) slot = (coordinates[dim] >> bit) & 1;
+                ea.encrypt(cCoordinatesStd[dim][bit], encryptionKey, a_vec);
+                points.emplace_back(Point(ea, public_key, coordinates));
+            }
+    }
     return cCoordinatesStd;
 }
 

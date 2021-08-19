@@ -19,7 +19,6 @@ void TestDataServer::testScratchPoint() {
     cout << " ------ testEncryptScratchPoint ------ " << endl;
     KeysServer keysServer;
     DataServer dataServer(keysServer);
-    cout << "םמקםמק" << endl;
     Point scratchPoint = dataServer.scratchPoint();
     //    cCoordinates.emplace_back(bitSize, helib::Ctxt(public_key));
     cout << " ------ testEncryptScratchPoint finished ------ " << endl << endl;

@@ -59,7 +59,6 @@ public:
     // certain advantages.  If one left out the "&", then encryptions done via
     // publicKey will NOT use the secret key.
     const helib::PubKey &pubKey;
-
     helib::PubKey getPublicKey() {
         return pubKey;
     }
@@ -87,7 +86,7 @@ public:
     }
 
     //    [[nodiscard]] const helib::SecKey &getSecKey() const {
-    [[nodiscard]] helib::SecKey getSecKey() const {
+    [[nodiscard]]helib::SecKey getSecKey() const {
         return secKey;
     }
 

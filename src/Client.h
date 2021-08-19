@@ -9,43 +9,49 @@ class Point {
     std::vector<std::vector<helib::Ctxt> > cCoordinates;
     const helib::PubKey &public_key;// = encryptionKey;
     friend class Client;
+
     friend class KeysServer;
 
 public:
-    Point(const helib::EncryptedArray &ea,
-          const helib::PubKey &public_key,
-          const long coordinates[] = nullptr) :
-            public_key(public_key) {
-        cout << " Point"<< endl;
-        std::vector<long> a_vec(ea.size());
-        cout << "ehad" << endl;
+
+    // Each bit of the binary number is encoded into a single ciphertext. Thus
+    // for a 16 bit binary number, we will represent this as an array of 16
+    // unique ciphertexts.
+    // i.e. b0 = [0] [0] [0] ... [0] [0] [0]        ciphertext for bit 0
+    //      b1 = [1] [1] [1] ... [1] [1] [1]        ciphertext for bit 1
+    //      b2 = [1] [1] [1] ... [1] [1] [1]        ciphertext for bit 2
+    // These 3 ciphertexts represent the 3-bit binary number 110b = 6
+    // todo why all slots the same? redundant? (KT)
+    // Note: several numbers can be encoded across the slots of each ciphertext
+    // which would result in several parallel slot-wise operations.
+    // For simplicity we place the same data into each slot of each ciphertext,
+    // printing out only the back of each vector.
+    // NB: fifteenOrLess4Four max is 15 bits. Later in the code we pop the MSB.
+    //        long bitSize = 16;
+    //        long outSize = 2 * bitSize;
+    explicit Point(const helib::PubKey &public_key, const long coordinates[] = nullptr) :
+            public_key(public_key),
+            cCoordinates(DIM, std::vector(bitSize, helib::Ctxt(public_key))) {
+        cout << " Point Init" << endl;
         if (coordinates)
-            for (int dim = 0; dim < DIM; ++dim) {
-            cout << "shtaim" << endl;
-            cCoordinates.emplace_back(bitSize, helib::Ctxt(public_key));
-            cout << "shalosh" << endl;
-            for (long bit = 0; bit < bitSize; ++bit) {
-                // Extract the i'th bit of coordinates[dim].
-                cout << "arba" << endl;
-                for (auto &slot : a_vec) slot = (coordinates[dim] >> bit) & 1;
-                cout << "hamesh" << endl;
-                if (coordinates) ea.encrypt(cCoordinates[dim][bit], public_key, a_vec);
-            }
-        }
+            for (int dim = 0; dim < DIM; ++dim)
+                for (long bit = 0; bit < bitSize; ++bit) // Extract the i'th bit of coordinates[dim]
+                    this->public_key.Encrypt(cCoordinates[dim][bit],
+                                             NTL::to_ZZX((coordinates[dim] >> bit) & 1));
     }
 
 private:
     std::vector<long> decrypt(const helib::EncryptedArray &ea,
-                              const helib::PubKey &public_key){
+                              const helib::PubKey &public_key) {
         std::vector<std::vector<long>> decrypted_result(DIM);
         std::vector<long> dCoordinates(DIM); // todo redundant, decide which of the two to keep
         for (int i = 0; i < DIM; ++i) {
-//            helib::SecKey sk;
-//            sk.Decrypt()
-//            helib::decryptBinaryNums(decrypted_result[i],
-//                                     helib::CtPtrs_vectorCt(cCoordinates[i]),
-//                                     public_key, ea);
-//            dCoordinates[i] = decrypted_result[i].back();
+            //            helib::SecKey sk;
+            //            sk.Decrypt()
+            //            helib::decryptBinaryNums(decrypted_result[i],
+            //                                     helib::CtPtrs_vectorCt(cCoordinates[i]),
+            //                                     public_key, ea);
+            //            dCoordinates[i] = decrypted_result[i].back();
         }
 #if VERBOSE
         for (auto dec_coordinate :decrypted_result) printNameVal(dec_coordinate.back());

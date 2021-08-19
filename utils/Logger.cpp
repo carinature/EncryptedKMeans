@@ -25,7 +25,7 @@ Logger::~Logger() {
             } else cout << this->logs[l].str();
         }
 #else //VERBOSE==flase
-    cout << endl << "~Logger() " << endl;
+    cout << endl << "~Logger() for "<<name << endl;
 #endif //VERBOSE
 }
 

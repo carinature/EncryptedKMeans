@@ -51,7 +51,7 @@ add_executable(Tests
         tests/test.cpp
         tests/TestDataServer.cpp
 #        src/Point.cpp src/Point.h
-        )
+        tests/TestPoint.cpp tests/TestPoint.h tests/TestKeysServer.cpp tests/TestKeysServer.h)
 target_link_libraries(Tests PUBLIC helib)
 target_link_libraries(Tests PRIVATE nlohmann_json::nlohmann_json)
 

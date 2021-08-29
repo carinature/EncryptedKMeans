@@ -40,25 +40,29 @@ public:
                                              NTL::to_ZZX((coordinates[dim] >> bit) & 1));
     }
 
-private:
-    std::vector<long> decrypt(const helib::EncryptedArray &ea,
-                              const helib::PubKey &public_key) {
-        std::vector<std::vector<long>> decrypted_result(DIM);
-        std::vector<long> dCoordinates(DIM); // todo redundant, decide which of the two to keep
-        for (int i = 0; i < DIM; ++i) {
-            //            helib::SecKey sk;
-            //            sk.Decrypt()
-            //            helib::decryptBinaryNums(decrypted_result[i],
-            //                                     helib::CtPtrs_vectorCt(cCoordinates[i]),
-            //                                     public_key, ea);
-            //            dCoordinates[i] = decrypted_result[i].back();
-        }
-#if VERBOSE
-        for (auto dec_coordinate :decrypted_result) printNameVal(dec_coordinate.back());
-        cout << endl << endl;
-#endif
-        return dCoordinates;
+
+    const std::vector<helib::Ctxt> operator[](short int dim) const {
+        return cCoordinates[dim];
     }
+
+
+    [[maybe_unused]] bool isEmpty() {
+        //        return this->cCoordinates[0][0].isEmpty();
+        return false;
+    }
+
+    Point operator+(const Point &point) const {
+        //        if (point.isEmpty()) return this;
+        //        if (this.isEmpty()) return point;
+        Point sum(public_key);
+        ////        for (int dim = 0; dim < DIM; ++dim) {
+        ////            sum[dim] = cCoordinates[dim] + point.cCoordinates[dim];
+        ////        }
+        sum.cCoordinates[0] = cCoordinates[0] + point.cCoordinates[0];
+        return sum;
+        //        return Point(public_key);
+    }
+
 };
 
 

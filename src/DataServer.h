@@ -8,8 +8,11 @@
 
 class DataServer {
 
-    [[maybe_unused]] const helib::SecKey encryptionKey;
-    [[maybe_unused]] const helib::EncryptedArray ea;
+//    [[maybe_unused]] const helib::SecKey encryptionKey;
+//    [[maybe_unused]] const helib::PubKey encryptionKey;
+//    [[maybe_unused]] const helib::EncryptedArray ea;
+     const helib::PubKey encryptionKey;
+     const helib::EncryptedArray ea;
     const helib::Ctxt scratch;
 protected:
 //    const helib::PubKey &public_key;// = encryptionKey;

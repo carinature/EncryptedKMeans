@@ -47,13 +47,13 @@ std::vector<long> Client::decryptCoordinates() {
     clientLogger.log("decryptCoordiantes", log_debug);
     std::vector<long> dCoordinates(DIM);
 //    if (!cCoordinatesStd[0][0].isEmpty())
-    for (int i = 0; i < DIM; ++i) {
+    for (int dim = 0; dim < DIM; ++dim) {
         NTL::ZZX pp;
-        for (int j = 0; j < bitSize; ++j) {
-            encryptionKey.Decrypt(pp, points[0].cCoordinates[i][j]);
+        for (int bit = 0; bit < bitSize; ++bit) {
+            encryptionKey.Decrypt(pp, points[0].cCoordinates[dim][bit]);
 //            printNameVal(pp);
-            if (IsOne(pp)) dCoordinates[i]+=std::pow(2, j);
-//            printNameVal(dCoordinates[i]);
+            if (IsOne(pp)) dCoordinates[dim]+=std::pow(2, bit);
+//            printNameVal(dCoordinates[dim]);
         }
     }
     return dCoordinates;

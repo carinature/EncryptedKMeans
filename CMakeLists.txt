@@ -23,7 +23,8 @@ if (NOT json_POPULATED)
 endif ()
 
 # HElib
-find_package(helib REQUIRED)
+find_package(helib 2.1.0 EXACT REQUIRED)
+#find_package(helib REQUIRED)
 
 add_executable(EncryptedKMeans
         main.cpp

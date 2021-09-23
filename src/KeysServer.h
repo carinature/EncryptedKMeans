@@ -85,12 +85,19 @@ public:
         return context.getCtxtPrimes(nprimes);
     }
 
+    std::vector<long> decryptCtxt(helib::Ctxt);
+    std::vector<long> decryptNum(std::vector<helib::Ctxt>);
+
+protected:
+
+
     //    [[nodiscard]] const helib::SecKey &getSecKey() const {
     [[nodiscard]]helib::SecKey getSecKey() const {
         return secKey;
     }
-
-    std::vector<long> decryptCtxt(helib::Ctxt);
+    friend class TestPoint;
+    //fixme -https://stackoverflow.com/questions/3903180/make-a-friend-class-have-only-special-access-to-1-function-of-another-class
+    friend class Client;
 
 
 private:

@@ -7,7 +7,7 @@ using std::endl;
 static Logger dataServerLogger(log_debug, "dataServerLogger");
 
 DataServer::DataServer(KeysServer &keysServer) :
-        encryptionKey(keysServer.getSecKey()),
+        encryptionKey(keysServer.getPublicKey()),
 //        public_key(keysServer.getPublicKey()),
 //        public_key(encryptionKey),
         ea(keysServer.getEA()),

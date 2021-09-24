@@ -8,6 +8,7 @@ public:
     static void testOperatorSubscript();
     static void testIsEmpty();
     static void testAddition();
+    static void testAddManyPoints();
     static void testMultiplication();
 };
 

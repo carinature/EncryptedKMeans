@@ -15,7 +15,7 @@ class Client {
 
 protected:
     //    NTL::Vec<helib::Ctxt> cCoordinatesNTL;
-    std::vector<std::vector<helib::Ctxt> > cCoordinatesStd;
+//    std::vector<std::vector<helib::Ctxt> > cCoordinatesStd;
     const helib::PubKey &public_key;// = encryptionKey;
     //#if DBG
     //private:
@@ -35,10 +35,12 @@ public:
      * */
     std::vector<std::vector<helib::Ctxt>> encryptPoint(const long coordinates[] = nullptr);
 
+    Client& addEncryptedPoint(Point & point) ;
+
     /**
      *
      * */
-    std::vector<long> decryptCoordinates();
+    std::vector<long> decryptCoordinates(int i=0);
 
     /**
      *

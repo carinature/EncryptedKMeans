@@ -10,7 +10,6 @@
 #include "utils/aux.h"
 
 int main() {
-/*
 
     cout << " ============ Test KeysServer ============ " << endl;
     TestKeysServer::testConstructor();
@@ -21,23 +20,21 @@ int main() {
     TestPoint::testEncryptCoordinates();
     TestPoint::testOperatorSubscript();
     TestPoint::testIsEmpty();
-    */
     TestPoint::testAddition();
-/*    TestPoint::testMultiplication();
-    cout << " ============ Test Point Finished ============ " << endl << endl;
+   TestPoint::testMultiplication();
+        cout << " ============ Test Point Finished ============ " << endl << endl;
 
-    cout << " ============ Test Client ============ " << endl;
-    TestClient::testConstructor();
-    TestClient::testEncryptCoordinates();
-    TestClient::testDecryptCoordinates();
-    TestClient::testEncryptScratchPoint();
-    cout << " ============ Test Client Finished ============ " << endl << endl;
+        cout << " ============ Test Client ============ " << endl;
+        TestClient::testConstructor();
+        TestClient::testEncryptCoordinates();
+       TestClient::testDecryptCoordinates();
+        TestClient::testEncryptScratchPoint();
+        cout << " ============ Test Client Finished ============ " << endl << endl;
 
-    cout << " ============ Test DataServer ============ " << endl;
-    TestDataServer::testConstructor();
-    TestDataServer::testScratchPoint();
-    TestDataServer::testCompareClients();
-    cout << " ============ Test DataServer Finished ============ " << endl << endl;
-*/
+        cout << " ============ Test DataServer ============ " << endl;
+        TestDataServer::testConstructor();
+        TestDataServer::testScratchPoint();
+        TestDataServer::testCompareClients();
+        cout << " ============ Test DataServer Finished ============ " << endl << endl;
 
 }

@@ -3,10 +3,10 @@
 // Distibution of keys for Clients and the DataServer
 //
 
-#include "KeysServer.h"
-#include "properties.h"
-#include "utils/Logger.h"
-//#include "utils/aux.h"
+//#include "KeysServer.h"
+//#include "properties.h"
+//#include "utils/Logger.h"
+#include "utils/aux.h"
 
 
 #include <iostream>
@@ -66,7 +66,7 @@ long KeysServer::calculateLevels(bool bootstrap, long bitSize) {
 
 helib::Context &KeysServer::prepareContext(helib::Context &contxt) {
     if (VERBOSE) {
-        cout << "input bitSize=" << bitSize << endl;
+        cout << "input BIT_SIZE=" << bitSize << endl;
         if (nthreads > 1) cout << "  using " << NTL::AvailableThreads() << " threads\n";
         cout << "computing key-independent tables..." << std::flush;
     }
@@ -146,6 +146,18 @@ KeysServer::KeysServer(long prm, long bitSize, bool bootstrap, long seed, long n
 
 }
 
+long KeysServer::decryptNum(std::vector<helib::Ctxt> cNum, bool isProduct) {
+    long pNum = 0;
+    NTL::ZZX pp;
+    int out_size = (1 + isProduct) * BIT_SIZE;
+    for (int bit = 0; bit < out_size; ++bit) {
+        secKey.Decrypt(pp, cNum[bit]);
+//        printNameVal(pp);
+        if (IsOne(pp)) pNum+=std::pow(2, bit);
+//        printNameVal(pNum);
+    }
+    return pNum;
+}
 
 //long KeysServer::decrypt(const helib::Ctxt& cBit) {
 //    //    long pBit = 0;
@@ -157,7 +169,7 @@ KeysServer::KeysServer(long prm, long bitSize, bool bootstrap, long seed, long n
 //long KeysServer::decrypt(const std::vector<helib::Ctxt> cNum) {
 //    long pNum = 0;
 //    NTL::ZZX pp;
-//    for (int bit = 0; bit < bitSize; ++bit) {
+//    for (int bit = 0; bit < BIT_SIZE; ++bit) {
 //        secKey.Decrypt(pp, cNum[bit]);
 //        printNameVal(pp);
 //        if (IsOne(pp)) pNum += std::pow(2, bit);

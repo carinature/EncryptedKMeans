@@ -50,13 +50,13 @@ int main() {
     NTL::Vec<helib::Ctxt> eMax, eMin, enca, encb;
     const helib::SecKey &encryptionKey = keysServer.getSecKey();
     helib::Ctxt mu(encryptionKey), ni(encryptionKey);
-    resize(enca, long(bitSize), mu);
-    resize(encb, long(bitSize) + 1, ni);
+    resize(enca, long(BIT_SIZE), mu);
+    resize(encb, long(BIT_SIZE) + 1, ni);
 
 #ifdef alt
     // Choose two random n-bit integers
-    long pa = NTL::RandomBits_long(bitSize);
-    long pb = NTL::RandomBits_long(bitSize + 1);
+    long pa = NTL::RandomBits_long(BIT_SIZE);
+    long pb = NTL::RandomBits_long(BIT_SIZE + 1);
 
     long pMax = std::max(pa, pb);
     long pMin = std::min(pa, pb);
@@ -66,14 +66,14 @@ int main() {
     //    auto pv = helib::PtrVector<helib::Ctxt>(pa);
 
     // Encrypt the individual bits
-    for (long i = 0; i <= bitSize; i++) {
+    for (long i = 0; i <= BIT_SIZE; i++) {
         //todo in future remove this `if`,
         // currently serves as an example for init/enc of 2 different-sized numbers
-        if (i < bitSize)
+        if (i < BIT_SIZE)
             encryptionKey.Encrypt(enca[i], NTL::ZZX((pa >> i) & 1));
         encryptionKey.Encrypt(encb[i], NTL::ZZX((pb >> i) & 1));
         //        if (helib_bootstrap) { // put them at a lower level
-        //            if (i < bitSize)
+        //            if (i < BIT_SIZE)
         //                enca[i].bringToSet(keysServer.getCtxtPrimes(5));
         //            encb[i].bringToSet(keysServer.getCtxtPrimes(5));
         //        }

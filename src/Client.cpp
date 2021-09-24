@@ -28,33 +28,29 @@ std::vector<std::vector<helib::Ctxt>> Client::encryptPoint(const long coordinate
         for (int i = 0; i < DIM; ++i) printNameVal(coordinates[i]);
 #endif
     std::vector<long> a_vec(ea.size());
-//    for (int dim = 0; dim < DIM; ++dim) {
-//        cCoordinatesStd.emplace_back(bitSize, scratch);
-//        if (coordinates)
-//            for (long bit = 0; bit < bitSize; ++bit) {
-//                // Extract the i'th bit of coordinates[dim].
-//                for (auto &slot : a_vec) slot = (coordinates[dim] >> bit) & 1;
-//                ea.encrypt(cCoordinatesStd[dim][bit], encryptionKey, a_vec);
-//            }
-//    }
     points.emplace_back(Point(public_key, coordinates));
     return points[0].cCoordinates;
 }
 
+Client &Client::addEncryptedPoint(Point &point) {
+    points.emplace_back(point);
+    return *this;
+}
 
-std::vector<long> Client::decryptCoordinates() {
+std::vector<long> Client::decryptCoordinates(int i) {
     cout << "Client::decryptCoordinates" << endl;
     clientLogger.log("decryptCoordiantes", log_debug);
     std::vector<long> dCoordinates(DIM);
-//    if (!cCoordinatesStd[0][0].isEmpty())
+    if (points[i][0][0].isEmpty()) return dCoordinates;
     for (int dim = 0; dim < DIM; ++dim) {
         NTL::ZZX pp;
-        for (int bit = 0; bit < bitSize; ++bit) {
-            encryptionKey.Decrypt(pp, points[0].cCoordinates[dim][bit]);
+        for (int bit = 0; bit < BIT_SIZE; ++bit) {
+            encryptionKey.Decrypt(pp, points[i].cCoordinates[dim][bit]);
 //            printNameVal(pp);
-            if (IsOne(pp)) dCoordinates[dim]+=std::pow(2, bit);
+            if (IsOne(pp)) dCoordinates[dim] += std::pow(2, bit);
 //            printNameVal(dCoordinates[dim]);
         }
     }
     return dCoordinates;
 }
+

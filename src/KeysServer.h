@@ -87,17 +87,18 @@ public:
 
     std::vector<long> decryptCtxt(helib::Ctxt);
 
-    long decryptNum(std::vector<helib::Ctxt> cNum) {
+    long decryptNum(std::vector<helib::Ctxt> cNum, bool isProduct=false);
+    /*{
         long pNum = 0;
             NTL::ZZX pp;
-            for (int bit = 0; bit < bitSize; ++bit) {
+            for (int bit = 0; bit < BIT_SIZE; ++bit) {
                 secKey.Decrypt(pp, cNum[bit]);
-                //            printNameVal(pp);
+                            printNameVal(pp);
                 if (IsOne(pp)) pNum+=std::pow(2, bit);
-                //            printNameVal(dCoordinates[dim]);
+                            printNameVal(pNum);
             }
         return pNum;
-    }
+    }*/
 
 protected:
 

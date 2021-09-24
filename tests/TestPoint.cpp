@@ -2,6 +2,7 @@
 // Created by karina on 29/08/2021.
 //
 
+#include <src/Client.h>
 #include "TestPoint.h"
 
 #include "utils/Logger.h"
@@ -42,7 +43,7 @@ void TestPoint::testOperatorSubscript() {
                                  server.getSecKey(),
                                  server.getEA());
         assert(coordinate.back() == arr[dim]);
-        assert(cCoordiante==point.cCoordinates[dim]);
+        assert(cCoordiante == point.cCoordinates[dim]);
     }
     cout << " ------ testOperatorSubscript finished ------ " << endl << endl;
 
@@ -64,44 +65,61 @@ void TestPoint::testIsEmpty() {
 }
 
 void TestPoint::testAddition() {
-    //    loggerTestClient.log("testDecryptCoordinates");
+    //    loggerTestClient.log("testAddition");
     cout << " ------ testAddition ------ " << endl;
     KeysServer server;// = KeysServer();
-    long arr[DIM];
-    for (long &c :arr) c = rand() % bitSizeRange;
-    for (auto a: arr) printNameVal(a);
+    long arr[DIM], arr2[DIM], arrSum[DIM];
+    for (int dim = 0; dim < DIM; ++dim) {
+        arr[dim] = rand() % bitSizeRange;
+        arr2[dim] = rand() % bitSizeRange;
+        arrSum[dim] = arr[dim] + arr2[dim];
+        //            for (auto a: arr) printNameVal(a);
+    }
     //  this option is good for readability
     //      `const helib::PubKey &pubKey = server.getPublicKey();`
     //      but the way it is now (asking the serv for a pubKey for each point)
     //      makes more sense in a "real world" application
     Point point(server.getPublicKey(), arr);
-    Point point2(server.getPublicKey(), arr);
-    Point sum = point+point2;
-//    long pSum = server.decryptNum(sum[0]);
-//    printNameVal(pSum);pSum = server.decryptNum(sum[1]);
-    printNameVal(server.decryptNum(sum[0]));
+    Point point2(server.getPublicKey(), arr2);
+    Point sum = point + point2;
+
+    for (int dim = 0; dim < DIM; ++dim)
+        assert(arrSum[dim] == server.decryptNum(sum[dim], true));
+
     cout << " ------ testAddition finished ------ " << endl << endl;
-//
-//    // Let's encrypt something!
-//    KeysServerCKKS serverCKKS;// = KeysServer();
-//
-//    const helib::Context &context = serverCKKS.getContext();
-//    cout <<"odin"<<endl;
-////    helib::PubKey publicKey = serverCKKS.getPublicKeyCKKS();
-//cout <<"dva "<<endl;
-//    long n = 6;//context.getNSlots();
-//    double PI=3.14;
-//    std::vector<double> v(n);
-//    for (long i = 0; i < n; i++)
-//        v[i] = sin(2.0 * PI * i / n);
-//    cout <<"tri "<<endl;
-//    helib::PtxtArray p(context, v);
-//    cout <<"chetiri "<<endl;
-////    Ctxt c(publicKey);
-////    cout <<"pyats]"<<endl;
-////    p.encrypt(c);
-////    cout <<"shests "<<endl;
+}
+
+void TestPoint::testMultiplication() {
+    //    loggerTestClient.log("testMultiplication");
+    cout << " ------ testMultiplication ------ " << endl;
+    KeysServer server;// = KeysServer();
+    long arr[DIM], arr2[DIM], arrProd[DIM];
+    for (int dim = 0; dim < DIM; ++dim) {
+        arr[dim] = rand() % (bitSizeRange / 8);
+        arr2[dim] = rand() % (bitSizeRange / 8);
+        arrProd[dim] = arr[dim] * arr2[dim];
+        for (auto a: arr) printNameVal(a);
+        for (auto a: arr2) printNameVal(a);
+        for (auto a: arrProd) printNameVal(a);
+    }
+    //  this option is good for readability
+    //      `const helib::PubKey &pubKey = server.getPublicKey();`
+    //      but the way it is now (asking the serv for a pubKey for each point)
+    //      makes more sense in a "real world" application
+    Point point(server.getPublicKey(), arr);
+    Point point2(server.getPublicKey(), arr2);
+    Point product = point * point2;
+
+    for (int dim = 0; dim < DIM; ++dim) {
+        printNameVal(server.decryptNum(product[dim], true));
+        printNameVal(arrProd[dim]);
+        assert(arrProd[dim] == server.decryptNum(product[dim], true));
+    }
+
+    cout << " ------ testAddition finished ------ " << endl << endl;
+}
+
+void TestPoint::testAddManyPoints() {
 
 }
 
-void TestPoint::testMultiplication() {}

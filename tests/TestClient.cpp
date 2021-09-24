@@ -9,7 +9,7 @@
 void TestClient::testConstructor() {
     //    loggerTestClient.log("testConstructor");
     cout << " ------ testConstructor ------ " << endl;
-    KeysServer server;// = KeysServer();
+    KeysServer server;
     Client client(server);
     //    loggerTestClient.print_log();
     cout << " ------ testConstructor finished ------ " << endl << endl;
@@ -18,7 +18,7 @@ void TestClient::testConstructor() {
 void TestClient::testEncryptCoordinates() {
     //    loggerTestClient.log("testDecryptCoordinates");
     cout << " ------ testEncryptCoordinates ------ " << endl;
-    KeysServer server;// = KeysServer();
+    KeysServer server;
     long arr[DIM];
     for (int dim = 0; dim < DIM; ++dim) arr[dim] = rand() % bitSizeRange;
     Client client(server);
@@ -30,7 +30,7 @@ void TestClient::testEncryptCoordinates() {
 void TestClient::testDecryptCoordinates() {
     //    loggerTestClient.log("testDecryptCoordinates");
     cout << " ------ testDecryptCoordinates ------ " << endl;
-    KeysServer server;// = KeysServer();
+    KeysServer server;
     long arr[DIM];
     for (int dim = 0; dim < DIM; ++dim) arr[dim] = rand() % bitSizeRange;
     Client client(server);

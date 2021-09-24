@@ -65,22 +65,36 @@ public:
                     result_wrapper,
                     helib::CtPtrs_vectorCt(point.cCoordinates[dim]),
                     helib::CtPtrs_vectorCt(this->cCoordinates[dim]),
-                    OUT_SIZE ,   // sizeLimit=0 means use as many bits as needed.
-                                    &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
+                    OUT_SIZE,   // sizeLimit=0 means use as many bits as needed.
+                    &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
             );
         }
         return sum;
     }
 
-    // Calculates the sum of many numbers using the 3-for-2 method
-    Point addManyPoints(std::vector<Point> points);
-    /*
-    // Calculates the sum of many numbers using the 3-for-2 method
-     void addManyNumbers(CtPtrs& sum,
-                        CtPtrMat& numbers,
-                        long sizeLimit,
-                        std::vector<zzX>* unpackSlotEncoding)
-    */
+    //todo notice that IT IS 3-for-2 (whoohhoo)
+    //// Calculates the sum of many numbers using the 3-for-2 method
+    static Point addManyPoints(std::vector<Point> points) {
+//        if (points.empty()) return static_cast<Point>(nullptr);
+        const long arr[] = {0, 0};
+        Point sum(points[0].public_key, arr);
+        std::vector<std::vector<helib::Ctxt>> summands; // = {encrypted_a, encrypted_b, encrypted_c};
+        for (short dim = 0; dim < DIM; ++dim) {
+            summands.clear();
+            for (Point & point : points) summands.push_back(point[dim]);
+            helib::CtPtrMat_vectorCt summands_wrapper(summands);
+            helib::CtPtrs_vectorCt result_wrapper(sum.cCoordinates[dim]);
+//            std::vector<helib::Ctxt> encrypted_result;
+//            helib::CtPtrs_vectorCt result_wrapper(encrypted_result);
+            // Calculates the sum of many numbers using the 3-for-2 method
+            addManyNumbers(result_wrapper,
+                                summands_wrapper,
+                                OUT_SIZE,   // sizeLimit=0 means use as many bits as needed.
+                                &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
+            );
+        }
+        return sum;
+    }
 
     /*
      * multiply  an encrypted point by an encrypted bit
@@ -88,15 +102,15 @@ public:
     Point operator*(Ctxt &bit) const {
         if (bit.isEmpty()) return *this; //todo consider
         if (this->isEmpty()) return Point(this->public_key);
-//        const long arr[] = {0, 0};
+        //        const long arr[] = {0, 0};
         Point product(*this);
         for (int dim = 0; dim < DIM; ++dim) {
             helib::CtPtrs_vectorCt result_wrapper(product.cCoordinates[dim]);
-//                vecCopy(product.cCoordinates[dim], this->cCoordinates[dim], BIT_SIZE);
-                binaryMask(result_wrapper, bit);
-//                for (long i = 0; i < resSize; i++)
-//                    productCoors[i]->multiplyBy(*(lhs[0]));
-//                return;
+            //                vecCopy(product.cCoordinates[dim], this->cCoordinates[dim], BIT_SIZE);
+            binaryMask(result_wrapper, bit);
+            //                for (long i = 0; i < resSize; i++)
+            //                    productCoors[i]->multiplyBy(*(lhs[0]));
+            //                return;
         }
         return product;
 
@@ -127,8 +141,8 @@ public:
                     helib::CtPtrs_vectorCt(point.cCoordinates[dim]),
                     helib::CtPtrs_vectorCt(this->cCoordinates[dim]),
                     false,
-                                        OUT_SIZE ,   // sizeLimit=0 means use as many bits as needed.
-                                    &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
+                    OUT_SIZE,   // sizeLimit=0 means use as many bits as needed.
+                    &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
             );
         }
         return product;

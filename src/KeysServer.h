@@ -85,7 +85,14 @@ public:
         return context.getCtxtPrimes(nprimes);
     }
 
-    std::vector<long> decryptCtxt(helib::Ctxt);
+    helib::Ctxt enccryptCtxt(long l){
+        NTL::ZZX pl(l);
+        helib::Ctxt cl(pubKey);
+        secKey.Encrypt(cl, pl);
+        return cl;
+    }
+
+    long decryptCtxt(helib::Ctxt);
 
     long decryptNum(std::vector<helib::Ctxt> cNum, bool isProduct=false);
     /*{

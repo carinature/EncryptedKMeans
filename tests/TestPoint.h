@@ -10,6 +10,7 @@ public:
     static void testAddition();
     static void testAddManyPoints();
     static void testMultiplication();
+    static void testMultiplicationByBit();
 };
 
 #endif //ENCRYPTEDKMEANS_TESTPOINT_H

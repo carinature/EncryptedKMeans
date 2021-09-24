@@ -8,7 +8,7 @@ void TestKeysServer::testConstructor() {
 
     //    loggerTestClient.log("testConstructor");
     cout << " ------ testConstructor ------ " << endl ;
-    KeysServer server;// = KeysServer();
+    KeysServer server;
 //    Client client(server);
     //    loggerTestClient.print_log();
     cout << " ------ testConstructor finished ------ " << endl << endl;

@@ -10,6 +10,14 @@ class TestKeysServer {
 
 public:
     static void testConstructor();
+
+    static void testEncryptCtxt();
+
+    static void testDecryptCtxt();
+
+    static void testEncryptNum();
+
+    static void testDecryptNum();
 };
 
 

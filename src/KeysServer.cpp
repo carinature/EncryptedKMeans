@@ -146,11 +146,13 @@ KeysServer::KeysServer(long prm, long bitSize, bool bootstrap, long seed, long n
 
 }
 
-long KeysServer::decryptNum(std::vector<helib::Ctxt> cNum, bool isProduct) {
+//long KeysServer::decryptNum(std::vector<helib::Ctxt> cNum, bool isProduct) {
+long KeysServer::decryptNum(std::vector<helib::Ctxt> cNum) {
     long pNum = 0;
     NTL::ZZX pp;
-    int out_size = (1 + isProduct) * BIT_SIZE;
-    for (int bit = 0; bit < out_size; ++bit) {
+//    int out_size = (1 + isProduct) * BIT_SIZE;
+    //    for (int bit = 0; bit < out_size; ++bit) {
+    for (int bit = 0; bit < cNum.size(); ++bit) {
         secKey.Decrypt(pp, cNum[bit]);
 //        printNameVal(pp);
         if (IsOne(pp)) pNum+=std::pow(2, bit);

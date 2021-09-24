@@ -12,8 +12,13 @@
 int main() {
 
 
-/*    cout << " ============ Test KeysServer ============ " << endl;
+    cout << " ============ Test KeysServer ============ " << endl;
     TestKeysServer::testConstructor();
+    TestKeysServer::testEncryptCtxt();
+    TestKeysServer::testDecryptCtxt();
+//    TestKeysServer::testEncryptNum();
+//    TestKeysServer::testDecryptNum();
+
     cout << " ============ Test KeysServer Finished ============ " << endl << endl;
 
     cout << " ============ Test Point ============ " << endl;
@@ -21,12 +26,10 @@ int main() {
     TestPoint::testEncryptCoordinates();
     TestPoint::testOperatorSubscript();
     TestPoint::testIsEmpty();
-    TestPoint::testAddition();*/
-
+    TestPoint::testAddition();
     TestPoint::testAddManyPoints();
-
-/*
     TestPoint::testMultiplication();
+    TestPoint::testMultiplicationByBit();
     cout << " ============ Test Point Finished ============ " << endl << endl;
 
     cout << " ============ Test Client ============ " << endl;
@@ -41,7 +44,6 @@ int main() {
     TestDataServer::testScratchPoint();
     TestDataServer::testCompareClients();
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
-*/
 
 
 

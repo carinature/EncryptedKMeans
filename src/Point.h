@@ -77,21 +77,23 @@ public:
     static Point addManyPoints(std::vector<Point> points) {
 //        if (points.empty()) return static_cast<Point>(nullptr);
         const long arr[] = {0, 0};
-        Point sum(points[0].public_key, arr);
+//        std::vector<std::vector<helib::Ctxt>>> c
+        Point sum(points[0].public_key);//, arr);
         std::vector<std::vector<helib::Ctxt>> summands; // = {encrypted_a, encrypted_b, encrypted_c};
         for (short dim = 0; dim < DIM; ++dim) {
             summands.clear();
             for (Point & point : points) summands.push_back(point[dim]);
             helib::CtPtrMat_vectorCt summands_wrapper(summands);
-            helib::CtPtrs_vectorCt result_wrapper(sum.cCoordinates[dim]);
-//            std::vector<helib::Ctxt> encrypted_result;
-//            helib::CtPtrs_vectorCt result_wrapper(encrypted_result);
+//            helib::CtPtrs_vectorCt result_wrapper(sum.cCoordinates[dim]);
+            std::vector<helib::Ctxt> encrypted_result;
+            helib::CtPtrs_vectorCt result_wrapper(encrypted_result);
             // Calculates the sum of many numbers using the 3-for-2 method
             addManyNumbers(result_wrapper,
                                 summands_wrapper,
-                                OUT_SIZE,   // sizeLimit=0 means use as many bits as needed.
+                                points.size()*OUT_SIZE,   // sizeLimit=0 means use as many bits as needed.
                                 &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
             );
+            sum.cCoordinates[dim] = encrypted_result;
         }
         return sum;
     }
@@ -114,7 +116,7 @@ public:
         }
         return product;
 
-        /*  todo note this two functions from @file binaryArith.cpp :
+        /*  todo notice this two functions from @file binaryArith.cpp :
                 //! Apply mask across the vector of bits slot-wise.
                 void binaryMask(CtPtrs& bits, const Ctxt& mask)        {
                     for (long i = 0; i < bits.size(); ++i)

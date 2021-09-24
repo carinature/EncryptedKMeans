@@ -146,6 +146,35 @@ KeysServer::KeysServer(long prm, long bitSize, bool bootstrap, long seed, long n
 
 }
 
+
+//long KeysServer::decrypt(const helib::Ctxt& cBit) {
+//    //    long pBit = 0;
+//    NTL::ZZX pp;
+//    secKey.Decrypt(pp, cBit);
+//    return IsOne(pp);
+//}
+//
+//long KeysServer::decrypt(const std::vector<helib::Ctxt> cNum) {
+//    long pNum = 0;
+//    NTL::ZZX pp;
+//    for (int bit = 0; bit < bitSize; ++bit) {
+//        secKey.Decrypt(pp, cNum[bit]);
+//        printNameVal(pp);
+//        if (IsOne(pp)) pNum += std::pow(2, bit);
+//        printNameVal(pNum);
+//    }
+//    return pNum;
+//}
+//
+//std::vector<long> KeysServer::decrypt(const Point& p) {
+//    cout << "KeysServer::decryptCoordinates" << endl;
+//    keysServerLogger.log("decryptCoordiantes", log_debug);
+//    std::vector<long> dCoordinates(DIM);
+//    if (!p[0][0].isEmpty()) return dCoordinates;
+//    for (int dim = 0; dim < DIM; ++dim) dCoordinates[dim] = decrypt(p[dim]);
+//    return dCoordinates;
+//}
+
 //std::vector<long> KeysServer::decryptCtxt(helib::Ctxt ctxt) {
 //#if VERBOSE
 //    cout << "decryptCoordiantes" << endl;

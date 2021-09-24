@@ -9,7 +9,7 @@
     "decimal_digits": 2,
     "conversion_factor": "pow(10, DECIMAL_DIGITS)",
     "conversion_factor_comment": "for conversion from double-type to long-type (helib compatibility)",
-    "bitSize": 8,
+    "bitSize": 10,
     "bitSize_comment": "0 - 2^bitSize is the range of the numbers for encryption. if bigger the result will be the original number modudu the range",
     "TODO": "change bit size to 10, if floats will be represented as longs (helib might have a new option for floats",
     "N_Threads": 1

@@ -10,6 +10,7 @@
 #include "utils/aux.h"
 
 int main() {
+/*
 
     cout << " ============ Test KeysServer ============ " << endl;
     TestKeysServer::testConstructor();
@@ -20,8 +21,9 @@ int main() {
     TestPoint::testEncryptCoordinates();
     TestPoint::testOperatorSubscript();
     TestPoint::testIsEmpty();
+    */
     TestPoint::testAddition();
-    TestPoint::testMultiplication();
+/*    TestPoint::testMultiplication();
     cout << " ============ Test Point Finished ============ " << endl << endl;
 
     cout << " ============ Test Client ============ " << endl;
@@ -36,5 +38,6 @@ int main() {
     TestDataServer::testScratchPoint();
     TestDataServer::testCompareClients();
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
+*/
 
 }

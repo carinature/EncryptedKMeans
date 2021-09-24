@@ -21,9 +21,9 @@
  * Manages protocols for creating Client and Data-Centers (DataServer) shared keys.
  * */
 class KeysServer {
+public:    static std::vector<helib::zzX> unpackSlotEncoding;
 
 protected:
-    static std::vector<helib::zzX> unpackSlotEncoding;
     constexpr static long mValues[][15] = {
             // { p, phi(m),   m,   d, m1, m2, m3,    g1,   g2,   g3, ord1,ord2,ord3, B,c}
             {2, 48,    105,   12, 3,  35,  0,   71,    76,    0,     2,  2,  0,   25, 2},
@@ -58,8 +58,8 @@ public:
     // encryptions done via publicKey will actually use the secret key, which has
     // certain advantages.  If one left out the "&", then encryptions done via
     // publicKey will NOT use the secret key.
-    const helib::PubKey &pubKey;
-    helib::PubKey getPublicKey() {
+     helib::PubKey &pubKey;
+    helib::PubKey & getPublicKey() {
         return pubKey;
     }
 
@@ -86,7 +86,18 @@ public:
     }
 
     std::vector<long> decryptCtxt(helib::Ctxt);
-    std::vector<long> decryptNum(std::vector<helib::Ctxt>);
+
+    long decryptNum(std::vector<helib::Ctxt> cNum) {
+        long pNum = 0;
+            NTL::ZZX pp;
+            for (int bit = 0; bit < bitSize; ++bit) {
+                secKey.Decrypt(pp, cNum[bit]);
+                //            printNameVal(pp);
+                if (IsOne(pp)) pNum+=std::pow(2, bit);
+                //            printNameVal(dCoordinates[dim]);
+            }
+        return pNum;
+    }
 
 protected:
 

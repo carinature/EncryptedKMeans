@@ -5,7 +5,8 @@
 #include "TestPoint.h"
 
 #include "utils/Logger.h"
-#include "src/Client.h"
+#include "src/Point.h"
+//#include "src/Client.h"
 
 void TestPoint::testConstructor() {
     //    loggerTestClient.log("testConstructor");
@@ -69,9 +70,16 @@ void TestPoint::testAddition() {
     long arr[DIM];
     for (long &c :arr) c = rand() % bitSizeRange;
     for (auto a: arr) printNameVal(a);
+    //  this option is good for readability
+    //      `const helib::PubKey &pubKey = server.getPublicKey();`
+    //      but the way it is now (asking the serv for a pubKey for each point)
+    //      makes more sense in a "real world" application
     Point point(server.getPublicKey(), arr);
     Point point2(server.getPublicKey(), arr);
-//    Point sum = point+point2;
+    Point sum = point+point2;
+//    long pSum = server.decryptNum(sum[0]);
+//    printNameVal(pSum);pSum = server.decryptNum(sum[1]);
+    printNameVal(server.decryptNum(sum[0]));
     cout << " ------ testAddition finished ------ " << endl << endl;
 //
 //    // Let's encrypt something!

@@ -9,7 +9,6 @@
 
 #include <helib/FHE.h>
 #include <helib/helib.h>
-#include <helib/binaryArith.h>
 #include <helib/intraSlot.h>
 
 #include "properties.h"

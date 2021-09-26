@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <helib/helib.h>
+#include <helib/binaryCompare.h>
+#include <helib/binaryArith.h>
 
 #include "utils/aux.h" // for including KeysServer.h
 
@@ -75,23 +77,24 @@ public:
     //todo notice that IT IS 3-for-2 (whoohhoo)
     //// Calculates the sum of many numbers using the 3-for-2 method
     static Point addManyPoints(std::vector<Point> points) {
-//        if (points.empty()) return static_cast<Point>(nullptr);
+        //        if (points.empty()) return static_cast<Point>(nullptr);
         const long arr[] = {0, 0};
-//        std::vector<std::vector<helib::Ctxt>>> c
+        //        std::vector<std::vector<helib::Ctxt>>> c
         Point sum(points[0].public_key);//, arr);
         std::vector<std::vector<helib::Ctxt>> summands; // = {encrypted_a, encrypted_b, encrypted_c};
         for (short dim = 0; dim < DIM; ++dim) {
             summands.clear();
-            for (Point & point : points) summands.push_back(point[dim]);
+            for (Point &point : points) summands.push_back(point[dim]);
             helib::CtPtrMat_vectorCt summands_wrapper(summands);
-//            helib::CtPtrs_vectorCt result_wrapper(sum.cCoordinates[dim]);
+            //            helib::CtPtrs_vectorCt result_wrapper(sum.cCoordinates[dim]);
             std::vector<helib::Ctxt> encrypted_result;
             helib::CtPtrs_vectorCt result_wrapper(encrypted_result);
             // Calculates the sum of many numbers using the 3-for-2 method
             addManyNumbers(result_wrapper,
-                                summands_wrapper,
-                                points.size()*OUT_SIZE,   // sizeLimit=0 means use as many bits as needed.
-                                &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
+                           summands_wrapper,
+                           points.size() *
+                           OUT_SIZE,   // sizeLimit=0 means use as many bits as needed.
+                           &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
             );
             sum.cCoordinates[dim] = encrypted_result;
         }
@@ -148,6 +151,29 @@ public:
             );
         }
         return product;
+    }
+
+    helib::Ctxt isBiggerThan(Point &p, short currentDim = DIM - 1) {
+        Ctxt mu(public_key), ni(public_key);
+        compareTwoNumbers(mu,
+                          ni,
+                          helib::CtPtrs_vectorCt(this->cCoordinates[currentDim]),
+                          helib::CtPtrs_vectorCt(p.cCoordinates[currentDim]),
+                          false,
+                          &KeysServer::unpackSlotEncoding
+        );
+        return mu;
+        /* todo notice there is also // comparison with max and min
+         *  maybe useful later
+         *      compareTwoNumbers(wMax,
+                      wMin,
+                      mu,
+                      ni,
+                      helib::CtPtrs_VecCt(enca),
+                      helib::CtPtrs_VecCt(encb),
+                      false,
+                      &unpackSlotEncoding);
+                      */
     }
 
 

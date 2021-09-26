@@ -12,7 +12,7 @@
 int main() {
 
 
-    cout << " ============ Test KeysServer ============ " << endl;
+/*    cout << " ============ Test KeysServer ============ " << endl;
     TestKeysServer::testConstructor();
     TestKeysServer::testEncryptCtxt();
     TestKeysServer::testDecryptCtxt();
@@ -29,7 +29,9 @@ int main() {
     TestPoint::testAddition();
     TestPoint::testAddManyPoints();
     TestPoint::testMultiplication();
-    TestPoint::testMultiplicationByBit();
+    TestPoint::testMultiplicationByBit();*/
+    TestPoint::testCompare();
+/*
     cout << " ============ Test Point Finished ============ " << endl << endl;
 
     cout << " ============ Test Client ============ " << endl;
@@ -44,6 +46,7 @@ int main() {
     TestDataServer::testScratchPoint();
     TestDataServer::testCompareClients();
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
+*/
 
 
 

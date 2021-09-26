@@ -11,6 +11,8 @@ public:
     static void testAddManyPoints();
     static void testMultiplication();
     static void testMultiplicationByBit();
+
+    static void testCompare();
 };
 
 #endif //ENCRYPTEDKMEANS_TESTPOINT_H

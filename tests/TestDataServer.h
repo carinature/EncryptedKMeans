@@ -7,9 +7,10 @@ class TestDataServer {
 public:
     static void testConstructor();
     static void testScratchPoint();
-    static void testCompareClients();
+    static void testComparePoints();
 //    static void testAddiiton();
 //    static void testMultiplication();
+static void testRetrievePoints();
 };
 
 

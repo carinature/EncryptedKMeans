@@ -181,7 +181,7 @@ long KeysServer::decryptNum(std::vector<helib::Ctxt> cNum) {
 //}
 //
 //std::vector<long> KeysServer::decrypt(const Point& p) {
-//    cout << "KeysServer::decryptCoordinates" << endl;
+//    cout << "KeysServer::decryptCoordinate" << endl;
 //    keysServerLogger.log("decryptCoordiantes", log_debug);
 //    std::vector<long> dCoordinates(DIM);
 //    if (!p[0][0].isEmpty()) return dCoordinates;

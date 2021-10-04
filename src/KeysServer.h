@@ -129,6 +129,7 @@ protected:
         return secKey;
     }
     friend class TestPoint;
+    friend class TestDataServer;
     //fixme -https://stackoverflow.com/questions/3903180/make-a-friend-class-have-only-special-access-to-1-function-of-another-class
     friend class Client;
 

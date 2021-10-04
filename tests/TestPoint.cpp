@@ -23,7 +23,7 @@ void TestPoint::testEncryptCoordinates() {
     cout << " ------ testEncryptCoordinates ------ " << endl;
     KeysServer server;
     long arr[DIM];
-    for (long &c :arr) c = rand() % bitSizeRange;
+    for (long &c :arr) c = rand() % NUMBERS_RANGE;
     Point point(server.getPublicKey(), arr);
     cout << " ------ testEncryptCoordinates finished ------ " << endl << endl;
 }
@@ -33,7 +33,7 @@ void TestPoint::testOperatorSubscript() {
     cout << " ------ testOperatorSubscript ------ " << endl;
     KeysServer server;
     long arr[DIM];
-    for (long &c :arr) c = rand() % bitSizeRange;
+    for (long &c :arr) c = rand() % NUMBERS_RANGE;
     Point point(server.getPublicKey(), arr);
     std::vector<long> coordinate;
     for (short int dim = 0; dim < DIM; ++dim) {
@@ -57,7 +57,7 @@ void TestPoint::testIsEmpty() {
     assert(true == emptyPoint.isEmpty());
 
     long arr[DIM];
-    for (long &c :arr) c = rand() % bitSizeRange;
+    for (long &c :arr) c = rand() % NUMBERS_RANGE;
     Point point(server.getPublicKey(), arr);
     assert(false == point.isEmpty());
 
@@ -70,8 +70,8 @@ void TestPoint::testAddition() {
     KeysServer server;
     long arr[DIM], arr2[DIM], arrSum[DIM];
     for (int dim = 0; dim < DIM; ++dim) {
-        arr[dim] = rand() % bitSizeRange;
-        arr2[dim] = rand() % bitSizeRange;
+        arr[dim] = rand() % NUMBERS_RANGE;
+        arr2[dim] = rand() % NUMBERS_RANGE;
         arrSum[dim] = arr[dim] + arr2[dim];
         //            for (auto a: arr) printNameVal(a);
     }
@@ -93,8 +93,8 @@ void TestPoint::testAddManyPoints() {
     KeysServer server;
     long arr[DIM], arr2[DIM], arr3[DIM], arrSum[DIM];
     for (int dim = 0; dim < DIM; ++dim) {
-        arr[dim] = rand() % (bitSizeRange / 2); //fixme should be full range?
-        arr2[dim] = rand() % (bitSizeRange / 2);
+        arr[dim] = rand() % (NUMBERS_RANGE / 2); //fixme should be full range?
+        arr2[dim] = rand() % (NUMBERS_RANGE / 2);
         arr3[dim] = arr[dim] + arr2[dim];
         arrSum[dim] = arr[dim] + arr2[dim] + arr3[dim];
     }
@@ -108,9 +108,31 @@ void TestPoint::testAddManyPoints() {
                                              Point(server.getPublicKey(), arr3)
                                      });
     for (int dim = 0; dim < DIM; ++dim) {
-        //        printNameVal(arrSum[dim]);
-        //        printNameVal(server.decryptNum(sum[dim]));
+                printNameVal(arrSum[dim]);
+                printNameVal(server.decryptNum(sum[dim]));
         assert(arrSum[dim] == server.decryptNum(sum[dim]));
+    }
+
+    std::vector<Point> points;
+    for (int i = 0; i < 40; ++i) {
+        points.emplace_back(Point(server.getPublicKey(), arr));
+        points.emplace_back(Point(server.getPublicKey(), arr2));
+        points.emplace_back(Point(server.getPublicKey(), arr3));
+        points.emplace_back(Point(server.getPublicKey(), arrSum));
+    }
+    Point sum2 = Point::addManyPoints(points);
+    printNameVal(server.decryptNum(sum2[0]));
+    printNameVal(arrSum[0]);
+    printNameVal(server.decryptNum(sum2[1]));
+    printNameVal(arrSum[1]);
+    for (int dim = 0; dim < DIM; ++dim) {
+                printNameVal(arrSum[dim]);
+                printNameVal(80*arrSum[dim]);
+                printNameVal(server.decryptNum(sum2[dim]));
+        assert(80*arrSum[dim] == server.decryptNum(sum2[dim]));
+        //fixme this part of the test acts weird when running after _all_ the other tests.
+        // incidentally, looks like the 2nd coordinate of sum is just a copy of the 1st.
+        // could be problem w/ the decryption result?
     }
     cout << " ------ testAddManyPoints finished ------ " << endl << endl;
 }
@@ -121,8 +143,8 @@ void TestPoint::testMultiplication() {
     KeysServer server;
     long arr[DIM], arr2[DIM], arrProd[DIM];
     for (int dim = 0; dim < DIM; ++dim) {
-        arr[dim] = rand() % (bitSizeRange / 8);
-        arr2[dim] = rand() % (bitSizeRange / 8);
+        arr[dim] = rand() % (NUMBERS_RANGE / 8);
+        arr2[dim] = rand() % (NUMBERS_RANGE / 8);
         arrProd[dim] = arr[dim] * arr2[dim];
     }
     //  this option is good for readability
@@ -142,7 +164,7 @@ void TestPoint::testMultiplicationByBit() {
     cout << " ------ testMultiplicationByBit ------ " << endl;
     KeysServer server;
     long arr[DIM], arr0[] = {0, 0};
-    for (int dim = 0; dim < DIM; ++dim) arr[dim] = rand() % bitSizeRange;
+    for (int dim = 0; dim < DIM; ++dim) arr[dim] = rand() % NUMBERS_RANGE;
     //  this option is good for readability
     //      `const helib::PubKey &pubKey = server.getPublicKey();`
     //      but the way it is now (asking the serv for a pubKey for each point)
@@ -163,19 +185,21 @@ void TestPoint::testMultiplicationByBit() {
 void TestPoint::testCompare() {    //    loggerTestClient.log("testCompare");
     cout << " ------ testCompare ------ " << endl;
     KeysServer server;
-    long arr[DIM], arr2[DIM], arrSum[DIM];
+    long arr[DIM], arr2[DIM];
     for (int dim = 0; dim < DIM; ++dim) {
-        arr[dim] = rand() % bitSizeRange;
-        arr2[dim] = rand() % bitSizeRange;
+        arr[dim] = rand() % NUMBERS_RANGE;
+        arr2[dim] = rand() % NUMBERS_RANGE;
     }
     Point point(server.getPublicKey(), arr);
     Point point2(server.getPublicKey(), arr2);
     for (short dim = 0; dim < DIM; ++dim) {
-        helib::Ctxt res = point.isBiggerThan(point2, dim);
-        assert((arr[dim] > arr2[dim]) == server.decryptCtxt(res));
+        for (int i = 0; i < 100; ++i) {
+            helib::Ctxt res = point.isBiggerThan(point2, dim);
+            assert((arr[dim] > arr2[dim]) == server.decryptCtxt(res));
 
-        helib::Ctxt res2 = point2.isBiggerThan(point, dim);
-        assert((arr2[dim] > arr[dim]) == server.decryptCtxt(res2));
+            helib::Ctxt res2 = point2.isBiggerThan(point, dim);
+            assert((arr2[dim] > arr[dim]) == server.decryptCtxt(res2));
+        }
     }
     cout << " ------ testCompare finished ------ " << endl << endl;
 }

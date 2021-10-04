@@ -1,7 +1,7 @@
 {
   "data_properties": {
     "number_of_points": 40,
-    "DIM": 1,
+    "DIM": 2,
     "range_lim": 1,
     "range_lim_comment": "for python, defines the range of the points (from BOTTOM_LIM to RANGE_LIM)",
     "low_limit": 0,

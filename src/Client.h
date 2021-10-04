@@ -33,6 +33,7 @@ public:
     /**
      *
      * */
+     //todo consider returning arr instad of vector (DIM is constant throughout the program)
     std::vector<std::vector<helib::Ctxt>> encryptPoint(const long coordinates[] = nullptr);
 
     Client& addEncryptedPoint(Point & point) ;
@@ -40,7 +41,7 @@ public:
     /**
      *
      * */
-    std::vector<long> decryptCoordinates(int i=0);
+    std::vector<long> decryptCoordinate(int i=0);
 
     /**
      *

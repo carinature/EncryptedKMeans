@@ -80,23 +80,32 @@ public:
         //        if (points.empty()) return static_cast<Point>(nullptr);
         const long arr[] = {0, 0};
         //        std::vector<std::vector<helib::Ctxt>>> c
-        Point sum(points[0].public_key);//, arr);
+        Point sum(points.back().public_key);//, arr);
         std::vector<std::vector<helib::Ctxt>> summands; // = {encrypted_a, encrypted_b, encrypted_c};
+        std::vector<helib::Ctxt> encrypted_result;
         for (short dim = 0; dim < DIM; ++dim) {
-            summands.clear();
-            for (Point &point : points) summands.push_back(point[dim]);
+//            if (80 < points.size()) {
+//                cout << "lskdjflksdjflksdjflksfjslkfj" << endl;
+//                for (Point &point : points) {
+//                    summands.push_back(point.cCoordinates[0]);
+//                    summands.push_back(point.cCoordinates[0]);
+//                }
+//            } else
+                for (Point &point : points) summands.push_back(point.cCoordinates[dim]);
             helib::CtPtrMat_vectorCt summands_wrapper(summands);
             //            helib::CtPtrs_vectorCt result_wrapper(sum.cCoordinates[dim]);
-            std::vector<helib::Ctxt> encrypted_result;
             helib::CtPtrs_vectorCt result_wrapper(encrypted_result);
             // Calculates the sum of many numbers using the 3-for-2 method
-            addManyNumbers(result_wrapper,
-                           summands_wrapper,
-                           points.size() *
-                           OUT_SIZE,   // sizeLimit=0 means use as many bits as needed.
-                           &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
+            addManyNumbers(
+                    result_wrapper,
+                    summands_wrapper
+                    //                    ,
+                    //                    points.size() * BIT_SIZE * 2, // sizeLimit=0 means use as many bits as needed.
+                    //                    &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
             );
             sum.cCoordinates[dim] = encrypted_result;
+            encrypted_result.clear();
+            summands.clear();
         }
         return sum;
     }

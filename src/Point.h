@@ -11,12 +11,20 @@
 
 
 class Point {
-    const helib::PubKey &public_key;// = encryptionKey;
     friend class Client;
 
     friend class KeysServer;
 
+    //    friend class TestClient;
+
+    /*  todo for DBG. remove */
+    std::vector<long> pCoordinatesDBG;
+    bool isCopyDBG = false;
+    bool isEmptyDBG = true;
+    const helib::PubKey *pubKeyPtrDBG;
+
 public:
+    const helib::PubKey &public_key;// = encryptionKey;
     std::vector<std::vector<helib::Ctxt> > cCoordinates;
 
     // Each bit of the binary number is encoded into a single ciphertext. Thus
@@ -35,25 +43,59 @@ public:
     //        long BIT_SIZE = 16;
     //        long OUT_SIZE = 2 * BIT_SIZE;
     explicit Point(const helib::PubKey &public_key, const long coordinates[] = nullptr) :
+    //            public_key(public_key){
             public_key(public_key),
-            cCoordinates(DIM, std::vector(BIT_SIZE, helib::Ctxt(public_key))) {
+            pubKeyPtrDBG(&public_key),
+            cCoordinates(DIM, std::vector(BIT_SIZE, helib::Ctxt(this->public_key))) {
+        //        this->cCoordinates.reserve(DIM);
+        pCoordinatesDBG.reserve(DIM);
         cout << " Point Init" << endl;
-        if (coordinates)
-            for (int dim = 0; dim < DIM; ++dim)
-                for (long bit = 0;
-                     bit < BIT_SIZE; ++bit) // Extract the i'th bit of coordinates[dim]
+        if (coordinates) {
+            isEmptyDBG = false;
+            for (int dim = 0; dim < DIM; ++dim) {
+                pCoordinatesDBG.push_back(coordinates[dim]);
+                // Extract the i'th bit of coordinates[dim]
+                for (long bit = 0; bit < BIT_SIZE; ++bit)
                     this->public_key.Encrypt(cCoordinates[dim][bit],
                                              NTL::to_ZZX((coordinates[dim] >> bit) & 1));
+            }
+        }
     }
-
-
-    const std::vector<helib::Ctxt> &operator[](short int i) const {
-        return cCoordinates[i];
-    }
-
 
     bool isEmpty() const {
         return cCoordinates[0][0].isEmpty();
+    }
+
+    Point(const Point &point) :
+            public_key(point.public_key),
+            pubKeyPtrDBG(&(point.public_key)),
+            //            cCoordinates(DIM, std::vector(BIT_SIZE, helib::Ctxt(public_key))),
+            cCoordinates(point.cCoordinates),
+            pCoordinatesDBG(point.pCoordinatesDBG),
+            isEmptyDBG(point.isEmptyDBG),
+            isCopyDBG(true) {
+        cout << " Point copy" << endl;
+        //        pCoordinatesDBG.reserve(DIM);
+        if (!point.isEmpty())
+            for (int dim = 0; dim < DIM; ++dim) {
+                //                .push_back(pCoordinatesDBG[dim]);
+                cCoordinates[dim] = point.cCoordinates[dim];
+            }
+    }
+
+//  todo need?
+    //    Point operator=(Point &point) {
+    //        cout << " Point assign" << endl;
+    //        public_key. = point.public_key;
+    //        if (point.isEmpty()) return
+    //            for (int dim = 0; dim < DIM; ++dim)
+    //                cCoordinates[dim] = point.cCoordinates[dim];
+    //    }
+
+
+    const std::vector<helib::Ctxt> &operator[](short int i) const {
+        //        if (isEmpty()) return std::vector<helib::Ctxt>(helib::Ctxt(public_key));
+        return cCoordinates[i];
     }
 
     Point operator+(Point &point) {
@@ -82,29 +124,21 @@ public:
         //        std::vector<std::vector<helib::Ctxt>>> c
         Point sum(points.back().public_key);//, arr);
         std::vector<std::vector<helib::Ctxt>> summands; // = {encrypted_a, encrypted_b, encrypted_c};
-        std::vector<helib::Ctxt> encrypted_result;
         for (short dim = 0; dim < DIM; ++dim) {
-//            if (80 < points.size()) {
-//                cout << "lskdjflksdjflksdjflksfjslkfj" << endl;
-//                for (Point &point : points) {
-//                    summands.push_back(point.cCoordinates[0]);
-//                    summands.push_back(point.cCoordinates[0]);
-//                }
-//            } else
-                for (Point &point : points) summands.push_back(point.cCoordinates[dim]);
+            for (Point &point : points) summands.push_back(point.cCoordinates[dim]);
             helib::CtPtrMat_vectorCt summands_wrapper(summands);
-            //            helib::CtPtrs_vectorCt result_wrapper(sum.cCoordinates[dim]);
-            helib::CtPtrs_vectorCt result_wrapper(encrypted_result);
+            helib::CtPtrs_vectorCt result_wrapper(sum.cCoordinates[dim]);
+            //            std::vector<helib::Ctxt> encrypted_result;
+            //            helib::CtPtrs_vectorCt result_wrapper(encrypted_result);
             // Calculates the sum of many numbers using the 3-for-2 method
             addManyNumbers(
                     result_wrapper,
-                    summands_wrapper
-                    //                    ,
-                    //                    points.size() * BIT_SIZE * 2, // sizeLimit=0 means use as many bits as needed.
-                    //                    &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
+                    summands_wrapper,
+                    2*points.size() * BIT_SIZE , // sizeLimit=0 means use as many bits as needed.
+                    &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
             );
-            sum.cCoordinates[dim] = encrypted_result;
-            encrypted_result.clear();
+            //            sum.cCoordinates[dim] = encrypted_result;
+            //            encrypted_result.clear();
             summands.clear();
         }
         return sum;

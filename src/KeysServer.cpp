@@ -101,50 +101,7 @@ std::vector<helib::zzX> KeysServer::unpackSlotEncoding; //todo move? already def
 // They were chosen to provide the best performance of execution while
 // providing the context to demonstrate how to use the HElib's FHE encryption.
 // (The parameters may not provide the security level that might be required by real use/application scenarios.)
-KeysServer::KeysServer(long prm, long bitSize, bool bootstrap, long seed, long nthreads) :
-        prm(validatePrm(prm)),
-        bitSize(correctBitSize(5, bitSize)),
-        bootstrap(bootstrap),
-        seed(seed),
-        nthreads(nthreads),
-        vals(mValues[prm]),
-        p(vals[0]),
-        m(vals[2]),
-        mvec(calculateMvec(vals)),
-        gens(calculateGens(vals)),
-        ords(calculateOrds(vals)),
-        c(vals[14]),
-        L(calculateLevels(bootstrap, bitSize)),
-        context(helib::ContextBuilder<helib::BGV>()
-                        .m(m)
-                        .p(p)
-                        .r(1)
-                        .gens(gens)
-                        .ords(ords)
-                        .buildModChain(false)
-                        .build()),
-        secKey(prepareContext(context)),
-        // In HElib, the SecKey class is actually a subclass if the PubKey class.  So
-        // one way to initialize a public key object is like this:
-
-        // TECHNICAL NOTE: Note the "&" in the declaration of publicKey. Since the
-        // SecKey class is a subclass of PubKey, this particular PubKey object is
-        // ultimately a SecKey object, and through the magic of C++ polymorphism,
-        // encryptions done via publicKey will actually use the secret key, which has
-        // certain advantages.  If one left out the "&", then encryptions done via
-        // publicKey will NOT use the secret key.
-        pubKey(secKey) {
-
-    if (seed) NTL::SetSeed(NTL::ZZ(seed));
-    if (nthreads > 1) NTL::SetNumThreads(nthreads);
-
-    prepareSecKey(secKey);
-
-    helib::activeContext = &context; // make things a little easier sometimes
-
-    helib::setupDebugGlobals(&secKey, context.shareEA());
-
-}
+//KeysServer::KeysServer(long prm, long bitSize, bool bootstrap, long seed, long nthreads)
 
 //long KeysServer::decryptNum(std::vector<helib::Ctxt> cNum, bool isProduct) {
 long KeysServer::decryptNum(std::vector<helib::Ctxt> cNum) {

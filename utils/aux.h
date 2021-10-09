@@ -30,7 +30,9 @@ using EncryptedNum = std::vector<helib::Ctxt>;
 std::chrono::time_point<std::chrono::system_clock> NowTime();
 
 std::string
-printDuration(const std::chrono::time_point<std::chrono::system_clock> &t1, const std::string &funcName = "");
+printDuration(const std::chrono::time_point<std::chrono::system_clock> &t1,
+              const std::string &funcName = "");
+
 
 
 #endif //ENCKMEAN_AUX_H

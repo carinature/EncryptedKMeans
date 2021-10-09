@@ -13,6 +13,7 @@
 #include <helib/zzX.h>
 #include <helib/Context.h>
 #include <helib/keys.h>
+#include <helib/debugging.h>
 
 /**
  * @class KeysServer
@@ -21,9 +22,21 @@
  * Manages protocols for creating Client and Data-Centers (DataServer) shared keys.
  * */
 class KeysServer {
-public:    static std::vector<helib::zzX> unpackSlotEncoding;
-
+public:
+    static std::vector<helib::zzX> unpackSlotEncoding;
+    helib::PubKey &pubKey;
+//    helib::PubKey &pubKeyRef;
+    //    publicKey.writeTo(str));
+    //    std::shared_ptr<helib::PubKey> deserialized_pkp;// =            std::make_shared<helib::PubKey>(helib::PubKey::readFrom(str, context));
 protected:
+    friend class TestPoint;
+
+    friend class TestDataServer;
+
+    //fixme -https://stackoverflow.com/questions/3903180/make-a-friend-class-have-only-special-access-to-1-function-of-another-class
+    friend class Client;
+
+
     constexpr static long mValues[][15] = {
             // { p, phi(m),   m,   d, m1, m2, m3,    g1,   g2,   g3, ord1,ord2,ord3, B,c}
             {2, 48,    105,   12, 3,  35,  0,   71,    76,    0,     2,  2,  0,   25, 2},
@@ -49,19 +62,10 @@ protected:
     const long c;
     const long L;
     helib::Context context;
-    helib::SecKey secKey; //private?
+    helib::SecKey secKey; //private? //reference?
+    helib::SecKey &secKeyRef; //private? //reference?
 
 public:
-    // TECHNICAL NOTE: Note the "&" in the declaration of publicKey. Since the
-    // SecKey class is a subclass of PubKey, this particular PubKey object is
-    // ultimately a SecKey object, and through the magic of C++ polymorphism,
-    // encryptions done via publicKey will actually use the secret key, which has
-    // certain advantages.  If one left out the "&", then encryptions done via
-    // publicKey will NOT use the secret key.
-     helib::PubKey &pubKey;
-    helib::PubKey & getPublicKey() {
-        return pubKey;
-    }
 
     //::Values(     prm,    bitSize,    bootstrap,  seed,   nthreads)
     // Parameters(  1,      5,          false,      0,      1)            // SLOW
@@ -70,9 +74,84 @@ public:
                         long bitSize = 5, // itSize of input integers (<=32)
                         bool bootstrap = false, // comparison with bootstrapping (??)
                         long seed = 0, // PRG seed
-                        long nthreads = 1); // number of threads
+                        long nthreads = 1) // number of threads
+            :
+            prm(validatePrm(prm)),
+            bitSize(correctBitSize(5, bitSize)),
+            bootstrap(bootstrap),
+            seed(seed),
+            nthreads(nthreads),
+            vals(mValues[prm]),
+            p(vals[0]),
+            m(vals[2]),
+            mvec(calculateMvec(vals)),
+            gens(calculateGens(vals)),
+            ords(calculateOrds(vals)),
+            c(vals[14]),
+            L(calculateLevels(bootstrap, bitSize)),
+            context(helib::ContextBuilder<helib::BGV>()
+                            .m(m)
+                            .p(p)
+                            .r(1)
+                            .gens(gens)
+                            .ords(ords)
+                            .buildModChain(false)
+                            .build()),
+            secKey(prepareContext(context)),
+            secKeyRef(secKey),
+            // In HElib, the SecKey class is actually a subclass if the PubKey class.  So
+            // one way to initialize a public key object is like this:
 
-    // Getters
+            // TECHNICAL NOTE: Note the "&" in the declaration of publicKey. Since the
+            // SecKey class is a subclass of PubKey, this particular PubKey object is
+            // ultimately a SecKey object, and through the magic of C++ polymorphism,
+            // encryptions done via publicKey will actually use the secret key, which has
+            // certain advantages.  If one left out the "&", then encryptions done via
+            // publicKey will NOT use the secret key.
+            pubKey(secKey) {
+
+        if (seed) NTL::SetSeed(NTL::ZZ(seed));
+        if (nthreads > 1) NTL::SetNumThreads(nthreads);
+
+        prepareSecKey(secKey);
+
+        helib::activeContext = &context; // make things a little easier sometimes
+
+        helib::setupDebugGlobals(&secKey, context.shareEA());
+
+    }
+
+    // TECHNICAL NOTE: Note the "&" in the declaration of publicKey. Since the
+    // SecKey class is a subclass of PubKey, this particular PubKey object is
+    // ultimately a SecKey object, and through the magic of C++ polymorphism,
+    // encryptions done via publicKey will actually use the secret key, which has
+    // certain advantages.  If one left out the "&", then encryptions done via
+    // publicKey will NOT use the secret key.
+    helib::PubKey &getPublicKey() const {
+        return pubKey;
+//        return deserialized_pkp;
+    }
+
+    helib::Ctxt encryptCtxt(bool b) {
+        NTL::ZZX pl(b);
+        helib::Ctxt cl(pubKey);
+        pubKey.Encrypt(cl, pl);
+        return cl;
+    }
+
+    long decryptCtxt(helib::Ctxt &cBit) {
+        //    long pBit = 0;
+        NTL::ZZX pp;
+        secKey.Decrypt(pp, cBit);
+        return IsOne(pp);
+    }
+
+    long decryptNum(std::vector<helib::Ctxt> cNum);
+
+protected:helib::SecKey &getSecKey() const { // return CONST SecKey?
+        return secKeyRef;
+    }
+
     [[nodiscard]] const helib::Context &getContext() const {
         return context;
     }
@@ -85,53 +164,12 @@ public:
         return context.getCtxtPrimes(nprimes);
     }
 
-//    helib::Ctxt encryptCtxt(long l){
-//        NTL::ZZX pl(l);
-//        helib::Ctxt cl(pubKey);
-//        pubKey.Encrypt(cl, pl);
-//        return cl;
-//    }
-
-    helib::Ctxt encryptCtxt(bool b){
-        NTL::ZZX pl(b);
-        helib::Ctxt cl(pubKey);
-        pubKey.Encrypt(cl, pl);
-        return cl;
-    }
-
-    long decryptCtxt(helib::Ctxt& cBit){
-            //    long pBit = 0;
-            NTL::ZZX pp;
-            secKey.Decrypt(pp, cBit);
-            return IsOne(pp);
-    }
-
-    long decryptNum(std::vector<helib::Ctxt> cNum);
-
-//    long decryptNum(std::vector<helib::Ctxt> cNum, bool isProduct=false);
-    /*{
-        long pNum = 0;
-            NTL::ZZX pp;
-            for (int bit = 0; bit < BIT_SIZE; ++bit) {
-                secKey.Decrypt(pp, cNum[bit]);
-                            printNameVal(pp);
-                if (IsOne(pp)) pNum+=std::pow(2, bit);
-                            printNameVal(pNum);
-            }
-        return pNum;
-    }*/
-
-protected:
-
-
-    //    [[nodiscard]] const helib::SecKey &getSecKey() const {
-    [[nodiscard]]helib::SecKey getSecKey() const {
-        return secKey;
-    }
-    friend class TestPoint;
-    friend class TestDataServer;
-    //fixme -https://stackoverflow.com/questions/3903180/make-a-friend-class-have-only-special-access-to-1-function-of-another-class
-    friend class Client;
+    //    helib::Ctxt encryptCtxt(long l){
+    //        NTL::ZZX pl(l);
+    //        helib::Ctxt cl(pubKey);
+    //        pubKey.Encrypt(cl, pl);
+    //        return cl;
+    //    }
 
 
 private:

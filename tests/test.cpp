@@ -12,38 +12,39 @@
 int main() {
 
 
-//    cout << " ============ Test KeysServer ============ " << endl;
-//    TestKeysServer::testConstructor();
-//    TestKeysServer::testEncryptCtxt();
-//    TestKeysServer::testDecryptCtxt();
-////    TestKeysServer::testEncryptNum();
-////    TestKeysServer::testDecryptNum();
-//    cout << " ============ Test KeysServer Finished ============ " << endl << endl;
-//
-//    cout << " ============ Test Point ============ " << endl;
-//    TestPoint::testConstructor();
-//    TestPoint::testEncryptCoordinates();
-//    TestPoint::testOperatorSubscript();
-//    TestPoint::testIsEmpty();
-//    TestPoint::testAddition();
-//    TestPoint::testAddManyPoints();
-//    TestPoint::testMultiplication();
-//    TestPoint::testMultiplicationByBit();
-//    TestPoint::testCompare();
-//    cout << " ============ Test Point Finished ============ " << endl << endl;
-//
-//    cout << " ============ Test Client ============ " << endl;
-//    TestClient::testConstructor();
-//    TestClient::testEncryptCoordinates();
-//    TestClient::testDecryptCoordinates();
-//    TestClient::testEncryptScratchPoint();
-//    cout << " ============ Test Client Finished ============ " << endl << endl;
-//
-//    cout << " ============ Test DataServer ============ " << endl;
-//    TestDataServer::testConstructor();
-//    TestDataServer::testScratchPoint();
+    cout << " ============ Test KeysServer ============ " << endl;
+    TestKeysServer::testConstructor();
+    TestKeysServer::testEncryptCtxt();
+    TestKeysServer::testDecryptCtxt();
+//    TestKeysServer::testEncryptNum();   //  todo
+//    TestKeysServer::testDecryptNum();   //  todo
+    cout << " ============ Test KeysServer Finished ============ " << endl << endl;
+
+    cout << " ============ Test Point ============ " << endl;
+    TestPoint::testConstructor();
+    TestPoint::testEncryptCoordinates();
+    TestPoint::testOperatorSubscript();
+    TestPoint::testIsEmpty();
+    TestPoint::testAddition();
+    TestPoint::testAddManyPoints(); //fixme weird bug when huge #points
+    TestPoint::testMultiplication();
+    TestPoint::testMultiplicationByBit();
+    TestPoint::testCompare();
+    cout << " ============ Test Point Finished ============ " << endl << endl;
+
+    cout << " ============ Test Client ============ " << endl;
+    TestClient::testConstructor();
+    TestClient::testEncryptCoordinates();
+    TestClient::testDecryptCoordinates();
+    TestClient::testEncryptScratchPoint();
+    TestClient::testCompare(); //todo refine
+    cout << " ============ Test Client Finished ============ " << endl << endl;
+
+    cout << " ============ Test DataServer ============ " << endl;
+    TestDataServer::testConstructor();
+    TestDataServer::testScratchPoint();
     TestDataServer::testRetrievePoints();
-//    TestDataServer::testComparePoints();
+    TestDataServer::testComparePoints();
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
 
 

@@ -37,8 +37,8 @@ void TestClient::testDecryptCoordinates() {
     client.encryptPoint(arr);
     std::vector<long> decryptCoordinates = client.decryptCoordinate(0);
     for (int i = 0; i < DIM; ++i) {
-//        printNameVal(arr[i]);
-//        printNameVal(decryptCoordinate[i]);
+        //        printNameVal(arr[i]);
+        //        printNameVal(decryptCoordinate[i]);
         assert(decryptCoordinates[i] == arr[i]);
     }
     //    loggerTestClient.print_log();
@@ -59,11 +59,19 @@ void TestClient::testEncryptScratchPoint() {
 
 void TestClient::testCompare() {
     //    loggerTestClient.log("testComparePoints");
-    cout << " ------ testEncryptScratchPoint ------ " << endl << endl;
-    KeysServer server = KeysServer();
+    cout << " ------ testCompare ------ " << endl << endl;
+    KeysServer server; // = KeysServer();
     Client client1(server);
     Client client2(server);
     long arr[DIM], arr1[DIM], arr2[DIM];
+    std::vector<Client> clients;//(2, Client(server));
+    //    for (Client &c:clients) {
+    clients.reserve(2);
+    for (int i = 0; i < 2; ++i) {
+        Client c(server);
+        c.encryptPoint(arr);
+        clients.push_back(c);
+    }
     for (int dim = 0; dim < DIM; ++dim) {
         arr[dim] = rand() % NUMBERS_RANGE;
         arr1[dim] = rand() % NUMBERS_RANGE;
@@ -72,10 +80,38 @@ void TestClient::testCompare() {
     client1.encryptPoint(arr);
     client1.encryptPoint(arr1);
     client2.encryptPoint(arr2);
+    std::vector<long*> arrs;//(2, long[DIM]);
+//    for (Client &c:clients) {
+    arrs.reserve(2);
+    for (int i = 0; i < 2; ++i) {
+//        arrs.push_back(long[DIM]);
+        long arr0[DIM];
+        for (int dim = 0; dim < DIM; ++dim) {
+            arr0[dim] = rand() % NUMBERS_RANGE;
+        }
+        arrs.push_back(arr0);
+    }
+    std::vector<Point> points;
+    points.reserve(2);
+    for (Client &c:clients) {
+        for (Point &p:c.points) {
+            points.push_back(Point(p));
+        }
+    }
+    cout << "one ";
+    Point point1(client1.points[0]);
+    cout << "two ";
+    Point point2(client2.points[0]);
+    cout << "three ";
+    Ctxt isBigger = point1.isBiggerThan(point2);
+    cout << "four ";
+    bool well = server.decryptCtxt(isBigger);
+    printNameVal(well);
+
     //            client1.compare(client2);
     //    helib::decryptBinaryNums();
     //    loggerTestClient.print_log();
-    cout << " ------ testEncryptScratchPoint finished ------ " << endl << endl;
+    cout << " ------ testCompare finished ------ " << endl << endl;
 }
 
 void TestClient::testAddition() {

@@ -38,7 +38,7 @@ void TestKeysServer::testDecryptCtxt() {
     cout << " ------ testDecryptCtxt finished ------ " << endl << endl;
 }
 
-
+//todo
 void TestKeysServer::testEncryptNum() {
     cout << " ------ testEncryptNum ------ " << endl;
     KeysServer server;
@@ -46,7 +46,7 @@ void TestKeysServer::testEncryptNum() {
     //    loggerTestClient.print_log();
     cout << " ------ testEncryptNum finished ------ " << endl << endl;
 }
-
+//todo
 void TestKeysServer::testDecryptNum() {
 
     cout << " ------ testDecryptNum ------ " << endl;

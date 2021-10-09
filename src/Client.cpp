@@ -10,9 +10,11 @@ using std::cout;
 using std::endl;
 static Logger clientLogger(log_debug, "clientLogger");
 
-Client::Client(KeysServer &keysServer) :
+Client::Client(const KeysServer &keysServer) :
         encryptionKey(keysServer.getSecKey()),
-        public_key(encryptionKey),
+        //        public_key(encryptionKey),
+        public_key(keysServer.getPublicKey()),
+        pubKeyPtrDBG(&public_key),
         ea(keysServer.getEA()),
         scratch(encryptionKey)
 //        cCoordinatesStd(DIM)
@@ -27,8 +29,10 @@ std::vector<std::vector<helib::Ctxt>> Client::encryptPoint(const long coordinate
         cout << "encryptPoint for coordinates: " << endl;
         for (int i = 0; i < DIM; ++i) printNameVal(coordinates[i]);
 #endif
-    std::vector<long> a_vec(ea.size());
-    points.emplace_back(Point(public_key, coordinates));
+    //    std::vector<long> a_vec(ea.size());
+//    pCoordinatesDBG.push_back(std::vector<long>(DIM));
+//    for (int dim = 0; dim < DIM; ++dim) pCoordinatesDBG.back()[dim] = coordinates[dim];
+    points.emplace_back(public_key, coordinates); //be careful when changing to `emplace_back`
     return points.back().cCoordinates;
 }
 

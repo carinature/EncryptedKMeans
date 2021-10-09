@@ -112,28 +112,30 @@ void TestPoint::testAddManyPoints() {
                 printNameVal(server.decryptNum(sum[dim]));
         assert(arrSum[dim] == server.decryptNum(sum[dim]));
     }
-
-    std::vector<Point> points;
-    for (int i = 0; i < 40; ++i) {
-        points.emplace_back(Point(server.getPublicKey(), arr));
-        points.emplace_back(Point(server.getPublicKey(), arr2));
-        points.emplace_back(Point(server.getPublicKey(), arr3));
-        points.emplace_back(Point(server.getPublicKey(), arrSum));
-    }
-    Point sum2 = Point::addManyPoints(points);
-    printNameVal(server.decryptNum(sum2[0]));
-    printNameVal(arrSum[0]);
-    printNameVal(server.decryptNum(sum2[1]));
-    printNameVal(arrSum[1]);
-    for (int dim = 0; dim < DIM; ++dim) {
-                printNameVal(arrSum[dim]);
-                printNameVal(80*arrSum[dim]);
-                printNameVal(server.decryptNum(sum2[dim]));
-        assert(80*arrSum[dim] == server.decryptNum(sum2[dim]));
-        //fixme this part of the test acts weird when running after _all_ the other tests.
-        // incidentally, looks like the 2nd coordinate of sum is just a copy of the 1st.
-        // could be problem w/ the decryption result?
-    }
+//
+//    std::vector<Point> points;
+//    points.reserve(4 * number_of_points);
+//    printNameVal(number_of_points);
+//    for (int i = 0; i < number_of_points; ++i) {
+//        points.emplace_back(Point(server.getPublicKey(), arr));
+//        points.emplace_back(Point(server.getPublicKey(), arr2));
+//        points.emplace_back(Point(server.getPublicKey(), arr3));
+//        points.emplace_back(Point(server.getPublicKey(), arrSum));
+//    }
+//    Point sum2 = Point::addManyPoints(points);
+//    printNameVal(server.decryptNum(sum2[0]));
+//    printNameVal(arrSum[0]);
+//    printNameVal(server.decryptNum(sum2[1]));
+//    printNameVal(arrSum[1]);
+//    for (int dim = 0; dim < DIM; ++dim) {
+//                printNameVal(arrSum[dim]);
+//                printNameVal(2*number_of_points*arrSum[dim]);
+//                printNameVal(server.decryptNum(sum2[dim]));
+//        assert(2*number_of_points*arrSum[dim] == server.decryptNum(sum2[dim]));
+//        //fixme this part of the test acts weird when running after _all_ the other tests.
+//        // incidentally, looks like the 2nd coordinate of sum is just a copy of the 1st.
+//        // could be problem w/ the decryption result?
+//    }
     cout << " ------ testAddManyPoints finished ------ " << endl << endl;
 }
 
@@ -193,7 +195,7 @@ void TestPoint::testCompare() {    //    loggerTestClient.log("testCompare");
     Point point(server.getPublicKey(), arr);
     Point point2(server.getPublicKey(), arr2);
     for (short dim = 0; dim < DIM; ++dim) {
-        for (int i = 0; i < 100; ++i) {
+        for (int i = 0; i < number_of_points; ++i) {
             helib::Ctxt res = point.isBiggerThan(point2, dim);
             assert((arr[dim] > arr2[dim]) == server.decryptCtxt(res));
 

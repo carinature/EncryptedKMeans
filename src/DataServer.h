@@ -8,14 +8,14 @@
 
 class DataServer {
 
-//    [[maybe_unused]] const helib::SecKey encryptionKey;
-//    [[maybe_unused]] const helib::PubKey encryptionKey;
-//    [[maybe_unused]] const helib::EncryptedArray ea;
-     const helib::PubKey encryptionKey;
-     const helib::EncryptedArray ea;
+    //    [[maybe_unused]] const helib::SecKey encryptionKey;
+    //    [[maybe_unused]] const helib::PubKey encryptionKey;
+    //    [[maybe_unused]] const helib::EncryptedArray ea;
+    const helib::PubKey encryptionKey;
+    //     const helib::EncryptedArray ea;
     const helib::Ctxt scratch;
 protected:
-//    const helib::PubKey &public_key;// = encryptionKey;
+    //    const helib::PubKey &public_key;// = encryptionKey;
 
 public:
     /**
@@ -49,6 +49,38 @@ public:
     //        return isBiggerFlag;
     //    }
     Point scratchPoint();
+
+    // todo move to aux ?
+    static std::vector<Client> generateDataClients(const KeysServer &server) {
+        int uniquePointsNum = 3 + rand() % 10, clientsNum = uniquePointsNum;
+        //  init coordinate arrays
+        long arrs[uniquePointsNum][DIM];
+        for (auto &arr: arrs) for (int dim = 0; dim < DIM; ++dim) arr[dim] = rand() % NUMBERS_RANGE;
+        /*  init clients vector
+         *      client [0] stays empty
+         *      client [1] has 1 point - {point0}
+         *      client [2] has 2 points - {point0, point1}
+         *      ...
+         *      client [n] has n points -  {point0, point1, ... , pointN}
+         */
+        std::vector<Client> clients(clientsNum, Client(server));
+        for (int i = 1; i < clients.size(); ++i)
+            for (int j = 0; j < i; ++j)
+                clients[i].encryptPoint(arrs[j]);
+        return clients;
+    }
+
+    static std::vector<Point> retrievePoints(std::vector<Client> &clients) {
+        //  retrieving points
+        std::vector<Point> points;
+        points.reserve(pow(clients.size(), 2) / 2); // preallocate memory
+        for (Client &c:clients)
+            for (Point &p:c.points)
+                points.emplace_back(Point(p));
+        //            points.insert(points.end(),c.points.begin(), c.points.end());
+        points.shrink_to_fit();
+        return points;
+    }
 };
 
 

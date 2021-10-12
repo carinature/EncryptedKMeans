@@ -7,6 +7,7 @@ using std::endl;
 static Logger dataServerLogger(log_debug, "dataServerLogger");
 
 DataServer::DataServer(KeysServer &keysServer) :
+        keysServer(keysServer),
         encryptionKey(keysServer.getPublicKey()),
 //        public_key(keysServer.getPublicKey()),
 //        public_key(encryptionKey),
@@ -22,11 +23,12 @@ Point DataServer::scratchPoint() {
     return Point(encryptionKey);//, nullptr);
 }
 
+
 //std::vector<Client> DataServer::generateDataClients(const KeysServer &server) {
 //    int uniquePointsNum = 3 + rand() % 10, clientsNum = uniquePointsNum;
 //    //  init coordinate arrays
 //    long arrs[uniquePointsNum][DIM];
-//    for (auto &arr: arrs) for (int dim = 0; dim < DIM; ++dim) arr[dim] = rand() % NUMBERS_RANGE;
+//    for (auto &arr: arrs) for (short dim = 0; dim < DIM; ++dim) arr[dim] = rand() % NUMBERS_RANGE;
 //    /*  init clients vector
 //     *      client [0] stays empty
 //     *      client [1] has 1 point - {point0}

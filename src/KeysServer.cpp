@@ -3,21 +3,10 @@
 // Distibution of keys for Clients and the DataServer
 //
 
-//#include "KeysServer.h"
-//#include "properties.h"
-//#include "utils/Logger.h"
 #include "utils/aux.h"
+#include "KeysServer.h"
 
-
-#include <iostream>
-#include <helib/Context.h>
-#include <helib/intraSlot.h> //for buildUnpackSlotEncoding
-#include <helib/debugging.h> //for setupDebugGlobals
-
-using std::cout;
-using std::endl;
-
-Logger keysServerLogger(log_debug,"keysServerLogger");//todo change to log_trace
+Logger keysServerLogger(log_debug, "keysServerLogger");//todo change to log_trace
 
 // Validates the prm value, throwing if invalid
 // [prm] Corresponds to the number of entry in mValues table
@@ -103,74 +92,40 @@ std::vector<helib::zzX> KeysServer::unpackSlotEncoding; //todo move? already def
 // (The parameters may not provide the security level that might be required by real use/application scenarios.)
 //KeysServer::KeysServer(long prm, long bitSize, bool bootstrap, long seed, long nthreads)
 
+
+long KeysServer::decryptCtxt(const helib::Ctxt &cBit) {
+    if (cBit.isEmpty()) return -1; //todo should return 0?
+    NTL::ZZX pp;
+    secKey.Decrypt(pp, cBit);
+    return IsOne(pp);
+}
+
 //long KeysServer::decryptNum(std::vector<helib::Ctxt> cNum, bool isProduct) {
-long KeysServer::decryptNum(std::vector<helib::Ctxt> cNum) {
+long KeysServer::decryptNum(const std::vector<helib::Ctxt> &cNum) {
+    if (!cNum.size()) return -1; //todo should return 0?
     long pNum = 0;
     NTL::ZZX pp;
-//    int out_size = (1 + isProduct) * BIT_SIZE;
+    //    int out_size = (1 + isProduct) * BIT_SIZE;
     //    for (int bit = 0; bit < out_size; ++bit) {
     for (int bit = 0; bit < cNum.size(); ++bit) {
         secKey.Decrypt(pp, cNum[bit]);
-//        printNameVal(pp);
-        if (IsOne(pp)) pNum+=std::pow(2, bit);
-//        printNameVal(pNum);
+        //        printNameVal(pp);
+        if (IsOne(pp)) pNum += std::pow(2, bit);
+        //        printNameVal(pNum);
     }
     return pNum;
 }
 
-//long KeysServer::decrypt(const helib::Ctxt& cBit) {
-//    //    long pBit = 0;
-//    NTL::ZZX pp;
-//    secKey.Decrypt(pp, cBit);
-//    return IsOne(pp);
-//}
-//
-//long KeysServer::decrypt(const std::vector<helib::Ctxt> cNum) {
-//    long pNum = 0;
-//    NTL::ZZX pp;
-//    for (int bit = 0; bit < BIT_SIZE; ++bit) {
-//        secKey.Decrypt(pp, cNum[bit]);
-//        printNameVal(pp);
-//        if (IsOne(pp)) pNum += std::pow(2, bit);
-//        printNameVal(pNum);
-//    }
-//    return pNum;
-//}
-//
-//std::vector<long> KeysServer::decrypt(const Point& p) {
-//    cout << "KeysServer::decryptCoordinate" << endl;
-//    keysServerLogger.log("decryptCoordiantes", log_debug);
-//    std::vector<long> dCoordinates(DIM);
-//    if (!p[0][0].isEmpty()) return dCoordinates;
-//    for (int dim = 0; dim < DIM; ++dim) dCoordinates[dim] = decrypt(p[dim]);
-//    return dCoordinates;
-//}
-
-//std::vector<long> KeysServer::decryptCtxt(helib::Ctxt ctxt) {
-//#if VERBOSE
-//    cout << "decryptCoordiantes" << endl;
-//#endif
-//    keysServerLogger.log("decryptCoordiantes", log_debug);
-//    std::vector<long> decrypted_result(); // todo redundant, decide which of the two to keep
-//    for (int i = 0; i < DIM; ++i) {
-//        helib::decryptBinaryNums(decrypted_result,
-//                                 helib::CtPtrs_vectorCt(ctxt),
-//                                 secKey, getEA());
-//        dCoordinates[i] = decrypted_result[i].back();
-//    }
-//#if VERBOSE
-//    for (auto dec_coordinate :decrypted_result) printNameVal(dec_coordinate.back());
-//        cout << endl << endl;
-//#endif
-//    return dCoordinates;
-//}
-
-
-
-
-
-
-
+long KeysServer::decryptSize(const std::vector<helib::Ctxt> &cSize) {
+    long size = 0;
+    NTL::ZZX pp;
+    for (const Ctxt &ctxt: cSize) {
+        secKey.Decrypt(pp, ctxt);
+        //        printNameVal(pp);
+        size += IsOne(pp);
+    }
+    return size;
+}
 
 
 

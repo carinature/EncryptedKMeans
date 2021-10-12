@@ -46,6 +46,7 @@ void TestKeysServer::testEncryptNum() {
     //    loggerTestClient.print_log();
     cout << " ------ testEncryptNum finished ------ " << endl << endl;
 }
+
 //todo
 void TestKeysServer::testDecryptNum() {
 

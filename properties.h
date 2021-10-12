@@ -61,7 +61,7 @@ static const std::string rands_file = jsonConfig["files"]["rands_file"];
 static const std::string rands_bad_file = jsonConfig["files"]["rands_bad_file"];
 static const std::string point_csv_file = jsonConfig["files"]["point_csv_file"];
 
-#define HELIB_DEBUG
+//#define HELIB_DEBUG
 
 
 #define CLIENT_CLASS_EXISTS true

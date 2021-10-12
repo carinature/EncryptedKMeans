@@ -31,7 +31,7 @@ std::vector<std::vector<helib::Ctxt>> Client::encryptPoint(const long coordinate
 #endif
     //    std::vector<long> a_vec(ea.size());
 //    pCoordinatesDBG.push_back(std::vector<long>(DIM));
-//    for (int dim = 0; dim < DIM; ++dim) pCoordinatesDBG.back()[dim] = coordinates[dim];
+//    for (short dim = 0; dim < DIM; ++dim) pCoordinatesDBG.back()[dim] = coordinates[dim];
     points.emplace_back(public_key, coordinates); //be careful when changing to `emplace_back`
     return points.back().cCoordinates;
 }
@@ -46,7 +46,7 @@ std::vector<long> Client::decryptCoordinate(int i) {
     clientLogger.log("decryptCoordiantes", log_debug);
     std::vector<long> dCoordinates(DIM);
     if (points[i][0][0].isEmpty()) return dCoordinates;
-    for (int dim = 0; dim < DIM; ++dim) {
+    for (short dim = 0; dim < DIM; ++dim) {
         NTL::ZZX pp;
         for (int bit = 0; bit < BIT_SIZE; ++bit) {
             encryptionKey.Decrypt(pp, points[i].cCoordinates[dim][bit]);

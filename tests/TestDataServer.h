@@ -9,13 +9,17 @@
 class TestDataServer {
 public:
     static void testConstructor();
-    static void testScratchPoint();
-    static void testComparePoints();
-//    static void testAddiiton();
-//    static void testMultiplication();
-static void testRetrievePoints();
 
-    static std::vector<Client> generateDataClients(const KeysServer &server);
+    static void testScratchPoint();
+
+    static void testRetrievePoints();
+
+    static void testComparePoints();
+
+    static void testAddition();
+
+    static void testMultiplication();
+
 };
 
 

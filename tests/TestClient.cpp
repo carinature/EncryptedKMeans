@@ -20,7 +20,7 @@ void TestClient::testEncryptCoordinates() {
     cout << " ------ testEncryptCoordinates ------ " << endl;
     KeysServer server;
     long arr[DIM];
-    for (int dim = 0; dim < DIM; ++dim) arr[dim] = rand() % NUMBERS_RANGE;
+    for (short dim = 0; dim < DIM; ++dim) arr[dim] = rand() % NUMBERS_RANGE;
     Client client(server);
     client.encryptPoint(arr);
     cout << " ------ testEncryptCoordinates finished ------ " << endl << endl;
@@ -32,7 +32,7 @@ void TestClient::testDecryptCoordinates() {
     cout << " ------ testDecryptCoordinates ------ " << endl;
     KeysServer server;
     long arr[DIM];
-    for (int dim = 0; dim < DIM; ++dim) arr[dim] = rand() % NUMBERS_RANGE;
+    for (short dim = 0; dim < DIM; ++dim) arr[dim] = rand() % NUMBERS_RANGE;
     Client client(server);
     client.encryptPoint(arr);
     std::vector<long> decryptCoordinates = client.decryptCoordinate(0);
@@ -60,62 +60,36 @@ void TestClient::testEncryptScratchPoint() {
 void TestClient::testCompare() {
     //    loggerTestClient.log("testComparePoints");
     cout << " ------ testCompare ------ " << endl << endl;
-    KeysServer server; // = KeysServer();
-    Client client1(server);
-    Client client2(server);
-    long arr[DIM], arr1[DIM], arr2[DIM];
-    std::vector<Client> clients;//(2, Client(server));
-    //    for (Client &c:clients) {
-    clients.reserve(2);
-    for (int i = 0; i < 2; ++i) {
-        Client c(server);
-        c.encryptPoint(arr);
-        clients.push_back(c);
-    }
-    for (int dim = 0; dim < DIM; ++dim) {
-        arr[dim] = rand() % NUMBERS_RANGE;
+    KeysServer server;
+    long arr1[DIM], arr2[DIM];
+    for (short dim = 0; dim < DIM; ++dim) {
         arr1[dim] = rand() % NUMBERS_RANGE;
         arr2[dim] = rand() % NUMBERS_RANGE;
     }
-    client1.encryptPoint(arr);
-    client1.encryptPoint(arr1);
-    client2.encryptPoint(arr2);
-    std::vector<long*> arrs;//(2, long[DIM]);
-//    for (Client &c:clients) {
-    arrs.reserve(2);
-    for (int i = 0; i < 2; ++i) {
-//        arrs.push_back(long[DIM]);
-        long arr0[DIM];
-        for (int dim = 0; dim < DIM; ++dim) {
-            arr0[dim] = rand() % NUMBERS_RANGE;
-        }
-        arrs.push_back(arr0);
-    }
-    std::vector<Point> points;
-    points.reserve(2);
-    for (Client &c:clients) {
-        for (Point &p:c.points) {
-            points.push_back(Point(p));
-        }
-    }
-    cout << "one ";
-    Point point1(client1.points[0]);
-    cout << "two ";
-    Point point2(client2.points[0]);
-    cout << "three ";
-    Ctxt isBigger = point1.isBiggerThan(point2);
-    cout << "four ";
-    bool well = server.decryptCtxt(isBigger);
-    printNameVal(well);
 
-    //            client1.compare(client2);
-    //    helib::decryptBinaryNums();
+    Client client1(server);
+    client1.encryptPoint(arr1);
+    Point point1(client1.points.back());
+
+    Client client2(server);
+    client2.encryptPoint(arr2);
+    Point point2(client2.points.back());
+
+    for (int i = 0; i < 100; ++i)
+        for (short dim = 0; dim < DIM; ++dim) {
+            helib::Ctxt res = point1.isBiggerThan(point2, dim)[0];
+            assert((arr1[dim] > arr2[dim]) == server.decryptCtxt(res));
+
+            helib::Ctxt res2 = point2.isBiggerThan(point1, dim)[0];
+            assert((arr2[dim] > arr1[dim]) == server.decryptCtxt(res2));
+        }
+
     //    loggerTestClient.print_log();
     cout << " ------ testCompare finished ------ " << endl << endl;
 }
 
 void TestClient::testAddition() {
-    //    loggerTestClient.log("testAddiiton");
+    //    loggerTestClient.log("testAddition");
 }
 
 void TestClient::testMultiplication() {

@@ -5,7 +5,7 @@
     "range_lim": 1,
     "range_lim_comment": "for python, defines the range of the points (from BOTTOM_LIM to RANGE_LIM)",
     "low_limit": 0,
-    "epsilon": 0.5,
+    "epsilon": 0.2,
     "decimal_digits": 2,
     "conversion_factor": "pow(10, DECIMAL_DIGITS)",
     "conversion_factor_comment": "for conversion from double-type to long-type (helib compatibility)",

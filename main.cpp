@@ -11,7 +11,8 @@ using std::endl;
 #include "properties.h"
 #include "utils/Logger.h"
 #include "utils/aux.h"
-#include "src/Client.h"
+//#include "src/Client.h"
+#include "src/DataServer.h"
 
 //helib
 #include <helib/binaryArith.h>
@@ -28,30 +29,42 @@ int main() {
     KeysServer keysServer;
     logger.log(printDuration(t0_main, "KeysServer Initialization"));
 
-    const helib::EncryptedArray &ea = keysServer.getEA();    //    helib::Context context = keysServer.getContext();
+    std::vector<Client> clients = DataServer::generateDataClients(keysServer);
+    std::vector<Point> points = DataServer::retrievePoints(clients);
+    cout << " --- Points  ---" << endl;
+    printPoints(points, keysServer);
+    cout << " --- --- --- --- ---" << endl;
+    //    int numOfStrips = 5;
+    std::vector<Point> randomPoints = DataServer::pickRandomPoints(points);//, numOfStrips);
+    cout << " --- Random Points  ---" << endl;
+    printPoints(randomPoints, keysServer);
+    cout << " --- --- --- --- ---" << endl;
+    //    int numOfStrips = 5;
+    std::vector<
+            std::tuple<
+                    Point,
+                    std::vector<Point>,
+                    std::vector<Ctxt>
+            >
+    > groups = DataServer::split(points, 0, keysServer);//, numOfStrips);
+    cout << groups.size() << endl;
+    for (auto g: groups)  printPoint(std::get<0>(g), keysServer);
+    cout << " --- Groups  ---" << endl;
+    for (std::tuple tuple: groups) {
+        cout << "curtuple"<<endl;
+        Point randomPoint = std::get<0>(tuple);
+        std::vector<Point> group = std::get<1>(tuple);
+        std::vector<Ctxt> groupSize = std::get<2>(tuple);
+        cout << "for random point: ";
+        printPoint(randomPoint, keysServer);
+        cout << " these points will be included: \n";
+        printPoints(group, keysServer);
+        cout << "group size: " << keysServer.decryptSize(groupSize) << endl;
+        //        for (Point &point:group) {
+        //        }
+    }
+    cout << " --- --- --- --- ---" << endl;
 
-    cout << "start client" << endl;
-
-    const long arr[] = {1L, 2l};
-//    Client client1(keysServer, arr);
-//    Client client2(keysServer, arr);
-    Client client1(keysServer);
-    Client client2(keysServer);
-    client1.encryptPoint(arr);
-    client2.encryptPoint(arr);
-
-    cout << "fin client" << endl;
-
-    const helib::PubKey &publicKey = keysServer.getSecKey();
-    long n = keysServer.getContext().getNSlots();
-
-
-    //// This part should be done in Client/Point
-    NTL::Vec<helib::Ctxt> eMax, eMin, enca, encb;
-    const helib::SecKey &encryptionKey = keysServer.getSecKey();
-    helib::Ctxt mu(encryptionKey), ni(encryptionKey);
-    resize(enca, long(BIT_SIZE), mu);
-    resize(encb, long(BIT_SIZE) + 1, ni);
 
 #ifdef alt
     // Choose two random n-bit integers
@@ -94,7 +107,7 @@ int main() {
 //    ptxtArray.encrypt(c0);
 //
 //    compareTwoNumbers(mu, ni, helib::CtPtrs_VecCt(c0), helib::CtPtrs_VecCt(c0), false, nullptr);
-#else
+#elif alt2
     // Each bit of the binary number is encoded into a single ciphertext. Thus
     // for a 16 bit binary number, we will represent this as an array of 16
     // unique ciphertexts.

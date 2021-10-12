@@ -45,6 +45,8 @@ int main() {
     TestDataServer::testScratchPoint();
     TestDataServer::testRetrievePoints();
     TestDataServer::testComparePoints();
+    TestDataServer::testAddition();
+    TestDataServer::testMultiplication();
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
 
 

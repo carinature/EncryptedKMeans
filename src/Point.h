@@ -8,16 +8,16 @@
 #include <helib/binaryArith.h>
 
 #include "utils/aux.h" // for including KeysServer.h
+#include "KeysServer.h"
 
+static long counter = 0; //fixme move to the cpp file
 
 class Point {
     friend class Client;
 
     friend class KeysServer;
 
-    //    friend class TestClient;
-
-    /*  todo for DBG. remove */
+    /*  fixme for DBG. remove */
     std::vector<long> pCoordinatesDBG;
     bool isCopyDBG = false;
     bool isEmptyDBG = true;
@@ -44,15 +44,16 @@ public:
     //        long OUT_SIZE = 2 * BIT_SIZE;
     explicit Point(const helib::PubKey &public_key, const long coordinates[] = nullptr) :
     //            public_key(public_key){
-            public_key(public_key),
+            id(counter++),
+    public_key(public_key),
             pubKeyPtrDBG(&public_key),
             cCoordinates(DIM, std::vector(BIT_SIZE, helib::Ctxt(this->public_key))) {
         //        this->cCoordinates.reserve(DIM);
         pCoordinatesDBG.reserve(DIM);
-        cout << " Point Init" << endl;
+        //        cout << " Point Init" << endl;
         if (coordinates) {
             isEmptyDBG = false;
-            for (int dim = 0; dim < DIM; ++dim) {
+            for (short dim = 0; dim < DIM; ++dim) {
                 pCoordinatesDBG.push_back(coordinates[dim]);
                 // Extract the i'th bit of coordinates[dim]
                 for (long bit = 0; bit < BIT_SIZE; ++bit)
@@ -74,21 +75,21 @@ public:
             pCoordinatesDBG(point.pCoordinatesDBG),
             isEmptyDBG(point.isEmptyDBG),
             isCopyDBG(true) {
-        cout << " Point copy" << endl;
+        //        cout << " Point copy copy" << endl; //this print is important for later. efficiency...
         //        pCoordinatesDBG.reserve(DIM);
         if (!point.isEmpty())
-            for (int dim = 0; dim < DIM; ++dim) {
+            for (short dim = 0; dim < DIM; ++dim) {
                 //                .push_back(pCoordinatesDBG[dim]);
                 cCoordinates[dim] = point.cCoordinates[dim];
             }
     }
 
-//  todo need?
+    //  todo need?
     //    Point operator=(Point &point) {
     //        cout << " Point assign" << endl;
     //        public_key. = point.public_key;
     //        if (point.isEmpty()) return
-    //            for (int dim = 0; dim < DIM; ++dim)
+    //            for (short dim = 0; dim < DIM; ++dim)
     //                cCoordinates[dim] = point.cCoordinates[dim];
     //    }
 
@@ -103,7 +104,7 @@ public:
         if (this->isEmpty()) return point;
         const long arr[] = {0, 0};
         Point sum(this->public_key, arr);
-        for (int dim = 0; dim < DIM; ++dim) {
+        for (short dim = 0; dim < DIM; ++dim) {
             helib::CtPtrs_vectorCt result_wrapper(sum.cCoordinates[dim]);
             helib::addTwoNumbers(
                     result_wrapper,
@@ -118,9 +119,9 @@ public:
 
     //todo notice that IT IS 3-for-2 (whoohhoo)
     //// Calculates the sum of many numbers using the 3-for-2 method
-    static Point addManyPoints(std::vector<Point> points) {
+    static Point addManyPoints(std::vector<Point> &points) {
         //        if (points.empty()) return static_cast<Point>(nullptr);
-        const long arr[] = {0, 0};
+        //        const long arr[] = {0, 0};
         //        std::vector<std::vector<helib::Ctxt>>> c
         Point sum(points.back().public_key);//, arr);
         std::vector<std::vector<helib::Ctxt>> summands; // = {encrypted_a, encrypted_b, encrypted_c};
@@ -134,7 +135,7 @@ public:
             addManyNumbers(
                     result_wrapper,
                     summands_wrapper,
-                    2*points.size() * BIT_SIZE , // sizeLimit=0 means use as many bits as needed.
+                    2 * points.size() * BIT_SIZE, // sizeLimit=0 means use as many bits as needed.
                     &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
             );
             //            sum.cCoordinates[dim] = encrypted_result;
@@ -152,13 +153,12 @@ public:
         if (this->isEmpty()) return Point(this->public_key);
         //        const long arr[] = {0, 0};
         Point product(*this);
-        for (int dim = 0; dim < DIM; ++dim) {
+        for (short dim = 0; dim < DIM; ++dim) {
             helib::CtPtrs_vectorCt result_wrapper(product.cCoordinates[dim]);
             //                vecCopy(product.cCoordinates[dim], this->cCoordinates[dim], BIT_SIZE);
             binaryMask(result_wrapper, bit);
             //                for (long i = 0; i < resSize; i++)
             //                    productCoors[i]->multiplyBy(*(lhs[0]));
-            //                return;
         }
         return product;
 
@@ -182,7 +182,7 @@ public:
         if (this->isEmpty()) return point;
         const long arr[] = {0, 0};
         Point product(this->public_key, arr);
-        for (int dim = 0; dim < DIM; ++dim) {
+        for (short dim = 0; dim < DIM; ++dim) {
             helib::CtPtrs_vectorCt result_wrapper(product.cCoordinates[dim]);
             helib::multTwoNumbers(
                     result_wrapper,
@@ -196,16 +196,40 @@ public:
         return product;
     }
 
-    helib::Ctxt isBiggerThan(Point &p, short currentDim = DIM - 1) {
+//    friend std::ostream& operator<<(std::ostream& os, const Point& dt);
+//    std::ostream& operator<<(std::ostream& os, const Point& p){
+//        os << "( ";
+//        for (short dim = 0; dim < DIM - 1; ++dim)
+//            os << keysServer.decryptNum(p[dim]) << ",";
+//        os << keysServer.decryptNum(p[short(DIM) - 1]) << " ) " << endl;
+//
+//        //    os << dt.mo << '/' << dt.da << '/' << dt.yr;
+//        return os;
+//    }
+
+
+    /**
+     * compares 2 points by comparing the values of 2 coordinates, in a specified dimention.
+     * Params:
+     *  point - a point with encrypted coordinate values.
+     *  currentDim - the index of the coordinates to be compared.
+     * Returns a tuple that answers - ((p1[d]>p2[d]), (p2[d]>p1[d])). value are encrypted.
+     * */
+    std::vector<helib::Ctxt> isBiggerThan(Point &point, short currentDim = DIM - 1) {
         Ctxt mu(public_key), ni(public_key);
-        compareTwoNumbers(mu,
-                          ni,
-                          helib::CtPtrs_vectorCt(this->cCoordinates[currentDim]),
-                          helib::CtPtrs_vectorCt(p.cCoordinates[currentDim]),
-                          false,
-                          &KeysServer::unpackSlotEncoding
-        );
-        return mu;
+        if (!(isEmpty() || point.isEmpty()))
+            //        if(point.id == this->id) { //fixme
+            //            pubKey->Encrypt(mu, ZZX(1&1)); //fixme
+            //            return mu;
+            //        }
+            compareTwoNumbers(mu,
+                              ni,
+                              helib::CtPtrs_vectorCt(this->cCoordinates[currentDim]),
+                              helib::CtPtrs_vectorCt(point.cCoordinates[currentDim]),
+                              false,
+                              &KeysServer::unpackSlotEncoding
+            );
+        return std::vector<helib::Ctxt>{mu, ni};
         /* todo notice there is also // comparison with max and min
          *  maybe useful later
          *      compareTwoNumbers(wMax,
@@ -219,8 +243,19 @@ public:
                       */
     }
 
-
+public:
+    //! @var long id
+    //! used in createCmpDict for comparison
+    long id; // = 0;  //fixme
 };
+
+
+struct cmpPoints {
+    bool operator()( const Point & a, const Point & b ) {
+        return a.id > b.id;
+    }
+};
+
 
 
 #endif //ENCRYPTEDKMEANS_POINT_H

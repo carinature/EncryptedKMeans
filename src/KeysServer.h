@@ -4,16 +4,10 @@
 //  Big parts of the skfj c'tor and init uses GTestBinaryCompare code snipets
 //
 
-
 #ifndef ENCKMEAN_KEYSSERVER_H
 #define ENCKMEAN_KEYSSERVER_H
 
-
-#include <vector>
-#include <helib/zzX.h>
-#include <helib/Context.h>
-#include <helib/keys.h>
-#include <helib/debugging.h>
+#include "utils/aux.h"
 
 /**
  * @class KeysServer
@@ -25,7 +19,7 @@ class KeysServer {
 public:
     static std::vector<helib::zzX> unpackSlotEncoding;
     helib::PubKey &pubKey;
-//    helib::PubKey &pubKeyRef;
+    //    helib::PubKey &pubKeyRef;
     //    publicKey.writeTo(str));
     //    std::shared_ptr<helib::PubKey> deserialized_pkp;// =            std::make_shared<helib::PubKey>(helib::PubKey::readFrom(str, context));
 protected:
@@ -129,26 +123,24 @@ public:
     // publicKey will NOT use the secret key.
     helib::PubKey &getPublicKey() const {
         return pubKey;
-//        return deserialized_pkp;
+        //        return deserialized_pkp;
     }
 
-    helib::Ctxt encryptCtxt(bool b) {
+    helib::Ctxt encryptCtxt(bool b) const {
         NTL::ZZX pl(b);
         helib::Ctxt cl(pubKey);
         pubKey.Encrypt(cl, pl);
         return cl;
     }
 
-    long decryptCtxt(helib::Ctxt &cBit) {
-        //    long pBit = 0;
-        NTL::ZZX pp;
-        secKey.Decrypt(pp, cBit);
-        return IsOne(pp);
-    }
+    long decryptCtxt(const helib::Ctxt &cBit);
 
-    long decryptNum(std::vector<helib::Ctxt> cNum);
+    long decryptNum(const std::vector<helib::Ctxt>& cNum);
 
-protected:helib::SecKey &getSecKey() const { // return CONST SecKey?
+    long decryptSize(const std::vector<helib::Ctxt>& size);
+
+protected:
+    helib::SecKey &getSecKey() const { // return CONST SecKey?
         return secKeyRef;
     }
 
@@ -163,13 +155,6 @@ protected:helib::SecKey &getSecKey() const { // return CONST SecKey?
     [[nodiscard]] helib::IndexSet getCtxtPrimes(long nprimes = 5) const {
         return context.getCtxtPrimes(nprimes);
     }
-
-    //    helib::Ctxt encryptCtxt(long l){
-    //        NTL::ZZX pl(l);
-    //        helib::Ctxt cl(pubKey);
-    //        pubKey.Encrypt(cl, pl);
-    //        return cl;
-    //    }
 
 
 private:
@@ -190,6 +175,7 @@ private:
     helib::Context &prepareContext(helib::Context &contxt);
 
     void prepareSecKey(helib::SecKey &key) const;
+
 
 };
 

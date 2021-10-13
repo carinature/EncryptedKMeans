@@ -59,11 +59,13 @@ public:
         return clients;
     }
 
-    /* A simulated retrievel of data from clients.
-     * Params:
-     *  clients - a list of clients (chosen by the CA, to share a similar public key).
-     * Returns a list of all the points.
-     * */
+
+    /**
+     * @brief A simulated retrievel of data from clients.
+     * @param clients - a list of clients (chosen by the CA, to share a similar public key).
+     * @returns a list of all the points.
+* @return std::vector<Point>
+     * * */
     static std::vector<Point> retrievePoints(std::vector<Client> &clients) {
         std::vector<Point> points;
         if (clients.empty()) return points;
@@ -76,12 +78,13 @@ public:
         return points;
     }
 
-    /* Picks a group of random points to be used as both cell representative and max-limit.
+    /**
+     * @brief Picks a group of random points to be used as both cell representative and max-limit.
      * Uses the Fisher–Yates shuffle for choosing k random points.
-     * Params:
-     *  points - a list of all points (in current group).
-     *  numOfReps - the desired number of representatives, usually the number of desired data strips.
-     * Returns a sub list of the original points, picked randomly using the .
+     * @parampoints - a list of all points (in current group).
+     * @param numOfReps - the desired number of representatives, usually the number of desired data strips.
+     * @returns a sub list of the original points, picked randomly using the .
+     * @return std::vector<Point>
      * */
     static std::vector<Point>
     pickRandomPoints(std::vector<Point> &points, int numOfStrips = int(1 / epsilon)) {
@@ -104,8 +107,15 @@ public:
         return std::vector<Point>(copy.begin(), copy.begin() + numOfStrips - 1);
     }
 
+    /**
+     * @brief Split into (1/eps) groups - each group is between 2 representative points.
+     * @param points - a list of unordered points
+     * @param dim - the index of coor by which the comparison is made. in other words - in what dimension the split is made.
+     * @param keysServer - the appointed CA
+     * @returns a list of pairs/tuples of a representative point and a list of the points in its Group (cell/strip).
+     * */
     static std::vector<
-            std::tuple<
+            std::tuple< //should be replaced with std::pair in production
                     Point,
                     std::vector<Point>,
                     std::vector<Ctxt>
@@ -115,41 +125,90 @@ public:
         cout << "Split" << endl;
         auto t0_split = std::chrono::high_resolution_clock::now();
         std::vector<std::tuple<Point, std::vector<Point>, std::vector<Ctxt> > > groups;
-        // sanity check
-        if (points.empty() || 0 > dim || DIM < dim) return groups;
+        if (points.empty() || 0 > dim || DIM < dim) return groups;        // sanity check
+        //        if (points.empty() || 0 > dim || DIM < dim) return std::vector<std::tuple<Point, std::vector<Point>, std::vector<Ctxt> > >();        // sanity check
 
-        std::vector<Point> randomPoints = DataServer::pickRandomPoints(points);
+        const std::vector<Point> randomPoints = DataServer::pickRandomPoints(points);
+        //  create points compairing dict - for every 2 points (p1,p2) answers p1[dim]>p2[dim]
+        std::map<const Point,
+                std::map<const Point,
+                        helib::Ctxt, cmpPoints>, cmpPoints>
+                cmp = createCmpDict(randomPoints, points, 0);
 
-//        std::map<Point,
-//                std::map<Point,
-//                        std::vector<Bit>,
-//                        cmpPoints
-//                >,
-//                cmpPoints
-//        > cmp = createCmpDict(random, currStrip);
-
-        std::vector<Ctxt> numPoints;//(BIT_SIZE);//, (points[0].public_key));
-        numPoints.reserve(points.size());
-        //        cmpDict
-
-        for (Point &randomPoint: randomPoints) {
+        for (const Point &R: randomPoints) {
             auto t0_itr = std::chrono::high_resolution_clock::now();
+            cout << "\n\n   ### current R: ";
+            printPoint(R, keysServer);
 
             std::vector<Point> group;
-            for (Point &point:points) {
-                Ctxt ctxt(randomPoint.isBiggerThan(point, dim)[0]);
-                group.push_back(point * ctxt);
-                numPoints.emplace_back(ctxt);
+            group.reserve(points.size() * 2 * epsilon);
+            std::vector<Ctxt> groupSize;
+            groupSize.reserve(points.size() * 2 * epsilon);
+
+            for (const Point &p:points) {
+                cout << "\n       === current p: ";
+                printPoint(p, keysServer);
+
+                // p < R
+                helib::Ctxt isBelowCurrentRep(cmp[R].at(p));
+                printNameVal(keysServer.decryptCtxt(isBelowCurrentRep));
+                helib::Ctxt isAboveAboveSmallerReps(isBelowCurrentRep); //todo other init
+//                printNameVal(keysServer.decryptCtxt(isAboveAboveSmallerReps));
+
+                for (const Point &r: randomPoints) {
+                    cout << "           --- other r: ";
+                    printPoint(r, keysServer);
+                    if (r.id == R.id ) continue;
+                    //todo here's a good place to check for "tail" p - is curr p bigger than all the random points
+                    //todo handle cases of p that is equal to representative
+
+                    //  r > R (in which case we don't care about cmp results of p and r)
+                    Bit otherRepIsAboveCurrentRep = cmp[r].at(R);
+                    // results in: Bit otherRepIsAboveCurrentRep = (r > R)
+                    printNameVal(keysServer.decryptCtxt(otherRepIsAboveCurrentRep));
+
+                    //  R > r    AND     p > r
+                    Bit pIsAboveOtherRep(cmp[R].at(r)); //pIsAboveOtherRep = (R > r)
+                    pIsAboveOtherRep.multiplyBy(cmp[p].at(r));
+                    // results in: Bit pIsAboveOtherRep = (R > r) * (p > r)
+                    printNameVal(keysServer.decryptCtxt(pIsAboveOtherRep));
+
+                    //   R < r  OR  [ R > r    AND     p > r ]
+                    Bit pIsBelowCurrentRepAndAboveOtherRep = pIsAboveOtherRep;
+                    pIsBelowCurrentRepAndAboveOtherRep.multiplyBy(otherRepIsAboveCurrentRep);
+                    pIsBelowCurrentRepAndAboveOtherRep.negate();
+                    pIsBelowCurrentRepAndAboveOtherRep += pIsAboveOtherRep;
+                    pIsBelowCurrentRepAndAboveOtherRep += otherRepIsAboveCurrentRep;
+                    // results in: Bit pIsBelowCurrentRepAndAboveOtherRep =
+                    // pIsAboveOtherRep + otherRepIsAboveCurrentRep
+                    // - pIsAboveOtherRep * otherRepIsAboveCurrentRep
+                    printNameVal(keysServer.decryptCtxt(pIsBelowCurrentRepAndAboveOtherRep));
+
+                    // this will hold the Product[ (R > r) && (p > r) | foreach r in randomPoints ]
+                    isAboveAboveSmallerReps *= pIsBelowCurrentRepAndAboveOtherRep;
+                    printNameVal(keysServer.decryptCtxt(isAboveAboveSmallerReps));
+                }
+                Bit isInCell = isBelowCurrentRep;
+                isInCell *= isAboveAboveSmallerReps;
+                printNameVal(keysServer.decryptCtxt(isInCell));
+
+                Point pointIsInCell = p * isInCell;
+                cout << "\nPoint is in cell?";
+                printPoint(pointIsInCell, keysServer);
+                cout << "\n";
+
+
+                group.push_back(pointIsInCell);
+                groupSize.emplace_back(isInCell);
             }
 
             // fixme need to implement hash function for Point to use map ?
             //      `in instantiation of member function 'std::less<Point>::operator()' requested here`
-            groups.emplace_back(randomPoint, group, numPoints);
+            groups.emplace_back(R, group, groupSize);
             printDuration(t0_itr, "split iteration");
         }
 
         // todo "tail" points - all the points that are bigger than all random reps
-
 
         //
         //        for (std::tuple tuple: groups) {
@@ -171,28 +230,31 @@ public:
     }
 
 
-//    std::map<Point,
-//            std::map<Point,
-//                    std::vector<Bit>,
-//                    cmpPoints
-//            >,
-//            cmpPoints
-//    >
-//    createCmpDict(const std::vector<Point> &randomPoints,
-//                  const std::vector<Point> &stripPoints,
-//                  short dim) {
-//        std::map<Point, std::map<Point, std::vector<Bit>, cmpPoints>, cmpPoints> cmpDict;
-//        for (const Point &point : randomPoints) {
-////            std::map<Point, std::vector<Bit>, cmpPoints> cmpDictMini; //, cmpDictMini2;
-//            for (const Point &point2 : stripPoints) {
-//                std::vector<helib::Ctxt> res = point.isBiggerThan(point2, dim);
-//                // used to be cmpDictMini[point2].push_back(point > point2); and worked
-//                cmpDict[point][point2].push_back(res[0]);   // point > point2
-//                cmpDict[point2][point].push_back(res[1]);   // point2 > point
-//            }
-//        }
-//        return cmpDict;
-//    }
+    static std::map<const Point,
+            std::map<const Point,
+                    //                    std::vector<Bit>,
+                    helib::Ctxt,
+                    cmpPoints
+            >,
+            cmpPoints
+    >
+    createCmpDict(const std::vector<Point> &randomPoints,
+                  const std::vector<Point> &allPoints,
+                  short dim) {
+        std::map<const Point, std::map<const Point, helib::Ctxt, cmpPoints>, cmpPoints> cmpDict;
+        for (const Point &point : randomPoints) {
+            //            std::map<Point, std::vector<Bit>, cmpPoints> cmpDictMini; //, cmpDictMini2;
+            for (const Point &point2 : allPoints) {
+                //                if (!cmpDict[point].empty() && !cmpDict[point][point2].isEmpty()))
+                //                if (point.id == point2.id) continue; //this is checked inside isBigger function
+                // need to check if exist for efficiency
+                std::vector<helib::Ctxt> res = point.isBiggerThan(point2, dim);
+                cmpDict[point].emplace(point2, res[0]);   //  point > point2
+                cmpDict[point2].emplace(point, res[1]);   //  point < point2
+            }
+        }
+        return cmpDict;
+    }
 
 };
 

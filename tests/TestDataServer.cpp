@@ -14,16 +14,6 @@ void TestDataServer::testConstructor() {
     cout << " ------ testConstructor finished ------ " << endl << endl;
 }
 
-void TestDataServer::testScratchPoint() {
-    loggerTestDataServer.log("testEncryptScratchPoint");
-    cout << " ------ testEncryptScratchPoint ------ " << endl;
-    KeysServer keysServer;
-    DataServer dataServer(keysServer);
-    Point scratchPoint = dataServer.scratchPoint();
-    //    cCoordinates.emplace_back(BIT_SIZE, helib::Ctxt(public_key));
-    printNameVal(scratchPoint.isEmpty());
-    cout << " ------ testEncryptScratchPoint finished ------ " << endl << endl;
-}
 
 void TestDataServer::testRetrievePoints() {
     //    loggerTestClient.log("testComparePoints");

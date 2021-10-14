@@ -5,7 +5,6 @@
 #include "src/Client.h"
 
 void TestKeysServer::testConstructor() {
-
     //    loggerTestClient.log("testConstructor");
     cout << " ------ testConstructor ------ " << endl;
     KeysServer server;
@@ -23,7 +22,6 @@ void TestKeysServer::testEncryptCtxt() {
 }
 
 void TestKeysServer::testDecryptCtxt() {
-
     cout << " ------ testDecryptCtxt ------ " << endl;
     KeysServer server;
     long bit0 = 0;
@@ -49,10 +47,29 @@ void TestKeysServer::testEncryptNum() {
 
 //todo
 void TestKeysServer::testDecryptNum() {
-
     cout << " ------ testDecryptNum ------ " << endl;
     KeysServer server;
     //    Client client(server);
     //    loggerTestClient.print_log();
     cout << " ------ testDecryptNum finished ------ " << endl << endl;
+}
+
+void TestKeysServer::testScratchPoint() {
+    cout << " ------ testEncryptScratchPoint ------ " << endl;
+//    loggerTestDataServer.log("testEncryptScratchPoint");
+    KeysServer keysServer;
+//    DataServer dataServer(keysServer);
+    Point scratchPoint = keysServer.scratchPoint();
+    //    cCoordinates.emplace_back(BIT_SIZE, helib::Ctxt(public_key));
+    printNameVal(scratchPoint.isEmpty());
+    cout << " ------ testEncryptScratchPoint finished ------ " << endl << endl;
+}
+
+void TestKeysServer::testTinyRandomPoint() {
+    cout << " ------ testTinyRandomPoint ------ " << endl;
+    KeysServer server;
+    Point tiny(server.tinyRandomPoint());
+    printPoint(tiny, server);
+    //    loggerTestClient.print_log();
+    cout << " ------ testTinyRandomPoint finished ------ " << endl << endl;
 }

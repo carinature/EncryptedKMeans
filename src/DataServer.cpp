@@ -18,33 +18,6 @@ DataServer::DataServer(KeysServer &keysServer) :
     cout << "DataServer()" << endl;
 }
 
-Point DataServer::scratchPoint() {
-    cout << " scratchPoint"<<endl;
-    return Point(encryptionKey);//, nullptr);
-}
-
-
-//std::vector<Client> DataServer::generateDataClients(const KeysServer &server) {
-//    int uniquePointsNum = 3 + rand() % 10, clientsNum = uniquePointsNum;
-//    //  init coordinate arrays
-//    long arrs[uniquePointsNum][DIM];
-//    for (auto &arr: arrs) for (short dim = 0; dim < DIM; ++dim) arr[dim] = rand() % NUMBERS_RANGE;
-//    /*  init clients vector
-//     *      client [0] stays empty
-//     *      client [1] has 1 point - {point0}
-//     *      client [2] has 2 points - {point0, point1}
-//     *      ...
-//     *      client [n] has n points -  {point0, point1, ... , pointN}
-//     */
-//    std::vector<Client> clients(clientsNum, Client(server));
-//    for (int i = 1; i < clients.size(); ++i)
-//        for (int j = 0; j < i; ++j)
-//            clients[i].encryptPoint(arrs[j]);
-//    return clients;
-//}
-
-
-
 
 int main2() {
     cout << "Hello, World!" << endl;

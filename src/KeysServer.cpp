@@ -5,6 +5,7 @@
 
 #include "utils/aux.h"
 #include "KeysServer.h"
+#include "Point.h"
 
 Logger keysServerLogger(log_debug, "keysServerLogger");//todo change to log_trace
 
@@ -125,6 +126,21 @@ long KeysServer::decryptSize(const std::vector<helib::Ctxt> &cSize) {
         size += IsOne(pp);
     }
     return size;
+}
+
+
+const Point KeysServer::scratchPoint() const {
+    cout << " scratchPoint" << endl;
+    return Point(getPublicKey());//, nullptr);
+}
+
+const Point KeysServer::tinyRandomPoint() const {
+    long arr[DIM];
+    for (short dim = 0; dim < DIM; ++dim) arr[dim] = rand() % 1 * epsilon;
+    // note that despite the rand illusion, currently this always returns 0
+    // which is perfectly for us, but the "real" solution will be ok too
+    // to create the "real" solution we'll change the `rand()` function (and `long` to `double`)
+    return Point(getPublicKey(), arr);
 }
 
 

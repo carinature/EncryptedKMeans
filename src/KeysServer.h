@@ -126,6 +126,7 @@ public:
         //        return deserialized_pkp;
     }
 
+    /*  for DBG     */
     helib::Ctxt encryptCtxt(bool b) const {
         NTL::ZZX pl(b);
         helib::Ctxt cl(pubKey);
@@ -135,10 +136,10 @@ public:
 
     long decryptCtxt(const helib::Ctxt &cBit);
 
-    long decryptNum(const std::vector<helib::Ctxt>& cNum);
+    long decryptNum(const std::vector<helib::Ctxt> &cNum);
 
-    long decryptSize(const std::vector<helib::Ctxt>& size);
-
+    long decryptSize(const std::vector<helib::Ctxt> &size);
+    /*  end for DBG     */
 protected:
     helib::SecKey &getSecKey() const { // return CONST SecKey?
         return secKeyRef;
@@ -176,7 +177,20 @@ private:
 
     void prepareSecKey(helib::SecKey &key) const;
 
+public:
+    /*  services    */ //todo consider moving back to DataServer
+    /**
+     * @brief return a scratch point. for cases of ...(?)
+     * */
+    const Point scratchPoint() const;
 
+    /**
+     * @brief  returns a tiny point, as close to zero point as possible,
+     * within EPSILON margin.
+     * used, by data server, for classification of null (zero) points -
+     * so as to not assign then to one of the cells
+     * */
+    const Point tinyRandomPoint() const;
 };
 
 

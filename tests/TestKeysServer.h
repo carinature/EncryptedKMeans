@@ -18,6 +18,10 @@ public:
     static void testEncryptNum();
 
     static void testDecryptNum();
+
+    static void testScratchPoint();
+
+    static void testTinyRandomPoint();
 };
 
 

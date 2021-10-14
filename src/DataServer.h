@@ -27,9 +27,7 @@ public:
      * */
     explicit DataServer(KeysServer &keysServer);
 
-    Point scratchPoint();
-
-    /*  Generate random data.
+    /*  @brief Generate random data.
      *  Returns a vector of clients with random points.
     *      client [0] stays empty
     *      client [1] has 1 point - {point0}
@@ -37,16 +35,18 @@ public:
     *      ...
     *      client [n] has n points -  {point0, point1, ... , pointN}
     */  // todo move to aux ?
-    static std::vector<Client> generateDataClients(const KeysServer &server) {
+    static std::vector<Client> generateDataClients(const KeysServer &keysServer) {
         int uniquePointsNum = 3 + rand() % number_of_points,
                 clientsNum = uniquePointsNum;
+        printNameVal(number_of_points);
+        printNameVal(uniquePointsNum);
         /*        //  init coordinate arrays
                 //        long arrs[uniquePointsNum][DIM];
                 //        for (auto &arr: arrs)
                 //            for (short dim = 0; dim < DIM; ++dim)
                 //                arr[dim] = rand() % NUMBERS_RANGE;*/
         long arr[DIM];
-        std::vector<Client> clients(clientsNum, Client(server));
+        std::vector<Client> clients(clientsNum, Client(keysServer));
         for (int i = 1; i < clients.size(); ++i)
             for (int j = 0; j < i; ++j) {
                 //  pick random coordinates
@@ -87,7 +87,7 @@ public:
      * @return std::vector<Point>
      * */
     static std::vector<Point>
-    pickRandomPoints(std::vector<Point> &points, int numOfStrips = int(1 / epsilon)) {
+    pickRandomPoints(std::vector<Point> &points, int numOfStrips) {
         // sanity check
         if (points.empty() || numOfStrips > points.size()) return std::vector<Point>();
 
@@ -122,22 +122,28 @@ public:
             >
     >
     split(std::vector<Point> &points, short dim, KeysServer &keysServer) {
-        cout << "Split" << endl;
+        //        cout << "Split" << endl;
         auto t0_split = std::chrono::high_resolution_clock::now();
         std::vector<std::tuple<Point, std::vector<Point>, std::vector<Ctxt> > > groups;
         if (points.empty() || 0 > dim || DIM < dim) return groups;        // sanity check
         //        if (points.empty() || 0 > dim || DIM < dim) return std::vector<std::tuple<Point, std::vector<Point>, std::vector<Ctxt> > >();        // sanity check
 
-        const std::vector<Point> randomPoints = DataServer::pickRandomPoints(points);
-        //  create points compairing dict - for every 2 points (p1,p2) answers p1[dim]>p2[dim]
+        std::vector<Point> randomPoints =
+                DataServer::pickRandomPoints(points, 1 / epsilon);
+//        to avoid cases of null (zero) points being assigned to group and blowing up in size,
+//          we add a rep for null points to whom those points will be assigned
+        randomPoints.push_back(keysServer.tinyRandomPoint());
+        //  create points-comparing dict - for every 2 points (p1,p2) answers p1[dim]>p2[dim]
         std::map<const Point,
                 std::map<const Point,
                         helib::Ctxt, cmpPoints>, cmpPoints>
-                cmp = createCmpDict(randomPoints, points, 0);
+                cmp = createCmpDict(randomPoints, points, dim);
+        cout << "Random Points in this group: ";
+        printPoints(points, keysServer);
 
         for (const Point &R: randomPoints) {
             auto t0_itr = std::chrono::high_resolution_clock::now();
-            cout << "\n\n   ### current R: ";
+            cout << "\n   ############### current R: ";
             printPoint(R, keysServer);
 
             std::vector<Point> group;
@@ -146,32 +152,32 @@ public:
             groupSize.reserve(points.size() * 2 * epsilon);
 
             for (const Point &p:points) {
-                cout << "\n       === current p: ";
-                printPoint(p, keysServer);
+//                cout << "       ============= current p: ";
+//                printPoint(p, keysServer);
 
                 // p < R
                 helib::Ctxt isBelowCurrentRep(cmp[R].at(p));
-                printNameVal(keysServer.decryptCtxt(isBelowCurrentRep));
+                //                printNameVal(keysServer.decryptCtxt(isBelowCurrentRep));
                 helib::Ctxt isAboveAboveSmallerReps(isBelowCurrentRep); //todo other init
-//                printNameVal(keysServer.decryptCtxt(isAboveAboveSmallerReps));
+                //                printNameVal(keysServer.decryptCtxt(isAboveAboveSmallerReps));
 
                 for (const Point &r: randomPoints) {
-                    cout << "           --- other r: ";
-                    printPoint(r, keysServer);
-                    if (r.id == R.id ) continue;
+                    //                    cout << "           --- other r: ";
+                    //                    printPoint(r, keysServer);
+                    if (r.id == R.id) continue;
                     //todo here's a good place to check for "tail" p - is curr p bigger than all the random points
                     //todo handle cases of p that is equal to representative
 
                     //  r > R (in which case we don't care about cmp results of p and r)
                     Bit otherRepIsAboveCurrentRep = cmp[r].at(R);
                     // results in: Bit otherRepIsAboveCurrentRep = (r > R)
-                    printNameVal(keysServer.decryptCtxt(otherRepIsAboveCurrentRep));
+                    //                    printNameVal(keysServer.decryptCtxt(otherRepIsAboveCurrentRep));
 
                     //  R > r    AND     p > r
                     Bit pIsAboveOtherRep(cmp[R].at(r)); //pIsAboveOtherRep = (R > r)
                     pIsAboveOtherRep.multiplyBy(cmp[p].at(r));
                     // results in: Bit pIsAboveOtherRep = (R > r) * (p > r)
-                    printNameVal(keysServer.decryptCtxt(pIsAboveOtherRep));
+                    //                    printNameVal(keysServer.decryptCtxt(pIsAboveOtherRep));
 
                     //   R < r  OR  [ R > r    AND     p > r ]
                     Bit pIsBelowCurrentRepAndAboveOtherRep = pIsAboveOtherRep;
@@ -182,24 +188,32 @@ public:
                     // results in: Bit pIsBelowCurrentRepAndAboveOtherRep =
                     // pIsAboveOtherRep + otherRepIsAboveCurrentRep
                     // - pIsAboveOtherRep * otherRepIsAboveCurrentRep
-                    printNameVal(keysServer.decryptCtxt(pIsBelowCurrentRepAndAboveOtherRep));
+                    //                    printNameVal(keysServer.decryptCtxt(pIsBelowCurrentRepAndAboveOtherRep));
 
                     // this will hold the Product[ (R > r) && (p > r) | foreach r in randomPoints ]
                     isAboveAboveSmallerReps *= pIsBelowCurrentRepAndAboveOtherRep;
-                    printNameVal(keysServer.decryptCtxt(isAboveAboveSmallerReps));
+                    //                    printNameVal(keysServer.decryptCtxt(isAboveAboveSmallerReps));
                 }
-                Bit isInCell = isBelowCurrentRep;
-                isInCell *= isAboveAboveSmallerReps;
-                printNameVal(keysServer.decryptCtxt(isInCell));
+                Bit isInGroup = isBelowCurrentRep;
+                isInGroup *= isAboveAboveSmallerReps;
+                //                printNameVal(keysServer.decryptCtxt(isInGroup));
 
-                Point pointIsInCell = p * isInCell;
-                cout << "\nPoint is in cell?";
-                printPoint(pointIsInCell, keysServer);
-                cout << "\n";
+                Point pointIsInCell = p * isInGroup;
+
+
+                long pIsInGroup = keysServer.decryptCtxt(isInGroup);
+                if (pIsInGroup) {
+                    cout << "       Point is in group of       ";
+                    printPoint(pointIsInCell, keysServer);
+                }
+//                cout << "       Point is in group?       "
+//                     << pIsInGroup ? "yes    " : "no   ";
+//                printPoint(pointIsInCell, keysServer);
+                //                cout << "\n";
 
 
                 group.push_back(pointIsInCell);
-                groupSize.emplace_back(isInCell);
+                groupSize.emplace_back(isInGroup);
             }
 
             // fixme need to implement hash function for Point to use map ?
@@ -210,34 +224,17 @@ public:
 
         // todo "tail" points - all the points that are bigger than all random reps
 
-        //
-        //        for (std::tuple tuple: groups) {
-        //            cout << "curtuple" << endl;
-        //            Point randomPoint = std::get<0>(tuple);
-        //            std::vector<Point> group = std::get<1>(tuple);
-        //            std::vector<Ctxt> groupSize = std::get<2>(tuple);
-        //            cout << "for random point: ";
-        //            printPoint(randomPoint, keysServer);
-        //            cout << " these points will be included: \n";
-        //            printPoints(group, keysServer);
-        //            cout << "group size: " << keysServer.decryptSize(groupSize) << endl;
-        //            //        for (Point &point:group) {
-        //            //        }
-        //        }
-
         printDuration(t0_split, "split ");
         return groups;
     }
 
 
-    static std::map<const Point,
+    static
+    std::map<const Point,
             std::map<const Point,
-                    //                    std::vector<Bit>,
                     helib::Ctxt,
-                    cmpPoints
-            >,
-            cmpPoints
-    >
+                    cmpPoints>,
+            cmpPoints>
     createCmpDict(const std::vector<Point> &randomPoints,
                   const std::vector<Point> &allPoints,
                   short dim) {

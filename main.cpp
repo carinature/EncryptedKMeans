@@ -35,33 +35,49 @@ int main() {
     printPoints(points, keysServer);
     cout << " --- --- --- --- ---" << endl;
     //    int numOfStrips = 5;
-    std::vector<Point> randomPoints = DataServer::pickRandomPoints(points);//, numOfStrips);
-    cout << " --- Random Points  ---" << endl;
-    printPoints(randomPoints, keysServer);
-    cout << " --- --- --- --- ---" << endl;
-    //    int numOfStrips = 5;
     std::vector<
             std::tuple<
                     Point,
                     std::vector<Point>,
                     std::vector<Ctxt>
             >
-    > groups = DataServer::split(points, 0, keysServer);//, numOfStrips);
-    cout << groups.size() << endl;
+    > groups = DataServer::split(points, 0, keysServer);
+    printNameVal(groups.size());
+        cout << " --- Random Points  ---" << endl;
     for (auto g: groups)  printPoint(std::get<0>(g), keysServer);
     cout << " --- Groups  ---" << endl;
     for (std::tuple tuple: groups) {
-        cout << "curtuple"<<endl;
         Point randomPoint = std::get<0>(tuple);
         std::vector<Point> group = std::get<1>(tuple);
         std::vector<Ctxt> groupSize = std::get<2>(tuple);
-        cout << "for random point: ";
+        cout << "on the left of random point: ";
         printPoint(randomPoint, keysServer);
         cout << " these points will be included: \n";
         printPoints(group, keysServer);
         cout << "group size: " << keysServer.decryptSize(groupSize) << endl;
-        //        for (Point &point:group) {
-        //        }
+        std::vector<
+                std::tuple<
+                        Point,
+                        std::vector<Point>,
+                        std::vector<Ctxt>
+                >
+        > cells = DataServer::split(group, 1, keysServer);
+        printNameVal(cells.size());
+        cout << " --- Random Points For Cells ---" << endl;
+        for (auto g: cells)  printPoint(std::get<0>(g), keysServer);
+        cout << " --- Cells  ---" << endl;
+        for (std::tuple tuple: cells) {
+            Point randomPointCell = std::get<0>(tuple);
+            std::vector <Point> cell = std::get<1>(tuple);
+            std::vector <Ctxt> cellSize = std::get<2>(tuple);
+            cout << "on the left of random point: ";
+            printPoint(randomPoint, keysServer);
+            cout << "and under the (cell) random point: ";
+            printPoint(randomPointCell, keysServer);
+            cout << " these points will be included: \n";
+            printPoints(cell, keysServer);
+            cout << "cell size: " << keysServer.decryptSize(cellSize) << endl;
+        }
     }
     cout << " --- --- --- --- ---" << endl;
 
@@ -93,11 +109,6 @@ int main() {
     }
 
 //
-//    printNameVal(n);
-//    printNameVal(n);
-//    printNameVal(n);
-//    printNameVal(n);
-//    printNameVal(n);
 //    printNameVal(n);
 //    std::vector<long> v0(n);
 //    for (long i = 0; i < n; i++)
@@ -178,84 +189,6 @@ int main() {
     // encrypted binary numbers.
 #endif
 
-#ifdef HELIB_DEBUG
-    decryptAndPrint((cout << " before comparison: "),
-                  encb[0],
-                  encryptionKey,
-                  ea,
-                  0);
-#endif
-
-#if alt
-    //// this should stay in main but use `Client` class compare
-    std::vector<long> slotsMin, slotsMax, slotsMu, slotsNi;
-    // comparison only
-    compareTwoNumbers(mu, ni,
-                      helib::CtPtrs_VecCt(enca),
-                      helib::CtPtrs_VecCt(encb),
-                      false);
-    ea.decrypt(mu, encryptionKey, slotsMu);
-    ea.decrypt(ni, encryptionKey, slotsNi);
-    auto muniPair = std::make_pair(slotsMu[0], slotsNi[0]);
-    auto pmupniPair = std::make_pair((long) pMu, (long) pNi);
-    cout << "Comparison (without min max) : a=" << pa << ", b=" << pb
-         << ", mu=" << slotsMu[0] << ", ni=" << slotsNi[0] << endl;
-    cout << std::get<0>(muniPair) << ", " << std::get<1>(muniPair) << endl;
-    cout << std::get<0>(pmupniPair) << ", " << std::get<1>(pmupniPair) << endl;
-    if (VERBOSE)
-        cout << "Comparison (without min max) : " << '(' << pa << ',' << pb << ")"
-             << "=> mu=" << slotsMu[0] << ", ni=" << slotsNi[0] << endl;
-
-    {
-        helib::CtPtrs_VecCt wMin(eMin),
-                wMax(eMax); // A wrappers around output vectors
-        // comparison with max and min
-        compareTwoNumbers(wMax, wMin,
-                          mu, ni,
-                          helib::CtPtrs_VecCt(enca),
-                          helib::CtPtrs_VecCt(encb),
-                          false);
-        decryptBinaryNums(slotsMax, wMax, encryptionKey, ea);
-        decryptBinaryNums(slotsMin, wMin, encryptionKey, ea);
-    } // get rid of the wrapper
-
-    ea.decrypt(mu, encryptionKey, slotsMu);
-    ea.decrypt(ni, encryptionKey, slotsNi);
-
-    auto muniTuple = std::make_tuple(pMax, pMin, pMu, pNi);
-    auto pmupniTuple = std::make_tuple(slotsMax[0], slotsMin[0], slotsMu[0], slotsNi[0]);
-    cout << "Comparison (with min max) a=" << pa << ", b=" << pb
-         << ", min=" << slotsMin[0] << ", max=" << slotsMax[0]
-         << ", mu=" << slotsMu[0] << ", ni=" << slotsNi[0] << endl;
-    cout << std::get<0>(muniTuple) << ", " << std::get<1>(muniTuple) << ", "
-         << std::get<2>(muniTuple) << ", " << std::get<3>(muniTuple) << endl;
-    cout << std::get<0>(pmupniTuple) << ", " << std::get<1>(pmupniTuple) << ", "
-         << std::get<2>(pmupniTuple) << ", " << std::get<3>(pmupniTuple) << endl;
-    if (VERBOSE)
-        cout << "Comparison (with min max) : " << '(' << pa << ',' << pb << ")=>(" << slotsMin[0]
-             << ','
-             << slotsMax[0] << "), mu=" << slotsMu[0] << ", ni=" << slotsNi[0] << endl;
-#endif
-
-#ifdef HELIB_DEBUG
-    const helib::Ctxt* minLvlCtxt = nullptr;
-  long minLvl = 1000;
-  for (const helib::Ctxt& c : eMax) {
-    long lvl = c.logOfPrimeSet();
-    if (lvl < minLvl) {
-      minLvlCtxt = &c;
-      minLvl = lvl;
-    }
-  }
-  decryptAndPrint((cout << " after comparison: "),
-                  *minLvlCtxt,
-                  encryptionKey,
-                  ea,
-                  0);
-  cout << endl;
-#endif
-
-    if (VERBOSE) helib::printAllTimers(cout);
 
 
     //-----------------------------------------------------------

@@ -6,6 +6,10 @@
 
 #include "Client.h"
 
+//move to the cpp file
+#include <algorithm> //for the random shuffle
+#include <random>
+
 class DataServer {
 
     //    [[maybe_unused]] const helib::SecKey encryptionKey;
@@ -36,7 +40,8 @@ public:
     *      client [n] has n points -  {point0, point1, ... , pointN}
     */  // todo move to aux ?
     static std::vector<Client> generateDataClients(const KeysServer &keysServer) {
-        int uniquePointsNum = 3 + rand() % number_of_points,
+        //        Note that rand() is considered harmful, and is discouraged in C++14
+        int uniquePointsNum = 3 + random() % number_of_points,
                 clientsNum = uniquePointsNum;
         printNameVal(number_of_points);
         printNameVal(uniquePointsNum);
@@ -51,7 +56,7 @@ public:
             for (int j = 0; j < i; ++j) {
                 //  pick random coordinates
                 for (short dim = 0; dim < DIM; ++dim)
-                    arr[dim] = rand() % NUMBERS_RANGE;
+                    arr[dim] = random() % NUMBERS_RANGE;
                 //  encrypt coordinates and add to client
                 clients[i].encryptPoint(arr);
                 //                clients[i].encryptPoint(arrs[j]);}
@@ -87,24 +92,19 @@ public:
      * @return std::vector<Point>
      * */
     static std::vector<Point>
-    pickRandomPoints(std::vector<Point> &points, int numOfStrips) {
-        // sanity check
-        if (points.empty() || numOfStrips > points.size()) return std::vector<Point>();
+    pickRandomPoints(const std::vector<Point> &points, int k, KeysServer &keysServer) {
+        if (points.empty() || k > points.size()) return std::vector<Point>();        // sanity check
 
-        std::vector<Point> copy(points);
-        auto begin = copy.begin();
-        int k = numOfStrips, stripSize = numOfStrips;
-        while (k--) {
-            auto r = begin;
-            // next line used to crushes the program with small(<20) number of points in file
-            advance(r, random() % stripSize);
-            swap(begin, r);
-            ++begin;
-            --stripSize;
-        }
-        //  todo see if there's a way to reduce this copy
-        //        std::vector<Point> random(copy.begin(), copy.begin() + numOfStrips - 1);
-        return std::vector<Point>(copy.begin(), copy.begin() + numOfStrips - 1);
+        std::vector<int> indecies(points.size());
+        for (int i = 0; i < indecies.size(); ++i) indecies[i] = i;
+        auto rd = std::random_device{};
+        auto rng = std::default_random_engine{rd()};
+        std::shuffle(std::begin(indecies), std::end(indecies), rng);
+
+        std::vector<Point> randomPoints;
+        randomPoints.reserve(k);
+        for (int i = 0; i < k; ++i) randomPoints.emplace_back(points[indecies[i]]);
+        return randomPoints;
     }
 
     /**
@@ -129,9 +129,9 @@ public:
         //        if (points.empty() || 0 > dim || DIM < dim) return std::vector<std::tuple<Point, std::vector<Point>, std::vector<Ctxt> > >();        // sanity check
 
         std::vector<Point> randomPoints =
-                DataServer::pickRandomPoints(points, 1 / epsilon);
-//        to avoid cases of null (zero) points being assigned to group and blowing up in size,
-//          we add a rep for null points to whom those points will be assigned
+                DataServer::pickRandomPoints(points, 1 / epsilon, keysServer);
+        //        to avoid cases of null (zero) points being assigned to group and blowing up in size,
+        //          we add a rep for null points to whom those points will be assigned
         randomPoints.push_back(keysServer.tinyRandomPoint());
         //  create points-comparing dict - for every 2 points (p1,p2) answers p1[dim]>p2[dim]
         std::map<const Point,
@@ -152,8 +152,8 @@ public:
             groupSize.reserve(points.size() * 2 * epsilon);
 
             for (const Point &p:points) {
-//                cout << "       ============= current p: ";
-//                printPoint(p, keysServer);
+                //                cout << "       ============= current p: ";
+                //                printPoint(p, keysServer);
 
                 // p < R
                 helib::Ctxt isBelowCurrentRep(cmp[R].at(p));
@@ -196,19 +196,17 @@ public:
                 }
                 Bit isInGroup = isBelowCurrentRep;
                 isInGroup *= isAboveAboveSmallerReps;
-                //                printNameVal(keysServer.decryptCtxt(isInGroup));
 
                 Point pointIsInCell = p * isInGroup;
-
 
                 long pIsInGroup = keysServer.decryptCtxt(isInGroup);
                 if (pIsInGroup) {
                     cout << "       Point is in group of       ";
                     printPoint(pointIsInCell, keysServer);
                 }
-//                cout << "       Point is in group?       "
-//                     << pIsInGroup ? "yes    " : "no   ";
-//                printPoint(pointIsInCell, keysServer);
+                //                cout << "       Point is in group?       "
+                //                     << pIsInGroup ? "yes    " : "no   ";
+                //                printPoint(pointIsInCell, keysServer);
                 //                cout << "\n";
 
 
@@ -238,18 +236,27 @@ public:
     createCmpDict(const std::vector<Point> &randomPoints,
                   const std::vector<Point> &allPoints,
                   short dim) {
+
+        auto t0_cmpDict = std::chrono::high_resolution_clock::now();
+
         std::map<const Point, std::map<const Point, helib::Ctxt, cmpPoints>, cmpPoints> cmpDict;
         for (const Point &point : randomPoints) {
             //            std::map<Point, std::vector<Bit>, cmpPoints> cmpDictMini; //, cmpDictMini2;
             for (const Point &point2 : allPoints) {
                 //                if (!cmpDict[point].empty() && !cmpDict[point][point2].isEmpty()))
                 //                if (point.id == point2.id) continue; //this is checked inside isBigger function
-                // need to check if exist for efficiency
+                // todo in the future, for efficiency
+                //  - need to check if exist
+                //  - find a way to utilize the 2nd result of the `isBiggerThan()`
+                //      since you get it for free in helibs cmp
+                //  - maybe useful to use helibs `min/max` somehow?
                 std::vector<helib::Ctxt> res = point.isBiggerThan(point2, dim);
                 cmpDict[point].emplace(point2, res[0]);   //  point > point2
                 cmpDict[point2].emplace(point, res[1]);   //  point < point2
             }
         }
+        printDuration(t0_cmpDict, "createCmpDict");
+
         return cmpDict;
     }
 

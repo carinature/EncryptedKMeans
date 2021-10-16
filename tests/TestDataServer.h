@@ -10,14 +10,17 @@ class TestDataServer {
 public:
     static void testConstructor();
 
-    static void testRetrievePoints();
-
     static void testComparePoints();
 
     static void testAddition();
 
     static void testMultiplication();
 
+    static void testgGenerateDataClients();
+    static void testRetrievePoints();
+    static void testPickRandomPoints();
+
+    static void testminirand();
 };
 
 

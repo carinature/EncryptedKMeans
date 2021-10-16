@@ -44,10 +44,14 @@ int main() {
 //
 //    cout << " ============ Test DataServer ============ " << endl;
 //    TestDataServer::testConstructor();
+////    TestDataServer::testComparePoints();
+////    TestDataServer::testAddition();
+////    TestDataServer::testMultiplication();
+//    TestDataServer::testgGenerateDataClients();
 //    TestDataServer::testRetrievePoints();
-//    TestDataServer::testComparePoints();
-//    TestDataServer::testAddition();
-//    TestDataServer::testMultiplication();
+    TestDataServer::testminirand();
+    TestDataServer::testPickRandomPoints();
+
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
 
 

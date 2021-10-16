@@ -44,6 +44,9 @@ public:
     //        long BIT_SIZE = 16;
     //        long OUT_SIZE = 2 * BIT_SIZE;
     explicit Point(const helib::PubKey &public_key, const long coordinates[] = nullptr) :
+            cmpCounter(0),  //todo maybe better to init to 0, depending future impl & use
+            addCounter(0),  //todo maybe better to init to 0, depending future impl & use
+            multCounter(0), //todo maybe better to init to 0, depending future impl & use
     //            public_key(public_key){
             id(counter++),
             public_key(public_key),
@@ -69,6 +72,9 @@ public:
     }
 
     Point(const Point &point) :
+            cmpCounter(point.cmpCounter),  //todo maybe better to init to 0, depending future impl & use
+            addCounter(point.addCounter),  //todo maybe better to init to 0, depending future impl & use
+            multCounter(point.multCounter), //todo maybe better to init to 0, depending future impl & use
             id(point.id), //todo make sure this approach won't cuase some unpredictable behaviour later (e.g in cases of EXPLICIT copy (instead of implicit, in which this way makes sense))
             public_key(point.public_key),
             pubKeyPtrDBG(&(point.public_key)),

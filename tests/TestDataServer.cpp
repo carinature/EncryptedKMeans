@@ -15,28 +15,6 @@ void TestDataServer::testConstructor() {
 }
 
 
-void TestDataServer::testRetrievePoints() {
-    //    loggerTestClient.log("testComparePoints");
-    cout << " ------ testRetrievePoints ------ " << endl << endl;
-    KeysServer server;
-    std::vector<Client> clients = DataServer::generateDataClients(server);
-    std::vector<Point> points = DataServer::retrievePoints(clients);
-
-    cout << "===========" << endl;
-    //    printNameVal(uniquePointsNum);
-    printNameVal(points.size());
-    for (Point &p:points) {
-        cout << "( ";
-        for (short dim = 0; dim < DIM - 1; ++dim)
-            cout << server.decryptNum(p[dim]) << ",";
-        cout << server.decryptNum(p[DIM - 1]) << " ) " << endl;
-    }
-    // todo worth reading again, may improve efficiency:
-    //  https://stackoverflow.com/questions/25108854/initializing-the-size-of-a-c-vector
-    cout << " ------ testRetrievePoints finished ------ " << endl << endl;
-}
-
-
 void TestDataServer::testComparePoints() {
     //    loggerTestClient.log("testComparePoints");
     cout << " ------ testComparePoints ------ " << endl << endl;
@@ -51,13 +29,13 @@ void TestDataServer::testComparePoints() {
     Point point2(server.getPublicKey(), arr2);
 
     for (short dim = 0; dim < DIM; ++dim) {
-//        for (int i = 0; i < number_of_points; ++i) {
-            helib::Ctxt res = point.isBiggerThan(point2, dim)[0];
-            assert((arr[dim] > arr2[dim]) == server.decryptCtxt(res));
+        //        for (int i = 0; i < number_of_points; ++i) {
+        helib::Ctxt res = point.isBiggerThan(point2, dim)[0];
+        assert((arr[dim] > arr2[dim]) == server.decryptCtxt(res));
 
-            helib::Ctxt res2 = point2.isBiggerThan(point, dim)[0];
-            assert((arr2[dim] > arr[dim]) == server.decryptCtxt(res2));
-//        }
+        helib::Ctxt res2 = point2.isBiggerThan(point, dim)[0];
+        assert((arr2[dim] > arr[dim]) == server.decryptCtxt(res2));
+        //        }
     }
     cout << " ------ testComparePoints finished ------ " << endl << endl;
 }
@@ -78,4 +56,109 @@ void TestDataServer::testAddition() {
 void TestDataServer::testMultiplication() {
     cout << " ------ testMultiplication ------ " << endl << endl;
     cout << " ------ testMultiplication finished ------ " << endl << endl;
+}
+
+
+void TestDataServer::testgGenerateDataClients() {
+    cout << " ------ testgGenerateDataClients ------ " << endl << endl;
+    KeysServer keysServer;
+
+    std::vector<Client> clients = DataServer::generateDataClients(keysServer);
+    //    std::vector<Point> points = DataServer::retrievePoints(clients);
+    //
+    //    cout << " --- Points  ---" << endl;
+    //    printPoints(points, keysServer);
+    //    cout << " --- --- --- --- ---" << endl;
+    cout << " ------ testgGenerateDataClients finished ------ " << endl << endl;
+}
+
+
+void TestDataServer::testRetrievePoints() {
+    cout << " ------ testRetrievePoints ------ " << endl << endl;
+    KeysServer keysServer;
+
+    std::vector<Client> clients = DataServer::generateDataClients(keysServer);
+    std::vector<Point> points = DataServer::retrievePoints(clients);
+
+    cout << " --- Points  ---" << endl;
+    printPoints(points, keysServer);
+    cout << " --- --- --- --- ---" << endl;
+
+    cout << " ------ testRetrievePoints finished ------ " << endl << endl;
+}
+
+
+void TestDataServer::testPickRandomPoints() {
+    cout << " ------ testPickRandomPoints ------ " << endl << endl;
+    KeysServer keysServer;
+
+    std::vector<Client> clients = DataServer::generateDataClients(keysServer);
+    std::vector<Point> points = DataServer::retrievePoints(clients);
+    cout << " --- All Points  ---" << endl;
+    printPoints(points, keysServer);
+    cout << " --- --- --- --- ---" << endl;
+
+    std::vector<Point> randomPoints =
+            DataServer::pickRandomPoints(points, 1 / epsilon, keysServer);
+    cout << " --- Random Points  ---" << endl;
+    printPoints(randomPoints, keysServer);
+    cout << " --- --- --- --- ---" << endl;
+
+    randomPoints.push_back(keysServer.tinyRandomPoint());
+    cout << " --- Random Points with a Tiny Point ---" << endl;
+    printPoints(randomPoints, keysServer);
+    cout << " --- --- --- --- ---" << endl;
+
+    cout << " ------ testPickRandomPoints finished ------ " << endl << endl;
+}
+
+#include <iostream>
+#include <random>
+
+void TestDataServer::testminirand() {
+    // Fill vector with numbers 0,1,2,3...,kMaxValue
+    static const int kMaxValue = 7;
+    std::vector<int> v(kMaxValue + 1);
+    for (size_t i = 0; i < v.size(); ++i)
+        v[i] = i;
+
+    // Random seed generator
+    std::random_device rd;
+
+    // Psuedo random number generator
+    std::mt19937 prng(rd());
+
+    // Shuffle the 0,1,2,3...,kMaxValue integer sequence
+    std::shuffle(v.begin(), v.end(), prng);
+
+    // Print random sequence
+    for (int x : v)
+        std::cout << x << ' ';
+    std::cout << std::endl;
+
+    cout << " ==== and another one ===  " << endl;
+    auto rng = std::default_random_engine { rd() };
+    std::vector<int> v2(kMaxValue + 1);
+    for (size_t i = 0; i < v2.size(); ++i)
+        v2[i] = i;
+    std::shuffle(std::begin(v2), std::end(v2), rng);
+    // Print random sequence
+    for (int x : v2)
+        std::cout << x << ' ';
+    std::cout << std::endl;
+
+/*
+    cout << " ==== and with points ===  " << endl;
+    KeysServer keysServer;
+    std::vector<Client> clients = DataServer::generateDataClients(keysServer);
+    std::vector<Point> points = DataServer::retrievePoints(clients);
+    std::shuffle(std::begin(points), std::end(points), rng);
+    // Print random sequence
+    for (Point &point: points) printPoint(point, keysServer);
+    std::cout << std::endl;
+//    error: no matching function for call to ‘swap(Point&, Point&)’
+//    swap(*__a, *__b);
+*/
+
+
 }

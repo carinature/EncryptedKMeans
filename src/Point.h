@@ -248,7 +248,7 @@ public:
      * @returns a tuple that answers - ((p1[d]>p2[d]), (p2[d]>p1[d])). value are encrypted.
      * @return std::vector<helib::Ctxt>
      * */
-    std::vector<helib::Ctxt> isBiggerThan(const Point &point, short currentDim = DIM - 1) const {
+    const std::vector<helib::Ctxt> isBiggerThan(const Point &point, short currentDim = DIM - 1) const {
         Ctxt mu(public_key), ni(public_key);
         if (!(isEmpty() || point.isEmpty())) {
             if (point.id == id) {
@@ -282,22 +282,37 @@ public:
                       */
     }
 
-    bool operator==(Point &point) const {
+    bool operator==(const Point &point) const {
         return id == point.id;
     }
 
 public:
     //! @var long id
     //! used in createCmpDict for comparison
-    long id; // = 0;  //fixme
+    const long id; // = 0;  //fixme
 };
 
 
 struct cmpPoints {
+    long id;
     bool operator()(const Point &a, const Point &b) const {
         return a.id > b.id;
     }
+    bool operator==(const Point &p) const {
+        return id == p.id;
+    }
 };
+
+struct hashPoints {
+    std::size_t operator()(const Point &point) const {
+        return std::hash<long>()(point.id);
+    }
+//    bool operator==(const Point &p) const {
+//        return id == p.id;
+//    }
+};
+
+
 
 
 #endif //ENCRYPTEDKMEANS_POINT_H

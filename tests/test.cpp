@@ -56,6 +56,7 @@ int main() {
     TestDataServer::testRetrievePoints();
     TestDataServer::testminirand();
     TestDataServer::testPickRandomPoints();
+    TestDataServer::testCreateCmpDict();
 
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
 

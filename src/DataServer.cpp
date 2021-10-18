@@ -9,48 +9,83 @@ static Logger dataServerLogger(log_debug, "dataServerLogger");
 DataServer::DataServer(KeysServer &keysServer) :
         keysServer(keysServer),
         encryptionKey(keysServer.getPublicKey()),
-//        public_key(keysServer.getPublicKey()),
-//        public_key(encryptionKey),
-//        ea(keysServer.getEA()),
-        scratch(keysServer.getPublicKey()){
-
+        //        public_key(keysServer.getPublicKey()),
+        //        public_key(encryptionKey),
+        //        ea(keysServer.getEA()),
+        scratch(keysServer.getPublicKey()) {
     dataServerLogger.log("DataServer()");
     cout << "DataServer()" << endl;
 }
 
+/**
+ * @brief request data from clients and conentrate into one list
+ * @param clients
+ * @return std::vector<Point>
+ * @returns a list containing all the points from all the clients in the data set
+ * */
+std::vector<Point>
+DataServer::retrievePoints(
+        const std::vector<Client> &clients) {
+    auto t0_retrievePoints = CLOCK::now();// logging
 
-int main2() {
-    cout << "Hello, World!" << endl;
-//    BGV_binary_arithmetic();
-//    BGV_packed_arithmetic();
-//    KT_packed_arithmetic();
-//    add_numbers();
-//    mult_numbers();
-//    cmp_numbers();
+    std::vector<Point> points;
+    if (clients.empty()) return points;
+    points.reserve(pow(clients.size(), 2) / 2); // preallocate memory
+    for (const Client &c:clients)
+        for (const Point &p:c.points)
+            points.emplace_back(Point(p));
+    //            points.insert(points.end(),c.points.begin(), c.points.end());
+    points.shrink_to_fit();
 
+    loggerDataServer.log(printDuration(t0_retrievePoints, "retrievePoints"));
 
-    return 0;
-}
-
-constexpr static long mValues[8][15] = {
-        // clang-format off
-        // {p,phi(m),     m,  d,   m1,  m2,  m3,   g1,   g2,   g3,ord1,ord2,ord3,  B, c}
-        {2,    48,   105, 12,    3,  35,   0,   71,   76,    0,   2,   2,   0, 25, 2},
-        {2,   600,  1023, 10,   11,  93,   0,  838,  584,    0,  10,   6,   0, 25, 2},
-        {2,  2304,  4641, 24,    7,   3, 221, 3979, 3095, 3760,   6,   2,  -8, 25, 3},
-        {2,  5460,  8193, 26, 8193,   0,   0,   46,    0,    0, 210,   0,   0, 25, 3},
-        {2,  8190,  8191, 13, 8191,   0,   0,   39,    0,    0, 630,   0,   0, 25, 3},
-        {2, 10752, 11441, 48,   17, 673,   0, 4712, 2024,    0,  16, -14,   0, 25, 3},
-        {2, 15004, 15709, 22,   23, 683,   0, 4099,13663,    0,  22,  31,   0, 25, 3},
-        {2, 27000, 32767, 15,   31,   7, 151,11628,28087,25824,  30,   6, -10, 28, 4}
-        // clang-format on
-};
-
-void add_numbers() {
+    return points;
 
 }
 
 
+/**
+ * @brief request data from clients and conentrate into one list
+ * @param points - all the points from all the clients in the data set
+ * @param m - number of random representatives for each slice
+ * @return std::vector<Point>
+ * @returns a list of #DIM lists - each containing m^d randomly chosen points
+ * */
+const std::vector<std::vector<Point>>
+DataServer::pickRandomPoints(
+        const std::vector<Point> &points,
+        int m) {
+    auto t0_rndPoints = CLOCK::now();  // logging, profiling, DBG
+
+    if (points.empty() || m > points.size()) return std::vector<std::vector<Point>>();
+
+    const Point &tinyRandomPoint = keysServer.tinyRandomPoint();
+    std::vector<std::vector<Point>> randomPoints(DIM);
+
+    for (int dim = 0; dim < DIM; ++dim) {
+        // for every dimension random m^dim points (m points for every 'slice') and one tiny-point
+        randomPoints[dim].reserve(std::pow(m, dim) + 1);
+
+        // choose random indices
+        std::vector<int> indices(points.size());
+        for (int i = 0; i < indices.size(); ++i) indices[i] = i;
+        auto rd = std::random_device{};
+        auto rng = std::default_random_engine{rd()};
+        std::shuffle(std::begin(indices), std::end(indices), rng);
+        //todo shuffle only m instead of all ? check which is more efficient
+
+        for (int i = 0; i < m; ++i) randomPoints[dim].emplace_back(points[indices[i]]);
+        //        to avoid cases of null (zero) points being assigned to group and blowing up in size,
+        //          we add a rep for null points to whom those points will be assigned
+        //        randomPoints.push_back(keysServer.tinyRandomPoint());
+        randomPoints[dim].push_back(tinyRandomPoint);
+
+    }
+
+    loggerDataServer.log(printDuration(t0_rndPoints, "pickRandomPoints"));
+    return randomPoints;
+
+}
 
 void KT_packed_arithmetic() {
     /*  Example of BGV scheme  */
@@ -64,7 +99,13 @@ void KT_packed_arithmetic() {
     cout << "Initialising context object..." << endl;
     // Initialize context
     // This object will hold information about the algebra created from the previously set parameters
-    helib::Context context = helib::ContextBuilder<helib::BGV>().m(m).p(p).r(r).bits(bits).c(c).build();
+    helib::Context context = helib::ContextBuilder<helib::BGV>()
+            .m(m)
+            .p(p)
+            .r(r)
+            .bits(bits)
+            .c(c)
+            .build();
 
     // Print the context
     context.printout();
@@ -374,16 +415,15 @@ void BGV_packed_arithmetic() {
 
 }
 
-
 void BGV_binary_arithmetic() {/*  Example of binary arithmetic using the BGV scheme  */
 
     // First set up parameters.
-//
-// NOTE: The parameters used in this example code are for demonstration only.
-// They were chosen to provide the best performance of execution while
-// providing the context to demonstrate how to use the "Binary Arithmetic
-// APIs". The parameters do not provide the security level that might be
-// required by real use/application scenarios.
+    //
+    // NOTE: The parameters used in this example code are for demonstration only.
+    // They were chosen to provide the best performance of execution while
+    // providing the context to demonstrate how to use the "Binary Arithmetic
+    // APIs". The parameters do not provide the security level that might be
+    // required by real use/application scenarios.
 
     // Plaintext prime modulus.
     long p = 2;
@@ -415,8 +455,8 @@ void BGV_binary_arithmetic() {/*  Example of binary arithmetic using the BGV sch
 
     cout << "Initialising context object..." << endl;
     // Initialize the context.
-// This object will hold information about the algebra created from the
-// previously set parameters.
+    // This object will hold information about the algebra created from the
+    // previously set parameters.
     helib::Context context = helib::ContextBuilder<helib::BGV>()
             .m(m)
             .p(p)
@@ -447,7 +487,7 @@ void BGV_binary_arithmetic() {/*  Example of binary arithmetic using the BGV sch
     secret_key.genRecryptData();
 
     // Public key management.
-// Set the secret key (upcast: SecKey is a subclass of PubKey).
+    // Set the secret key (upcast: SecKey is a subclass of PubKey).
     const helib::PubKey &public_key = secret_key;
 
     // Get the EncryptedArray of the context.
@@ -462,28 +502,28 @@ void BGV_binary_arithmetic() {/*  Example of binary arithmetic using the BGV sch
     cout << "Number of slots: " << nslots << endl;
 
     // Generate three random binary numbers a, b, c.
-// Encrypt them under BGV.
-// Calculate a * b + c with HElib's binary arithmetic functions, then decrypt
-// the result.
-// Next, calculate a + b + c with HElib's binary arithmetic functions, then
-// decrypt the result.
-// Finally, calculate popcnt(a) with HElib's binary arithmetic functions,
-// then decrypt the result.  Note that popcnt, also known as hamming weight
-// or bit summation, returns the count of non-zero bits.
+    // Encrypt them under BGV.
+    // Calculate a * b + c with HElib's binary arithmetic functions, then decrypt
+    // the result.
+    // Next, calculate a + b + c with HElib's binary arithmetic functions, then
+    // decrypt the result.
+    // Finally, calculate popcnt(a) with HElib's binary arithmetic functions,
+    // then decrypt the result.  Note that popcnt, also known as hamming weight
+    // or bit summation, returns the count of non-zero bits.
 
     // Each bit of the binary number is encoded into a single ciphertext. Thus
-// for a 16 bit binary number, we will represent this as an array of 16
-// unique ciphertexts.
-// i.e. b0 = [0] [0] [0] ... [0] [0] [0]        ciphertext for bit 0
-//      b1 = [1] [1] [1] ... [1] [1] [1]        ciphertext for bit 1
-//      b2 = [1] [1] [1] ... [1] [1] [1]        ciphertext for bit 2
-// These 3 ciphertexts represent the 3-bit binary number 110b = 6
+    // for a 16 bit binary number, we will represent this as an array of 16
+    // unique ciphertexts.
+    // i.e. b0 = [0] [0] [0] ... [0] [0] [0]        ciphertext for bit 0
+    //      b1 = [1] [1] [1] ... [1] [1] [1]        ciphertext for bit 1
+    //      b2 = [1] [1] [1] ... [1] [1] [1]        ciphertext for bit 2
+    // These 3 ciphertexts represent the 3-bit binary number 110b = 6
 
     // Note: several numbers can be encoded across the slots of each ciphertext
-// which would result in several parallel slot-wise operations.
-// For simplicity we place the same data into each slot of each ciphertext,
-// printing out only the back of each vector.
-// NB: fifteenOrLess4Four max is 15 bits. Later in the code we pop the MSB.
+    // which would result in several parallel slot-wise operations.
+    // For simplicity we place the same data into each slot of each ciphertext,
+    // printing out only the back of each vector.
+    // NB: fifteenOrLess4Four max is 15 bits. Later in the code we pop the MSB.
     long bitSize = 16;
     long outSize = 2 * bitSize;
     long a_data = NTL::RandomBits_long(bitSize);
@@ -518,15 +558,15 @@ void BGV_binary_arithmetic() {/*  Example of binary arithmetic using the BGV sch
     }
 
     // Although in general binary numbers are represented here as
-// std::vector<helib::Ctxt> the binaryArith APIs for HElib use the PtrVector
-// wrappers instead, e.g. helib::CtPtrs_vectorCt. These are nothing more than
-// thin wrapper classes to standardise access to different vector types, such
-// as NTL::Vec and std::vector. They do not take ownership of the underlying
-// object but merely provide access to it.
-//
-// helib::CtPtrMat_vectorCt is a wrapper for
-// std::vector<std::vector<helib::Ctxt>>, used for representing a list of
-// encrypted binary numbers.
+    // std::vector<helib::Ctxt> the binaryArith APIs for HElib use the PtrVector
+    // wrappers instead, e.g. helib::CtPtrs_vectorCt. These are nothing more than
+    // thin wrapper classes to standardise access to different vector types, such
+    // as NTL::Vec and std::vector. They do not take ownership of the underlying
+    // object but merely provide access to it.
+    //
+    // helib::CtPtrMat_vectorCt is a wrapper for
+    // std::vector<std::vector<helib::Ctxt>>, used for representing a list of
+    // encrypted binary numbers.
 
     // Perform the multiplication first and put it in encrypted_product.
     std::vector<helib::Ctxt> encrypted_product;
@@ -574,9 +614,9 @@ void BGV_binary_arithmetic() {/*  Example of binary arithmetic using the BGV sch
     cout << "a+b+c = " << decrypted_result.back() << endl;
 
     // This section calculates popcnt(a) using the fifteenOrLess4Four
-// function.
-// Note: the output i.e. encrypted_result should be of size 4
-// because 4 bits are required to represent numbers in [0,15].
+    // function.
+    // Note: the output i.e. encrypted_result should be of size 4
+    // because 4 bits are required to represent numbers in [0,15].
     encrypted_result.resize(4lu, scratch);
     decrypted_result.clear();
     encrypted_a.pop_back(); // drop the MSB since we only support up to 15 bits.

@@ -44,17 +44,16 @@ public:
             const std::vector<Client> &clients);
 
     /**
-     * @brief Picks a group of random points to be used as both cell representative and max-limit.
-     * Uses the Fisher–Yates shuffle for choosing m random points. (fixme not anymore. make sure)
-     * @param points - a list of all points (in current group).
-     * @param numOfReps - the desired number of representatives, usually the number of desired data slices.
-     * @returns a sub list of the original points, picked randomly using the .
+     * @brief request data from clients and conentrate into one list
+     * @param points - all the points from all the clients in the data set
+     * @param m - number of random representatives for each slice
+     * @returns a list of #DIM lists - each containing m^d randomly chosen points
      * @return std::vector<Point>
      * */
     const std::vector<std::vector<Point>>
-    pickRandomPoints(
-            const std::vector<Point> &points,
-            int m = int(1 / epsilon));
+    pickRandomPoints(const std::vector<Point> &points,
+                     int m,
+                     const Point &tinyRandomPoint);
 
     // TODO candidate for multithreading
     /**
@@ -71,153 +70,100 @@ public:
      * @return std::vector<Point>
      * */
     static
-    std::vector<
-            std::unordered_map<
-                    const Point,
-                    std::unordered_map<
-                            const Point,
-                            helib::Ctxt
-                    >
-            >
-    >
-//    std::vector<
-//            std::unordered_map<
-//                    const Point,
-//                    std::unordered_map<
-//                            const Point,
-//                            helib::Ctxt,
-//                            hashPoints
-//                    >,
-//                    hashPoints
-//            >
-//    >
-    createCmpDict(
-            const std::vector<std::vector<Point>> &randomPoints,
-            const std::vector<Point> &allPoints) {
-        auto t0_cmpDict = CLOCK::now();//for logging
-
-//        std::vector<std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt, hashPoints>, hashPoints> >
-        std::vector<std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt> > >
-                cmpsDict(DIM);
-
-        for (short dim = 0; dim < DIM; ++dim) {
-
-//            std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt, hashPoints>, hashPoints>
-            std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt> >
-                    &cmpDictForCurrDim = cmpsDict[dim];
-//            cmpDictForCurrDim.reserve(allPoints.size());
-
-            for (const Point &point : randomPoints[dim]) {
-
-                //                cmpDictForCurrDim[point].reserve(pow(sliceSize, dim));
-                for (const Point &point2 : allPoints) {
-                    //                if (!cmpsDict[point].empty() && !cmpsDict[point][point2].isEmpty()))
-                    //                if (point.id == point2.id) continue; //this is checked inside isBigger function
-                    // todo in the future, for efficiency
-                    //  - need to check if exist
-                    //  - find a way to utilize the 2nd result of the `isBiggerThan()`
-                    //      since you get it for free in helibs cmp
-                    //  - maybe useful to use helibs `min/max` somehow?
-                    const std::vector<helib::Ctxt> res = point.isBiggerThan(point2, dim);
-                    cmpDictForCurrDim[point].emplace(point2, res[0]);   //  point > point2
-                    cmpDictForCurrDim[point2].emplace(point, res[1]);   //  point < point2
-                }
-            }
-
-        }
-
-        loggerDataServer.log(printDuration(t0_cmpDict, "CmpDict Creation"));
-        return cmpsDict;
-
-    }
-/*
+    std::vector<std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt>>>
+    createCmpDict(const std::vector<Point> &allPoints,
+                  const std::vector<std::vector<Point>> &randomPoints,
+                  const Point &tinyRandomPoint);
 
 
     // TODO candidate for multithreading
-    */
-/**
+    /**
      * @brief Split into (1/eps) groups - each group is between 2 representative points.
      * @param points - a list of unordered points
+     * @param randomPoints - a list of unordered points
      * @param dim - the index of coor by which the comparison is made. in other words - in what dimension the split is made.
-     * @param keysServer - the appointed CA
      * @returns a list of pairs/tuples of a representative point and a list of the points in its Group (cell/slice).
-     * *//*
-
-    std::vector<
-            std::tuple< //should be replaced with std::pair in production
-                    Point,
-                    std::vector<Point>,
-                    std::vector<Ctxt>
+     * */
+    static
+    std::map<int, //DIM
+            std::vector< //current slices for approp dimension
+                    Cell
             >
     >
-    split(
-            std::vector<Point> &points,
-            short dim) {
+    splitIntoEpsNet(
+            const std::vector<Point> &points,
+            const std::vector<std::vector<Point>> &randomPoints,
+            const std::vector<
+                    std::unordered_map<
+                            const Point,
+                            std::unordered_map<
+                                    const Point,
+                                    helib::Ctxt> > > &cmpDict,
+            const KeysServer &keysServer // for dbg todo remove
+    ) {
+        auto t0_split = CLOCK::now();     //  for logging, profiling, DBG
 
-        auto t0_split = CLOCK::now();
-        std::vector<std::tuple<Point, std::vector<Point>, std::vector<Ctxt> > > groups;
-        if (points.empty() || 0 > dim || DIM < dim) return groups;        // sanity check
-        //        if (points.empty() || 0 > dim || DIM < dim) return std::vector<std::tuple<Point, std::vector<Point>, std::vector<Ctxt> > >();        // sanity check
+        std::map<int, std::vector<Cell> > groups;
+        if (points.empty()) return groups;        // sanity check
 
-        const std::vector<std::vector<Point>> randomPoints = pickRandomPoints(points, 1 / epsilon);
+        // init initial 1st level of data
+        Cell initCell;
+        const helib::PubKey &publicKey = points[0].public_key;
+        helib::Ctxt tempCtxt(publicKey);
+        //        initCell.addRep(points[0]);
+        for (auto const &point:points) initCell.addPoint(point, tempCtxt);
+        groups[-1].push_back(initCell);
 
-        //  create points-comparing dict - for every 2 points (p1,p2) answers p1[dim]>p2[dim]
-        std::vector<
-                std::unordered_map<
-                        const Point,
-                        std::unordered_map<const Point, helib::Ctxt,
-                                hashPoints
-                        >,
-                        hashPoints
-                >
-        >
-                cmp = createCmpDict(randomPoints, points);
-        //        cout << "Random Points in this group: ";
-        printPoints(points, keysServer);
-        */
-/*
+        for (int dim = 0; dim < DIM; ++dim) {
+            auto t0_itr_dim = CLOCK::now();     //  for logging, profiling, DBG
 
-                for (const Point &R: randomPoints) {
-                    auto t0_itr = CLOCK::now();
-                    //            cout << "\n   ############### current R: ";
-                    //            printPoint(R, keysServer);
+            for (const Cell &cellFromPrevDim:groups[dim - 1]) {
 
-                    std::vector<Point> group;
-                    group.reserve(points.size() * 2 * epsilon);
-                    std::vector<Ctxt> groupSize;
-                    groupSize.reserve(points.size() * 2 * epsilon);
+                for (const Point &R: randomPoints[dim]) {
+                    auto t0_itr_rep = CLOCK::now();     //  for logging, profiling, DBG
 
-                    for (const Point &p:points) {
-                        //                cout << "       ============= current p: ";
-                        //                printPoint(p, keysServer);
+                    Cell newCell;
+                    const std::vector<Point> &prevDimReps = cellFromPrevDim.reps;
+                    for (auto const &rep:prevDimReps) newCell.addRep(rep);
+
+                    newCell.addRep(R);
+                    const std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt>> &cmpDim = cmpDict[dim];
+                    const auto &atR = cmpDim.at(R);
+                    const Ctxt &atRR = atR.at(R);
+                    helib::Ctxt isRepInPrevCell(atRR);
+                    if (0 < dim) isRepInPrevCell = cmpDict[dim - 1].at(prevDimReps[dim - 1]).at(R);
+
+                    for (const Point &p:cellFromPrevDim.includedPoints) {
 
                         // p < R
-                        helib::Ctxt isBelowCurrentRep(cmp[R].at(p));
+                        helib::Ctxt isBelowCurrentRep(cmpDict[dim].at(R).at(p));
                         //                printNameVal(keysServer.decryptCtxt(isBelowCurrentRep));
                         helib::Ctxt isAboveAboveSmallerReps(isBelowCurrentRep); //todo other init
                         //                printNameVal(keysServer.decryptCtxt(isAboveAboveSmallerReps));
 
-                        for (const Point &r: randomPoints) {
+                        for (const Point &r: randomPoints[dim]) {
                             //                    cout << "           --- other r: ";
                             //                    printPoint(r, keysServer);
                             if (r.id == R.id) continue;
                             //todo here's a good place to check for "tail" p - is curr p bigger than all the random points
                             //todo handle cases of p that is equal to representative
 
-                            //  r > R (in which case we don't care about cmp results of p and r)
-                            Bit otherRepIsAboveCurrentRep = cmp[r].at(R);
+                            //  r > R (in which case we don't care about cmpDict results of p and r)
+                            Bit otherRepIsAboveCurrentRep = cmpDict[dim].at(r).at(R);
                             // results in: Bit otherRepIsAboveCurrentRep = (r > R)
                             //                    printNameVal(keysServer.decryptCtxt(otherRepIsAboveCurrentRep));
 
                             //  R > r    AND     p > r
-                            Bit pIsAboveOtherRep(cmp[R].at(r)); //pIsAboveOtherRep = (R > r)
-                            pIsAboveOtherRep.multiplyBy(cmp[p].at(r));
+                            Bit pIsAboveOtherRep(
+                                    cmpDict[dim].at(R).at(r)); //pIsAboveOtherRep = (R > r)
+                            pIsAboveOtherRep.multiplyBy(cmpDict[dim].at(p).at(r));
                             // results in: Bit pIsAboveOtherRep = (R > r) * (p > r)
                             //                    printNameVal(keysServer.decryptCtxt(pIsAboveOtherRep));
 
                             //   R < r  OR  [ R > r    AND     p > r ]
                             Bit pIsBelowCurrentRepAndAboveOtherRep = pIsAboveOtherRep;
-                            pIsBelowCurrentRepAndAboveOtherRep.multiplyBy(otherRepIsAboveCurrentRep);
+                            pIsBelowCurrentRepAndAboveOtherRep.multiplyBy(
+                                    otherRepIsAboveCurrentRep);
                             pIsBelowCurrentRepAndAboveOtherRep.negate();
                             pIsBelowCurrentRepAndAboveOtherRep += pIsAboveOtherRep;
                             pIsBelowCurrentRepAndAboveOtherRep += otherRepIsAboveCurrentRep;
@@ -233,36 +179,173 @@ public:
                         Bit isInGroup = isBelowCurrentRep;
                         isInGroup *= isAboveAboveSmallerReps;
 
+                        //fixme todo eod change! may need remove
+                        isInGroup *= isRepInPrevCell;
+                        //end fixme todo eod change! may need remove
+
                         Point pointIsInCell = p * isInGroup;
+                        /*
 
-                        long pIsInGroup = keysServer.decryptCtxt(isInGroup);
-                        if (pIsInGroup) {
-                            cout << "       Point is in group of       ";
-                            printPoint(pointIsInCell, keysServer);
-                        }
-                        //                cout << "       Point is in group?       "
-                        //                     << pIsInGroup ? "yes    " : "no   ";
-                        //                printPoint(pointIsInCell, keysServer);
-                        //                cout << "\n";
+                                                //                    long pIsInGroup = keysServer.decryptCtxt(isInGroup);
+                                                //                    if (pIsInGroup) {
+                                                //                        cout << "       Point is in group of       ";
+                                                //                        printPoint(pointIsInCell, keysServer);
+                                                //                    }
+                                                //                cout << "       Point is in group?       "
+                                                //                     << pIsInGroup ? "yes    " : "no   ";
+                                                //                printPoint(pointIsInCell, keysServer);
+                                                //                cout << "\n";
+                        */
 
-                        group.push_back(pointIsInCell);
-                        groupSize.emplace_back(isInGroup);
+                        newCell.addPoint(pointIsInCell, isInGroup);
                     }
 
-                    groups.emplace_back(R, group, groupSize);
+                    groups[dim].emplace_back(newCell);
+                    //                groups.emplace_back(R, group, groupSize);
 
-                    loggerDataServer.log(
-                            printDuration(t0_itr, "split iteration (for single random point)"));
+                    loggerDataServer.log(printDuration(
+                            t0_itr_rep,
+                            "split iteration (for single random point)"));
                 }
-        *//*
-
-
+            }
+            loggerDataServer.log(printDuration(
+                    t0_itr_dim,
+                    "split iteration (for #" + std::to_string(dim) + " dimention)"));
+        }
         // todo "tail" points - all the points that are bigger than all random reps
         loggerDataServer.log(printDuration(t0_split, "split total"));
 
         return groups;
     }
-*/
+
+
+
+
+    // TODO candidate for multithreading
+    /**
+     * @brief Split into (1/eps) groups - each group is between 2 representative points.
+     * @param points - a list of unordered points
+     * @param randomPoints - a list of unordered points
+     * @param dim - the index of coor by which the comparison is made. in other words - in what dimension the split is made.
+     * @returns a list of pairs/tuples of a representative point and a list of the points in its Group (cell/slice).
+     * */
+    static
+    std::vector<
+            std::tuple< //should be replaced with std::pair in production
+                    Point,
+                    std::vector<Point>,
+                    std::vector<Ctxt>
+            >
+    >
+    split(
+            const std::vector<Point> &points,
+            const std::vector<std::vector<Point>> &randomPoints,
+            const std::vector<
+                    std::unordered_map<
+                            const Point,
+                            std::unordered_map<
+                                    const Point,
+                                    helib::Ctxt> > > &cmpDict) {
+
+        auto t0_split = CLOCK::now();     //  for logging, profiling, DBG
+
+        //        std::vector<std::tuple<Point, std::vector<Point>, std::vector<Ctxt> > > groups;
+        std::vector<
+                std::tuple<
+                        Point,
+                        std::vector<Point>,
+                        std::vector<Ctxt> > > groups;
+        if (points.empty()) return std::vector<std::tuple<Point, std::vector<Point>, std::vector<Ctxt> > >();        // sanity check
+
+        //        //        cout << "Random Points in this group: ";
+        //        printPoints(points, keysServer);
+        //        for (int dim = 0; dim < DIM; ++dim) {
+        for (int dim = 0; dim < 1; ++dim) { //fixme
+
+            for (const Point &R: randomPoints[dim]) {
+                auto t0_itr = CLOCK::now();     //  for logging, profiling, DBG
+                //            cout << "\n   ############### current R: ";
+                //            printPoint(R, keysServer);
+
+                std::vector<Point> group;
+                group.reserve(points.size() * 2 * epsilon);
+                std::vector<Ctxt> groupSize;
+                groupSize.reserve(points.size() * 2 * epsilon);
+
+                for (const Point &p:points) {
+                    //                cout << "       ============= current p: ";
+                    //                printPoint(p, keysServer);
+
+                    // p < R
+                    helib::Ctxt isBelowCurrentRep(cmpDict[dim].at(R).at(p));
+                    //                printNameVal(keysServer.decryptCtxt(isBelowCurrentRep));
+                    helib::Ctxt isAboveAboveSmallerReps(isBelowCurrentRep); //todo other init
+                    //                printNameVal(keysServer.decryptCtxt(isAboveAboveSmallerReps));
+
+                    for (const Point &r: randomPoints[dim]) {
+                        //                    cout << "           --- other r: ";
+                        //                    printPoint(r, keysServer);
+                        if (r.id == R.id) continue;
+                        //todo here's a good place to check for "tail" p - is curr p bigger than all the random points
+                        //todo handle cases of p that is equal to representative
+
+                        //  r > R (in which case we don't care about cmpDict results of p and r)
+                        Bit otherRepIsAboveCurrentRep = cmpDict[dim].at(r).at(R);
+                        // results in: Bit otherRepIsAboveCurrentRep = (r > R)
+                        //                    printNameVal(keysServer.decryptCtxt(otherRepIsAboveCurrentRep));
+
+                        //  R > r    AND     p > r
+                        Bit pIsAboveOtherRep(cmpDict[dim].at(R).at(r)); //pIsAboveOtherRep = (R > r)
+                        pIsAboveOtherRep.multiplyBy(cmpDict[dim].at(p).at(r));
+                        // results in: Bit pIsAboveOtherRep = (R > r) * (p > r)
+                        //                    printNameVal(keysServer.decryptCtxt(pIsAboveOtherRep));
+
+                        //   R < r  OR  [ R > r    AND     p > r ]
+                        Bit pIsBelowCurrentRepAndAboveOtherRep = pIsAboveOtherRep;
+                        pIsBelowCurrentRepAndAboveOtherRep.multiplyBy(otherRepIsAboveCurrentRep);
+                        pIsBelowCurrentRepAndAboveOtherRep.negate();
+                        pIsBelowCurrentRepAndAboveOtherRep += pIsAboveOtherRep;
+                        pIsBelowCurrentRepAndAboveOtherRep += otherRepIsAboveCurrentRep;
+                        // results in: Bit pIsBelowCurrentRepAndAboveOtherRep =
+                        // pIsAboveOtherRep + otherRepIsAboveCurrentRep
+                        // - pIsAboveOtherRep * otherRepIsAboveCurrentRep
+                        //                    printNameVal(keysServer.decryptCtxt(pIsBelowCurrentRepAndAboveOtherRep));
+
+                        // this will hold the Product[ (R > r) && (p > r) | foreach r in randomPoints ]
+                        isAboveAboveSmallerReps *= pIsBelowCurrentRepAndAboveOtherRep;
+                        //                    printNameVal(keysServer.decryptCtxt(isAboveAboveSmallerReps));
+                    }
+                    Bit isInGroup = isBelowCurrentRep;
+                    isInGroup *= isAboveAboveSmallerReps;
+
+                    Point pointIsInCell = p * isInGroup;
+
+                    //                    long pIsInGroup = keysServer.decryptCtxt(isInGroup);
+                    //                    if (pIsInGroup) {
+                    //                        cout << "       Point is in group of       ";
+                    //                        printPoint(pointIsInCell, keysServer);
+                    //                    }
+                    //                cout << "       Point is in group?       "
+                    //                     << pIsInGroup ? "yes    " : "no   ";
+                    //                printPoint(pointIsInCell, keysServer);
+                    //                cout << "\n";
+
+                    group.push_back(pointIsInCell);
+                    groupSize.emplace_back(isInGroup);
+                }
+
+                groups.emplace_back(R, group, groupSize);
+
+                loggerDataServer.log(
+                        printDuration(t0_itr, "split iteration (for single random point)"));
+            }
+
+        }
+        // todo "tail" points - all the points that are bigger than all random reps
+        loggerDataServer.log(printDuration(t0_split, "split total"));
+
+        return groups;
+    }
 
 };
 

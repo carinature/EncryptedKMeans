@@ -69,11 +69,11 @@ void TestClient::testCompare() {
 
     Client client1(server);
     client1.encryptPoint(arr1);
-    Point point1(client1.points.back());
+    Point point1(client1.getPoints().back());
 
     Client client2(server);
     client2.encryptPoint(arr2);
-    Point point2(client2.points.back());
+    Point point2(client2.getPoints().back());
 
     for (int i = 0; i < 100; ++i)
         for (short dim = 0; dim < DIM; ++dim) {

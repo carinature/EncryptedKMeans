@@ -26,15 +26,15 @@ DataServer::DataServer(KeysServer &keysServer) :
 std::vector<Point>
 DataServer::retrievePoints(
         const std::vector<Client> &clients) {
-    auto t0_retrievePoints = CLOCK::now();// logging
+    auto t0_retrievePoints = CLOCK::now();     //  for logging, profiling, DBG// logging
 
     std::vector<Point> points;
     if (clients.empty()) return points;
     points.reserve(pow(clients.size(), 2) / 2); // preallocate memory
     for (const Client &c:clients)
-        for (const Point &p:c.points)
+        for (const Point &p:c.getPoints())
             points.emplace_back(Point(p));
-    //            points.insert(points.end(),c.points.begin(), c.points.end());
+    //            points.insert(points.end(),c.getPoints().begin(), c.getPoints().end());
     points.shrink_to_fit();
 
     loggerDataServer.log(printDuration(t0_retrievePoints, "retrievePoints"));
@@ -44,27 +44,25 @@ DataServer::retrievePoints(
 }
 
 
-/**
- * @brief request data from clients and conentrate into one list
- * @param points - all the points from all the clients in the data set
- * @param m - number of random representatives for each slice
- * @return std::vector<Point>
- * @returns a list of #DIM lists - each containing m^d randomly chosen points
- * */
 const std::vector<std::vector<Point>>
-DataServer::pickRandomPoints(
-        const std::vector<Point> &points,
-        int m) {
-    auto t0_rndPoints = CLOCK::now();  // logging, profiling, DBG
+DataServer::pickRandomPoints(const std::vector<Point> &points,
+                             int m,
+                             const Point &tinyRandomPoint) {
+    auto t0_rndPoints = CLOCK::now();     //  for logging, profiling, DBG
 
     if (points.empty() || m > points.size()) return std::vector<std::vector<Point>>();
 
-    const Point &tinyRandomPoint = keysServer.tinyRandomPoint();
+//    const Point &tinyRandomPoint = keysServer.tinyRandomPoint();
     std::vector<std::vector<Point>> randomPoints(DIM);
 
     for (int dim = 0; dim < DIM; ++dim) {
+
         // for every dimension random m^dim points (m points for every 'slice') and one tiny-point
-        randomPoints[dim].reserve(std::pow(m, dim) + 1);
+        randomPoints[dim].reserve(1 + std::pow(m, dim));
+        //        to avoid cases of null (zero) points being assigned to group and blowing up in size,
+        //          we add a rep for null points to whom those points will be assigned
+        //        randomPoints.push_back(keysServer.tinyRandomPoint());
+        randomPoints[dim].push_back(tinyRandomPoint);
 
         // choose random indices
         std::vector<int> indices(points.size());
@@ -75,16 +73,55 @@ DataServer::pickRandomPoints(
         //todo shuffle only m instead of all ? check which is more efficient
 
         for (int i = 0; i < m; ++i) randomPoints[dim].emplace_back(points[indices[i]]);
-        //        to avoid cases of null (zero) points being assigned to group and blowing up in size,
-        //          we add a rep for null points to whom those points will be assigned
-        //        randomPoints.push_back(keysServer.tinyRandomPoint());
-        randomPoints[dim].push_back(tinyRandomPoint);
 
     }
 
     loggerDataServer.log(printDuration(t0_rndPoints, "pickRandomPoints"));
     return randomPoints;
 
+}
+
+std::vector<std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt>>>
+DataServer::createCmpDict(const std::vector<Point> &allPoints,
+                          const std::vector<std::vector<Point>> &randomPoints,
+                          const Point &tinyRandomPoint) {
+    auto t0_cmpDict = CLOCK::now();     //  for logging, profiling, DBG
+
+    std::vector<
+            std::unordered_map<
+                    const Point,
+                    std::unordered_map<
+                            const Point,
+                            helib::Ctxt> > >
+            cmpsDict(DIM);
+
+    for (short dim = 0; dim < DIM; ++dim) {
+        // cmpDictForCurrDim.reserve(allPoints.size());
+
+        for (const Point &point : randomPoints[dim]) {
+
+            // todo fills like there is a better or more efficient way to do this
+            const std::vector<helib::Ctxt> res = point.isBiggerThan(tinyRandomPoint, dim);
+            cmpsDict[dim][point].emplace(tinyRandomPoint, res[0]);   //  point > point2
+            cmpsDict[dim][tinyRandomPoint].emplace(point, res[1]);   //  point < point2
+
+            for (const Point &point2 : allPoints) {
+                //                if (!cmpsDict[point].empty() && !cmpsDict[point][point2].isEmpty()))
+                //                if (point.id == point2.id) continue; //this is checked inside isBigger function
+                // todo in the future, for efficiency
+                //  - need to check if exist
+                //  - find a way to utilize the 2nd result of the `isBiggerThan()`
+                //      since you get it for free in helibs cmp
+                //  - maybe useful to use helibs `min/max` somehow?
+                const std::vector<helib::Ctxt> res = point.isBiggerThan(point2, dim);
+                cmpsDict[dim][point].emplace(point2, res[0]);   //  point > point2
+                cmpsDict[dim][point2].emplace(point, res[1]);   //  point < point2
+            }
+        }
+    }
+
+    loggerDataServer.log(printDuration(t0_cmpDict, "CmpDict Creation"));
+    return cmpsDict;
 }
 
 void KT_packed_arithmetic() {

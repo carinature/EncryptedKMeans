@@ -254,8 +254,8 @@ public:
             if (point.id == id) {
                 // good solution but results in representatienves being picked twice
                 //  - once for their own group and once for the group above fixme
-                public_key.Encrypt(mu, NTL::to_ZZX((1)));
-                public_key.Encrypt(ni, NTL::to_ZZX((1))); // make sure
+                public_key.Encrypt(mu, NTL::to_ZZX((true)));
+                public_key.Encrypt(ni, NTL::to_ZZX((true))); // make sure
             } else {
                 std::vector<helib::Ctxt> c = (*this)[currentDim];
                 std::vector<helib::Ctxt> coor = point[currentDim];
@@ -292,6 +292,23 @@ public:
     const long id; // = 0;  //fixme
 };
 
+/** hash functionality for std::unordered_map of Point  */
+namespace std {
+
+    template <>
+    struct hash<const Point>
+    {
+        std::size_t operator()(const Point& point) const
+        {
+            using std::size_t;
+            using std::hash;
+
+            return hash<long>()(point.id);
+            //            return point.id;
+        }
+    };
+
+}
 
 struct cmpPoints {
     long id;
@@ -312,22 +329,6 @@ struct hashPoints {
 //    }
 };
 
-namespace std {
-
-    template <>
-    struct hash<const Point>
-    {
-        std::size_t operator()(const Point& point) const
-        {
-            using std::size_t;
-            using std::hash;
-
-            return hash<long>()(point.id);
-//            return point.id;
-        }
-    };
-
-}
 
 
 #endif //ENCRYPTEDKMEANS_POINT_H

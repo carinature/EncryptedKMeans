@@ -126,7 +126,7 @@ public:
         //        return deserialized_pkp;
     }
 
-    /*  for DBG     */
+    /* * *  for DBG    * * */
     helib::Ctxt encryptCtxt(bool b) const {
         NTL::ZZX pl(b);
         helib::Ctxt cl(pubKey);
@@ -134,12 +134,14 @@ public:
         return cl;
     }
 
-    long decryptCtxt(const helib::Ctxt &cBit);
+    long decryptCtxt(const helib::Ctxt &cBit)const;
 
-    long decryptNum(const std::vector<helib::Ctxt> &cNum);
+    long decryptNum(const std::vector<helib::Ctxt> &cNum)const;
 
-    long decryptSize(const std::vector<helib::Ctxt> &size);
-    /*  end for DBG     */
+    long decryptSize(const std::vector<helib::Ctxt> &size)const;
+    /* * *  end for DBG    * * */
+
+
 protected:
     helib::SecKey &getSecKey() const { // return CONST SecKey?
         return secKeyRef;

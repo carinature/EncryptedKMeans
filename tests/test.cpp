@@ -41,21 +41,22 @@ int main() {
 //    TestClient::testEncryptScratchPoint();
 //    TestClient::testCompare(); //todo refine
 //    cout << " ============ Test Client Finished ============ " << endl << endl;
-
-    cout << " ============ Test Aux ============ " << endl;
-    TestAux::testGenerateDataClients();
-    cout << " ============ Test Client Finished ============ " << endl << endl;
+//
+//    cout << " ============ Test Aux ============ " << endl;
+//    TestAux::testGenerateDataClients();
+//    cout << " ============ Test Client Finished ============ " << endl << endl;
 
     cout << " ============ Test DataServer ============ " << endl;
-    TestDataServer::testConstructor();
+//    TestDataServer::testConstructor();
 //    TestDataServer::testComparePoints();
 //    TestDataServer::testAddition();
 //    TestDataServer::testMultiplication();
-    TestDataServer::testGenerateDataClients();
-    TestDataServer::testRetrievePoints();
-    TestDataServer::testminirand();
-    TestDataServer::testPickRandomPoints();
-    TestDataServer::testCreateCmpDict();
+//    TestDataServer::testGenerateDataClients();
+//    TestDataServer::testRetrievePoints();
+//    TestDataServer::testminirand();
+//    TestDataServer::testPickRandomPoints();
+//    TestDataServer::testCreateCmpDict();
+    TestDataServer::testSplit();
 
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
 

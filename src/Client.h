@@ -54,7 +54,12 @@ public:
      * */
     std::vector<Point> points;
 
-    [[maybe_unused]] helib::PubKey &getPublicKey() {
+    const std::vector<Point> &getPoints() const{
+        return points;
+    }
+
+
+    const helib::PubKey &getPublicKey() const{
         return (helib::PubKey &) encryptionKey;
     }
 

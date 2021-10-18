@@ -9,13 +9,13 @@ void TestAux::testGenerateDataClients() {
     KeysServer keysServer;
     auto t0_main = CLOCK::now();
 
-    std::vector<Client> clients = generateDataClients(keysServer);
+    const std::vector<Client> clients = generateDataClients(keysServer);
 
-    for (Client &client:clients)
-        for (Point &point:client.points)
+    for (const Client &client:clients)
+        for (const Point &point:client.getPoints())
             printPoint(point, keysServer);
 
-    printDuration(t0_main, "testGenerateDataClients");
+    cout << endl<<printDuration(t0_main, "testGenerateDataClients");
     cout << " ------ testGenerateDataClients finished ------ " << endl << endl;
 
 }

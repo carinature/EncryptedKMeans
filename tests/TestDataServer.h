@@ -23,6 +23,8 @@ public:
     static void testminirand();
 
     static void testCreateCmpDict();
+
+    static void testSplit();
 };
 
 

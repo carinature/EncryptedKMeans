@@ -28,25 +28,25 @@ std::string printDuration(const std::chrono::time_point<std::chrono::system_cloc
 }
 
 //    void printPoints(std::vector<Point> & points){ todo not static or move to aux
-void printPoint(const Point &p, KeysServer &keysServer) {
+void printPoint(const Point &p, const KeysServer &keysServer) {
     cout << "( ";
     for (short dim = 0; dim < DIM - 1; ++dim)
         cout << keysServer.decryptNum(p[dim]) << ",";
     cout << keysServer.decryptNum(p[short(DIM - 1)]) << " ) ";
 }
 
-void printPoints(const std::vector<Point> &points, KeysServer &keysServer) {
+void printPoints(const std::vector<Point> &points, const KeysServer &keysServer) {
+    cout << "   [ total of " << points.size() << " points ]   ";
     for (const Point &p:points) {
         cout << "( ";
         for (short dim = 0; dim < DIM - 1; ++dim)
             cout << keysServer.decryptNum(p[dim]) << ",";
         cout << keysServer.decryptNum(p[DIM - 1]) << " ) \t";
     }
-    cout << endl << "   --- total of " << points.size() << " points ---    " << endl;
 }
 
-void printNonEmptyPoints(const std::vector<Point> &points, KeysServer &keysServer) {
-    long arr[DIM], cnt=0;
+void printNonEmptyPoints(const std::vector<Point> &points, const KeysServer &keysServer) {
+    long arr[DIM], cnt = 0;
     for (const Point &p:points) {
         long sum = 0;
         for (short dim = 0; dim < DIM - 1; ++dim) {
@@ -63,7 +63,7 @@ void printNonEmptyPoints(const std::vector<Point> &points, KeysServer &keysServe
             cout << keysServer.decryptNum(p[DIM - 1]) << " ) \t";
         }
     }
-    cout << endl <<" --- total of "<< cnt << " points are not empty, out of " << points.size() <<" ---    " << endl;
+    cout << " \t\t[ total of " << cnt << " points are not empty, out of " << points.size() << " ]    ";
 }
 
 /*  @brief Generate random data.
@@ -109,3 +109,11 @@ std::vector<Client> generateDataClients(const KeysServer &keysServer) {
     return clients;
 }
 
+void Cell::printCell(const KeysServer &keysServer) const {
+    cout << "For the Reps: ";
+    printPoints(reps, keysServer);
+    cout <<endl<< " These " << keysServer.decryptSize(included) << " Points will be included: " ;//<< endl;
+    printNonEmptyPoints(includedPoints, keysServer);
+    //    printPoints(includedPoints, keysServer);
+    cout << "   ---     --- " << endl;
+}

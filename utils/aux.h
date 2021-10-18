@@ -36,21 +36,54 @@ class Client;
 //  print both the value and it's name. comfy for dgb  // best. macro. EVA! //TODO save this somewhere (list of useful tricks)
 #define printNameVal(val)   cout << # val << ": " << (val) << endl
 
+/* * for DBG * */
+void printPoint(const Point &p,  const KeysServer &keysServer);
+
+void printPoints(const std::vector<Point> &points, const KeysServer &keysServer);
+
+void printNonEmptyPoints(const std::vector<Point> &points, const KeysServer &keysServer);
+/* * fin * */
+
 std::chrono::time_point<std::chrono::system_clock> NowTime();
 
 std::string
 printDuration(const std::chrono::time_point<std::chrono::system_clock> &t1,
               const std::string &funcName = "");
 
+/**
+ * @brief generate a database of Clients and their data Points (randomized)
+ * @param keysServer - a reference to the CA
+ * @returns a list of data Clients
+ * @return std::vector<Client>
+ * */
 std::vector<Client> generateDataClients(const KeysServer &keysServer) ;
 
-/*
- * for DBG
+/**
+ * and aux struct to put some order in the
  * */
-void printPoint(const Point &p, KeysServer &keysServer);
+struct Cell{
+    std::vector<Point> reps;
+    std::vector<Point> includedPoints;
+    std::vector<helib::Ctxt> included;
 
-void printPoints(const std::vector<Point> &points, KeysServer &keysServer);
+    Cell(){
+//        cout << "init cell" << endl;
+        reps.reserve(DIM); //   should be one rep per dimension
+        includedPoints.reserve(number_of_points); //   should be one rep per dimension
+        included.reserve(number_of_points); //   should be one rep per dimension
+    }
 
-void printNonEmptyPoints(const std::vector<Point> &points, KeysServer &keysServer);
+    Cell & addRep(const Point &point){
+        reps.push_back(point);
+        return *this;
+    }
+    Cell & addPoint(const Point &point, const helib::Ctxt &isIncluded){
+        includedPoints.push_back(point);
+        included.push_back(isIncluded);
+        return *this;
+    }
+
+    void printCell(const KeysServer&keysServer)const ;
+};
 
 #endif //ENCKMEAN_AUX_H

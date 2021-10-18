@@ -37,10 +37,37 @@ int main() {
     printPoints(points, keysServer);
     cout << " --- --- --- --- ---" << endl;
 
-    const std::vector<std::vector<Point>> randomPoints = dataServer.pickRandomPoints(points);
+    const std::vector<std::vector<Point>> randomPoints = dataServer.pickRandomPoints(points, 0,
+                                                                                     keysServer.tinyRandomPoint());
     cout << " --- Random Points  ---" << endl;
     for (auto vec :randomPoints)         printPoints(vec, keysServer);
     cout << " --- --- --- --- ---" << endl;
+
+    //  create points-comparing dict - for every 2 points (p1,p2) answers p1[dim]>p2[dim]
+    const std::vector<
+            std::unordered_map<
+                    const Point,
+                    std::unordered_map<
+                            const Point,
+                            helib::Ctxt> > >
+            cmpDict = DataServer::createCmpDict(points, randomPoints, keysServer.tinyRandomPoint());
+
+//    const std::vector<
+//            std::tuple<
+//                    Point,
+//                    std::vector<Point>,
+//                    std::vector<Ctxt>
+//            >
+//    > groups = DataServer::split(points, randomPoints, cmpDict);
+    std::map<int, //DIM
+            std::vector< //current slices for approp dimension
+                    Cell
+            >
+    >
+    groups = DataServer::splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
+    for (Cell & cell: groups[0]) {
+        cell.printCell(keysServer);
+    }
 
 /*
     std::map<
@@ -54,15 +81,7 @@ int main() {
             >
     > allCells;
     //    allCells.reserve(pow((1 / epsilon), 2));*/
-    /*
-    std::vector<
-            std::tuple<
-                    Point,
-                    std::vector<Point>,
-                    std::vector<Ctxt>
-            >
-    > groups = DataServer::split(points, 0, keysServer);
-    *//*    printNameVal(groups.size());
+    /*    printNameVal(groups.size());
         cout << " --- Random Points  ---" << endl;
         for (auto g: groups) printPoint(std::get<0>(g), dataServer);
         cout << " --- Groups  ---" << endl;*//*

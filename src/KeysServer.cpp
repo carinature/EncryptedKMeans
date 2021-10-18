@@ -94,7 +94,7 @@ std::vector<helib::zzX> KeysServer::unpackSlotEncoding; //todo move? already def
 //KeysServer::KeysServer(long prm, long bitSize, bool bootstrap, long seed, long nthreads)
 
 
-long KeysServer::decryptCtxt(const helib::Ctxt &cBit) {
+long KeysServer::decryptCtxt(const helib::Ctxt &cBit) const {
     if (cBit.isEmpty()) return -1; //todo should return 0?
     NTL::ZZX pp;
     secKey.Decrypt(pp, cBit);
@@ -102,7 +102,7 @@ long KeysServer::decryptCtxt(const helib::Ctxt &cBit) {
 }
 
 //long KeysServer::decryptNum(std::vector<helib::Ctxt> cNum, bool isProduct) {
-long KeysServer::decryptNum(const std::vector<helib::Ctxt> &cNum) {
+long KeysServer::decryptNum(const std::vector<helib::Ctxt> &cNum) const {
     if (!cNum.size()) return -1; //todo should return 0?
     long pNum = 0;
     NTL::ZZX pp;
@@ -117,7 +117,7 @@ long KeysServer::decryptNum(const std::vector<helib::Ctxt> &cNum) {
     return pNum;
 }
 
-long KeysServer::decryptSize(const std::vector<helib::Ctxt> &cSize) {
+long KeysServer::decryptSize(const std::vector<helib::Ctxt> &cSize) const {
     long size = 0;
     NTL::ZZX pp;
     for (const Ctxt &ctxt: cSize) {

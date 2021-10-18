@@ -76,34 +76,36 @@ public:
                     const Point,
                     std::unordered_map<
                             const Point,
-                            helib::Ctxt,
-                            hashPoints
-                    >,
-                    hashPoints
+                            helib::Ctxt
+                    >
             >
     >
+//    std::vector<
+//            std::unordered_map<
+//                    const Point,
+//                    std::unordered_map<
+//                            const Point,
+//                            helib::Ctxt,
+//                            hashPoints
+//                    >,
+//                    hashPoints
+//            >
+//    >
     createCmpDict(
             const std::vector<std::vector<Point>> &randomPoints,
             const std::vector<Point> &allPoints) {
         auto t0_cmpDict = CLOCK::now();//for logging
 
-        std::vector<
-                std::unordered_map<
-                        const Point,
-                        std::unordered_map<
-                                const Point,
-                                helib::Ctxt,
-                                hashPoints
-                        >,
-                        hashPoints
-                >
-        > cmpsDict(DIM);
+//        std::vector<std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt, hashPoints>, hashPoints> >
+        std::vector<std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt> > >
+                cmpsDict(DIM);
 
         for (short dim = 0; dim < DIM; ++dim) {
 
-            std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt, hashPoints>, hashPoints>
+//            std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt, hashPoints>, hashPoints>
+            std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt> >
                     &cmpDictForCurrDim = cmpsDict[dim];
-            cmpDictForCurrDim.reserve(allPoints.size());
+//            cmpDictForCurrDim.reserve(allPoints.size());
 
             for (const Point &point : randomPoints[dim]) {
 
@@ -128,16 +130,19 @@ public:
         return cmpsDict;
 
     }
+/*
 
 
     // TODO candidate for multithreading
-    /**
+    */
+/**
      * @brief Split into (1/eps) groups - each group is between 2 representative points.
      * @param points - a list of unordered points
      * @param dim - the index of coor by which the comparison is made. in other words - in what dimension the split is made.
      * @param keysServer - the appointed CA
      * @returns a list of pairs/tuples of a representative point and a list of the points in its Group (cell/slice).
-     * */
+     * *//*
+
     std::vector<
             std::tuple< //should be replaced with std::pair in production
                     Point,
@@ -169,7 +174,8 @@ public:
                 cmp = createCmpDict(randomPoints, points);
         //        cout << "Random Points in this group: ";
         printPoints(points, keysServer);
-        /*
+        */
+/*
 
                 for (const Point &R: randomPoints) {
                     auto t0_itr = CLOCK::now();
@@ -248,13 +254,15 @@ public:
                     loggerDataServer.log(
                             printDuration(t0_itr, "split iteration (for single random point)"));
                 }
-        */
+        *//*
+
 
         // todo "tail" points - all the points that are bigger than all random reps
         loggerDataServer.log(printDuration(t0_split, "split total"));
 
         return groups;
     }
+*/
 
 };
 

@@ -312,7 +312,22 @@ struct hashPoints {
 //    }
 };
 
+namespace std {
 
+    template <>
+    struct hash<const Point>
+    {
+        std::size_t operator()(const Point& point) const
+        {
+            using std::size_t;
+            using std::hash;
+
+            return hash<long>()(point.id);
+//            return point.id;
+        }
+    };
+
+}
 
 
 #endif //ENCRYPTEDKMEANS_POINT_H

@@ -12,7 +12,6 @@
 
 int main() {
 
-
 //    cout << " ============ Test KeysServer ============ " << endl;
 //    TestKeysServer::testConstructor();
 //    TestKeysServer::testEncryptCtxt();

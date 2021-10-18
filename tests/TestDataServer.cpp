@@ -178,12 +178,21 @@ void TestDataServer::testCreateCmpDict() {
                     const Point,
                     std::unordered_map<
                             const Point,
-                            helib::Ctxt,
-                            hashPoints
-                    >,
-                    hashPoints
+                            helib::Ctxt
+                    >
             >
     >
+//    std::vector<
+//            std::unordered_map<
+//                    const Point,
+//                    std::unordered_map<
+//                            const Point,
+//                            helib::Ctxt,
+//                            hashPoints
+//                    >,
+//                    hashPoints
+//            >
+//    >
             cmp = DataServer::createCmpDict(randomPoints, points);
 
     cout << "The Dictionary: " << endl;

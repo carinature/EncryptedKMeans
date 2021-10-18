@@ -53,6 +53,7 @@ add_executable(Tests
         tests/TestKeysServer.cpp
         tests/TestPoint.cpp
         tests/TestClient.cpp
+        tests/TestAux.cpp
         tests/TestDataServer.cpp
 #         tests/TestPoint.h tests/TestKeysServer.h
         )

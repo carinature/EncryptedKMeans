@@ -10,14 +10,14 @@
 #include <algorithm> //for the random shuffle
 #include <random>
 
+static Logger loggerDataServer(log_debug, "loggerDataServer");
+
 class DataServer {
 
-    //    [[maybe_unused]] const helib::SecKey encryptionKey;
-    //    [[maybe_unused]] const helib::PubKey encryptionKey;
-    //    [[maybe_unused]] const helib::EncryptedArray ea;
     const helib::PubKey encryptionKey;
     //     const helib::EncryptedArray ea;
     const helib::Ctxt scratch;
+
 protected:
     //    const helib::PubKey &public_key;// = encryptionKey;
     KeysServer &keysServer;
@@ -69,7 +69,7 @@ public:
      * @brief A simulated retrievel of data from clients.
      * @param clients - a list of clients (chosen by the CA, to share a similar public key).
      * @returns a list of all the points.
-* @return std::vector<Point>
+    * @return std::vector<Point>
      * * */
     static std::vector<Point> retrievePoints(std::vector<Client> &clients) {
         std::vector<Point> points;
@@ -85,9 +85,9 @@ public:
 
     /**
      * @brief Picks a group of random points to be used as both cell representative and max-limit.
-     * Uses the Fisher–Yates shuffle for choosing k random points.
-     * @parampoints - a list of all points (in current group).
-     * @param numOfReps - the desired number of representatives, usually the number of desired data strips.
+     * Uses the Fisher–Yates shuffle for choosing m random points. (fixme not anymore. make sure)
+     * @param points - a list of all points (in current group).
+     * @param numOfReps - the desired number of representatives, usually the number of desired data slices.
      * @returns a sub list of the original points, picked randomly using the .
      * @return std::vector<Point>
      * */
@@ -107,6 +107,8 @@ public:
         return randomPoints;
     }
 
+
+    // TODO candidate for multithreading
     /**
      * @brief Split into (1/eps) groups - each group is between 2 representative points.
      * @param points - a list of unordered points

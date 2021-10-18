@@ -31,6 +31,7 @@ using EncryptedNum = std::vector<helib::Ctxt>;
 
 class KeysServer;
 class Point;
+class Client;
 
 //  print both the value and it's name. comfy for dgb  // best. macro. EVA! //TODO save this somewhere (list of useful tricks)
 #define printNameVal(val)   cout << # val << ": " << (val) << endl
@@ -41,11 +42,15 @@ std::string
 printDuration(const std::chrono::time_point<std::chrono::system_clock> &t1,
               const std::string &funcName = "");
 
+std::vector<Client> generateDataClients(const KeysServer &keysServer) ;
+
 /*
  * for DBG
  * */
 void printPoint(const Point &p, KeysServer &keysServer);
 
 void printPoints(const std::vector<Point> &points, KeysServer &keysServer);
+
+void printNonEmptyPoints(const std::vector<Point> &points, KeysServer &keysServer);
 
 #endif //ENCKMEAN_AUX_H

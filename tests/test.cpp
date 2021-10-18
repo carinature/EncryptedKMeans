@@ -5,6 +5,7 @@
 #include "TestKeysServer.h"
 #include "TestPoint.h"
 #include "TestClient.h"
+#include "TestAux.h"
 #include "TestDataServer.h"
 
 #include "utils/aux.h"
@@ -12,17 +13,17 @@
 int main() {
 
 
-    cout << " ============ Test KeysServer ============ " << endl;
-    TestKeysServer::testConstructor();
-    TestKeysServer::testEncryptCtxt();
-    TestKeysServer::testDecryptCtxt();
+//    cout << " ============ Test KeysServer ============ " << endl;
+//    TestKeysServer::testConstructor();
+//    TestKeysServer::testEncryptCtxt();
+//    TestKeysServer::testDecryptCtxt();
 //    TestKeysServer::testEncryptNum();   //  todo
 //    TestKeysServer::testDecryptNum();   //  todo
-    TestKeysServer::testScratchPoint();
-    TestKeysServer::testTinyRandomPoint();
-    cout << " ============ Test KeysServer Finished ============ " << endl << endl;
-
-    cout << " ============ Test Point ============ " << endl;
+//    TestKeysServer::testScratchPoint();
+//    TestKeysServer::testTinyRandomPoint();
+//    cout << " ============ Test KeysServer Finished ============ " << endl << endl;
+//
+//    cout << " ============ Test Point ============ " << endl;
 //    TestPoint::testConstructor();
 //    TestPoint::testEncryptCoordinates();
 //    TestPoint::testOperatorSubscript();
@@ -41,14 +42,18 @@ int main() {
 //    TestClient::testEncryptScratchPoint();
 //    TestClient::testCompare(); //todo refine
 //    cout << " ============ Test Client Finished ============ " << endl << endl;
-//
-//    cout << " ============ Test DataServer ============ " << endl;
-//    TestDataServer::testConstructor();
-////    TestDataServer::testComparePoints();
-////    TestDataServer::testAddition();
-////    TestDataServer::testMultiplication();
-//    TestDataServer::testgGenerateDataClients();
-//    TestDataServer::testRetrievePoints();
+
+    cout << " ============ Test Aux ============ " << endl;
+    TestAux::testGenerateDataClients();
+    cout << " ============ Test Client Finished ============ " << endl << endl;
+
+    cout << " ============ Test DataServer ============ " << endl;
+    TestDataServer::testConstructor();
+//    TestDataServer::testComparePoints();
+//    TestDataServer::testAddition();
+//    TestDataServer::testMultiplication();
+    TestDataServer::testGenerateDataClients();
+    TestDataServer::testRetrievePoints();
     TestDataServer::testminirand();
     TestDataServer::testPickRandomPoints();
 

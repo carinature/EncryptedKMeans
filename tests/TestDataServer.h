@@ -16,11 +16,13 @@ public:
 
     static void testMultiplication();
 
-    static void testgGenerateDataClients();
+    static void testGenerateDataClients();
     static void testRetrievePoints();
     static void testPickRandomPoints();
 
     static void testminirand();
+
+    static void testCreateCmpDict();
 };
 
 

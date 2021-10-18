@@ -1,6 +1,7 @@
 {
   "data_properties": {
-    "number_of_points": 25,
+    "number_of_points": 10,
+    "number_of_clients": 10,
     "DIM": 2,
     "range_lim": 1,
     "range_lim_comment": "for python, defines the range of the points (from BOTTOM_LIM to RANGE_LIM)",

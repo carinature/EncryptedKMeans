@@ -6,10 +6,10 @@
 
 #include <helib/helib.h>
 
-//  todo relocate to aux or main ...?
 using DecryptedPoint = std::vector<long>;     // typedef std::vector<long> DecryptedPoint;  // same as `typedef/using`
 using Bit = helib::Ctxt;  // typedef helib::Ctxt Bit;   // same as `typedef/using`
 using EncNumber = NTL::Vec<Bit>;  // typedef NTL::Vec<helib::Ctxt> EncNumber;   // same as `typedef/using`
+using CLOCK = std::chrono::high_resolution_clock;
 static std::ofstream fcout("fcout");  //for DBG
 
 /*
@@ -25,6 +25,8 @@ static json jsonConfig = json::parse(config_json_file);
  * Global Constatns & Data Properties
  * */
 static const short number_of_points = jsonConfig["data_properties"]["number_of_points"];
+static const short number_of_clients = number_of_points;
+//static const short number_of_clients = jsonConfig["data_properties"]["number_of_clients"];
 static const short DIM = jsonConfig["data_properties"]["DIM"];
 static const short range_lim = jsonConfig["data_properties"]["range_lim"];
 static const short low_limit = jsonConfig["data_properties"]["low_limit"];

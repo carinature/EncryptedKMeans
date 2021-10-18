@@ -1,7 +1,10 @@
 
+#include <random>
+
 #include "TestDataServer.h"
 
 //#include "utils/Logger.h"
+#include "utils/aux.h"
 #include "src/DataServer.h"
 
 static Logger loggerTestDataServer(log_debug, "loggerTestDataServer");
@@ -43,8 +46,8 @@ void TestDataServer::testComparePoints() {
 void TestDataServer::testAddition() {
     cout << " ------ testAddition ------ " << endl << endl;
     KeysServer server;
-    std::vector<Client> clients = DataServer::generateDataClients(server);
-    std::vector<Point> points = DataServer::retrievePoints(clients);
+    std::vector <Client> clients = generateDataClients(server);
+    std::vector <Point> points = DataServer::retrievePoints(clients);
     printPoints(points, server);
     Point sum = Point::addManyPoints(points);
     for (short dim = 0; dim < DIM; ++dim) {
@@ -58,27 +61,25 @@ void TestDataServer::testMultiplication() {
     cout << " ------ testMultiplication finished ------ " << endl << endl;
 }
 
-
-void TestDataServer::testgGenerateDataClients() {
-    cout << " ------ testgGenerateDataClients ------ " << endl << endl;
+void TestDataServer::testGenerateDataClients() {
+    cout << " ------ testGenerateDataClients ------ " << endl << endl;
     KeysServer keysServer;
 
-    std::vector<Client> clients = DataServer::generateDataClients(keysServer);
+    std::vector <Client> clients = generateDataClients(keysServer);
     //    std::vector<Point> points = DataServer::retrievePoints(clients);
     //
     //    cout << " --- Points  ---" << endl;
     //    printPoints(points, keysServer);
     //    cout << " --- --- --- --- ---" << endl;
-    cout << " ------ testgGenerateDataClients finished ------ " << endl << endl;
+    cout << " ------ testGenerateDataClients finished ------ " << endl << endl;
 }
-
 
 void TestDataServer::testRetrievePoints() {
     cout << " ------ testRetrievePoints ------ " << endl << endl;
     KeysServer keysServer;
 
-    std::vector<Client> clients = DataServer::generateDataClients(keysServer);
-    std::vector<Point> points = DataServer::retrievePoints(clients);
+    std::vector <Client> clients = generateDataClients(keysServer);
+    std::vector <Point> points = DataServer::retrievePoints(clients);
 
     cout << " --- Points  ---" << endl;
     printPoints(points, keysServer);
@@ -86,34 +87,6 @@ void TestDataServer::testRetrievePoints() {
 
     cout << " ------ testRetrievePoints finished ------ " << endl << endl;
 }
-
-
-void TestDataServer::testPickRandomPoints() {
-    cout << " ------ testPickRandomPoints ------ " << endl << endl;
-    KeysServer keysServer;
-
-    std::vector<Client> clients = DataServer::generateDataClients(keysServer);
-    std::vector<Point> points = DataServer::retrievePoints(clients);
-    cout << " --- All Points  ---" << endl;
-    printPoints(points, keysServer);
-    cout << " --- --- --- --- ---" << endl;
-
-    std::vector<Point> randomPoints =
-            DataServer::pickRandomPoints(points, 1 / epsilon, keysServer);
-    cout << " --- Random Points  ---" << endl;
-    printPoints(randomPoints, keysServer);
-    cout << " --- --- --- --- ---" << endl;
-
-    randomPoints.push_back(keysServer.tinyRandomPoint());
-    cout << " --- Random Points with a Tiny Point ---" << endl;
-    printPoints(randomPoints, keysServer);
-    cout << " --- --- --- --- ---" << endl;
-
-    cout << " ------ testPickRandomPoints finished ------ " << endl << endl;
-}
-
-#include <iostream>
-#include <random>
 
 void TestDataServer::testminirand() {
     // Fill vector with numbers 0,1,2,3...,kMaxValue
@@ -137,7 +110,7 @@ void TestDataServer::testminirand() {
     std::cout << std::endl;
 
     cout << " ==== and another one ===  " << endl;
-    auto rng = std::default_random_engine { rd() };
+    auto rng = std::default_random_engine{rd()};
     std::vector<int> v2(kMaxValue + 1);
     for (size_t i = 0; i < v2.size(); ++i)
         v2[i] = i;
@@ -147,18 +120,88 @@ void TestDataServer::testminirand() {
         std::cout << x << ' ';
     std::cout << std::endl;
 
-/*
-    cout << " ==== and with points ===  " << endl;
+    /*
+        cout << " ==== and with points ===  " << endl;
+        KeysServer keysServer;
+        std::vector<Client> clients = generateDataClients(keysServer);
+        std::vector<Point> points = DataServer::retrievePoints(clients);
+        std::shuffle(std::begin(points), std::end(points), rng);
+        // Print random sequence
+        for (Point &point: points) printPoint(point, keysServer);
+        std::cout << std::endl;
+    //    error: no matching function for call to ‘swap(Point&, Point&)’
+    //    swap(*__a, *__b);
+    */
+
+
+}
+
+void TestDataServer::testPickRandomPoints() {
+    cout << " ------ testPickRandomPoints ------ " << endl << endl;
     KeysServer keysServer;
-    std::vector<Client> clients = DataServer::generateDataClients(keysServer);
+    DataServer dataServer(keysServer);
+
+    std::vector <Client> clients = generateDataClients(keysServer);
+    std::vector <Point> points = DataServer::retrievePoints(clients);
+    cout << " --- All Points  ---" << endl;
+    printPoints(points, keysServer);
+    cout << " --- --- --- --- ---" << endl;
+
+    std::vector <std::vector<Point>> randomPoints = dataServer.pickRandomPoints(points,
+                                                                                1 / epsilon);
+    cout << " --- Random Points  ---" << endl;
+    for (auto vec :randomPoints) printPoints(vec, keysServer);
+    cout << " --- --- --- --- ---" << endl;
+
+    cout << " ------ testPickRandomPoints finished ------ " << endl << endl;
+}
+
+void TestDataServer::testCreateCmpDict() {
+    cout << " ------ testCreateCmpDict ------ " << endl << endl;
+    KeysServer keysServer;
+    DataServer dataServer(keysServer);
+
+    std::vector<Client> clients = generateDataClients(keysServer);
     std::vector<Point> points = DataServer::retrievePoints(clients);
-    std::shuffle(std::begin(points), std::end(points), rng);
-    // Print random sequence
-    for (Point &point: points) printPoint(point, keysServer);
-    std::cout << std::endl;
-//    error: no matching function for call to ‘swap(Point&, Point&)’
-//    swap(*__a, *__b);
-*/
+    cout << " --- All Points  ---" << endl;
+    printPoints(points, keysServer);
+    cout << " --- --- --- --- ---" << endl;
 
+    std::vector<std::vector<Point>> randomPoints = dataServer.pickRandomPoints(points,
+                                                                               1 / epsilon);
+    cout << " --- Random Points  ---" << endl;
+    for (auto vec :randomPoints) printPoints(vec, keysServer);
+    cout << " --- --- --- --- ---" << endl;
 
+    std::vector<
+            std::unordered_map<
+                    const Point,
+                    std::unordered_map<
+                            const Point,
+                            helib::Ctxt,
+                            hashPoints
+                    >,
+                    hashPoints
+            >
+    >
+            cmp = DataServer::createCmpDict(randomPoints, points);
+
+    cout << "The Dictionary: " << endl;
+    for (int dim = 0; dim < DIM; ++dim) {
+        cout << "    ======   " ; printNameVal(DIM);// << " ======" << endl;
+        for (auto const&[point, map] : cmp[dim]) {
+            printPoint(point, keysServer);
+            cout << endl;
+            for (auto const&[point2, val]: map) {
+                printPoint(point2, keysServer);
+                printNameVal(keysServer.decryptCtxt(val));
+            }
+            printNameVal(map.size());
+            cout << " --- --- ---" << endl;
+        }
+        printNameVal(cmp[dim].size());
+        cout << " === === ===" << endl;
+    }
+
+    cout << " ------ testCreateCmpDict finished ------ " << endl << endl;
 }

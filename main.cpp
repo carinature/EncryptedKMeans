@@ -19,22 +19,42 @@ using std::endl;
 #include <helib/binaryCompare.h>
 #include <bitset>
 
+static Logger loggerMain(log_debug, "loggerMain");
 
 int main() {
-    //  lLgging
-    auto t0_main = std::chrono::high_resolution_clock::now();
+    auto t0_main = CLOCK::now();
     Logger logger;
     logger.log("Starting Protocol", log_trace);
     //  Keys Server
     KeysServer keysServer;
+    DataServer dataServer(keysServer);
     logger.log(printDuration(t0_main, "KeysServer Initialization"));
 
-    std::vector<Client> clients = DataServer::generateDataClients(keysServer);
-    std::vector<Point> points = DataServer::retrievePoints(clients);
+    const std::vector<Client> clients = generateDataClients(keysServer);
+
+    const std::vector<Point> points = DataServer::retrievePoints(clients);
     cout << " --- Points  ---" << endl;
     printPoints(points, keysServer);
     cout << " --- --- --- --- ---" << endl;
-    //    int numOfStrips = 5;
+
+    const std::vector<std::vector<Point>> randomPoints = dataServer.pickRandomPoints(points);
+    cout << " --- Random Points  ---" << endl;
+    for (auto vec :randomPoints)         printPoints(vec, keysServer);
+    cout << " --- --- --- --- ---" << endl;
+
+/*
+    std::map<
+            const Point,
+            std::vector<
+                    std::tuple<
+                            const Point,
+                            std::vector<Point>,
+                            std::vector<Ctxt>
+                    >
+            >
+    > allCells;
+    //    allCells.reserve(pow((1 / epsilon), 2));*/
+    /*
     std::vector<
             std::tuple<
                     Point,
@@ -42,19 +62,19 @@ int main() {
                     std::vector<Ctxt>
             >
     > groups = DataServer::split(points, 0, keysServer);
-    printNameVal(groups.size());
+    *//*    printNameVal(groups.size());
         cout << " --- Random Points  ---" << endl;
-    for (auto g: groups)  printPoint(std::get<0>(g), keysServer);
-    cout << " --- Groups  ---" << endl;
-    for (std::tuple tuple: groups) {
-        Point randomPoint = std::get<0>(tuple);
-        std::vector<Point> group = std::get<1>(tuple);
-        std::vector<Ctxt> groupSize = std::get<2>(tuple);
-        cout << "on the left of random point: ";
-        printPoint(randomPoint, keysServer);
-        cout << " these points will be included: \n";
-        printPoints(group, keysServer);
-        cout << "group size: " << keysServer.decryptSize(groupSize) << endl;
+        for (auto g: groups) printPoint(std::get<0>(g), dataServer);
+        cout << " --- Groups  ---" << endl;*//*
+    for (std::tuple groupTuple: groups) {
+        Point randomPoint = std::get<0>(groupTuple);
+        std::vector<Point> group = std::get<1>(groupTuple);
+        std::vector<Ctxt> groupSize = std::get<2>(groupTuple);
+        *//*        cout << "on the left of random point: ";
+                printPoint(randomPoint, dataServer);
+                cout << " these points will be included: \n";
+                printPoints(group, dataServer);
+                cout << "group size: " << dataServer.decryptSize(groupSize) << endl;*//*
         std::vector<
                 std::tuple<
                         Point,
@@ -62,25 +82,31 @@ int main() {
                         std::vector<Ctxt>
                 >
         > cells = DataServer::split(group, 1, keysServer);
-        printNameVal(cells.size());
-        cout << " --- Random Points For Cells ---" << endl;
-        for (auto g: cells)  printPoint(std::get<0>(g), keysServer);
-        cout << " --- Cells  ---" << endl;
-        for (std::tuple tuple: cells) {
-            Point randomPointCell = std::get<0>(tuple);
-            std::vector <Point> cell = std::get<1>(tuple);
-            std::vector <Ctxt> cellSize = std::get<2>(tuple);
-            cout << "on the left of random point: ";
+        *//*        printNameVal(cells.size());
+                cout << " --- Random Points For Cells ---" << endl;
+                for (auto g: cells)  printPoint(std::get<0>(g), dataServer);
+                cout << " --- Cells  ---" << endl;*//*
+        for (std::tuple cellTuple: cells) {
+            Point randomPointCell = std::get<0>(cellTuple);
+            std::vector<Point> cell = std::get<1>(cellTuple);
+            std::vector<Ctxt> cellSize = std::get<2>(cellTuple);
+            cout << "on the LEFT of random point: ";
             printPoint(randomPoint, keysServer);
-            cout << "and under the (cell) random point: ";
+            cout << "and UNDER the (cell) random point: ";
             printPoint(randomPointCell, keysServer);
-            cout << " these points will be included: \n";
-            printPoints(cell, keysServer);
-            cout << "cell size: " << keysServer.decryptSize(cellSize) << endl;
+            cout << "these points will be included: \n";
+            //            printPoints(cell, dataServer);
+            printNonEmptyPoints(cell, keysServer);
+            cout << "cell size: " << keysServer.decryptSize(cellSize) << endl << endl;
         }
+        allCells.emplace(randomPoint, cells);
     }
-    cout << " --- --- --- --- ---" << endl;
+*/
+    //    for (auto &tup:allCells) {
+    //        for
+    //    }
 
+    cout << " --- --- --- --- ---" << endl;
 
 #ifdef alt
     // Choose two random n-bit integers
@@ -103,8 +129,8 @@ int main() {
         encryptionKey.Encrypt(encb[i], NTL::ZZX((pb >> i) & 1));
         //        if (helib_bootstrap) { // put them at a lower level
         //            if (i < BIT_SIZE)
-        //                enca[i].bringToSet(keysServer.getCtxtPrimes(5));
-        //            encb[i].bringToSet(keysServer.getCtxtPrimes(5));
+        //                enca[i].bringToSet(dataServer.getCtxtPrimes(5));
+        //            encb[i].bringToSet(dataServer.getCtxtPrimes(5));
         //        }
     }
 
@@ -113,7 +139,7 @@ int main() {
 //    std::vector<long> v0(n);
 //    for (long i = 0; i < n; i++)
 //        v0[i] = i;
-//    helib::PtxtArray ptxtArray(keysServer.getContext(), v0);
+//    helib::PtxtArray ptxtArray(dataServer.getContext(), v0);
 //    helib::Ctxt c0(publicKey);
 //    ptxtArray.encrypt(c0);
 //
@@ -140,7 +166,7 @@ int main() {
 
     // Use a scratch ciphertext to populate vectors.
     const helib::PubKey &public_key = encryptionKey;
-//    const helib::PubKey &public_key = keysServer.getSecKey();
+//    const helib::PubKey &public_key = dataServer.getSecKey();
     helib::Ctxt scratch(public_key);
     std::vector<helib::Ctxt> encrypted_a(bitSize, scratch);
     std::vector<helib::Ctxt> encrypted_b(bitSize, scratch);
@@ -188,8 +214,6 @@ int main() {
     // std::vector<std::vector<helib::Ctxt>>, used for representing a list of
     // encrypted binary numbers.
 #endif
-
-
 
     //-----------------------------------------------------------
 

@@ -6,16 +6,7 @@ using std::cout;
 using std::endl;
 static Logger dataServerLogger(log_debug, "dataServerLogger");
 
-DataServer::DataServer(KeysServer &keysServer) :
-        keysServer(keysServer),
-        encryptionKey(keysServer.getPublicKey()),
-        //        public_key(keysServer.getPublicKey()),
-        //        public_key(encryptionKey),
-        //        ea(keysServer.getEA()),
-        scratch(keysServer.getPublicKey()) {
-    dataServerLogger.log("DataServer()");
-    cout << "DataServer()" << endl;
-}
+//DataServer::DataServer(KeysServer &keysServer) ;
 
 /**
  * @brief request data from clients and conentrate into one list
@@ -44,10 +35,8 @@ DataServer::retrievePoints(
 }
 
 
-const std::vector<std::vector<Point>>
-DataServer::pickRandomPoints(const std::vector<Point> &points,
-                             int m,
-                             const Point &tinyRandomPoint) {
+std::vector<std::vector<Point>>
+DataServer::pickRandomPoints(const std::vector<Point> &points, int m) {
     auto t0_rndPoints = CLOCK::now();     //  for logging, profiling, DBG
 
     if (points.empty() || m > points.size()) return std::vector<std::vector<Point>>();
@@ -83,8 +72,7 @@ DataServer::pickRandomPoints(const std::vector<Point> &points,
 
 std::vector<std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt>>>
 DataServer::createCmpDict(const std::vector<Point> &allPoints,
-                          const std::vector<std::vector<Point>> &randomPoints,
-                          const Point &tinyRandomPoint) {
+                          const std::vector<std::vector<Point>> &randomPoints) {
     auto t0_cmpDict = CLOCK::now();     //  for logging, profiling, DBG
 
     std::vector<

@@ -61,29 +61,29 @@ std::vector<Client> generateDataClients(const KeysServer &keysServer) ;
 /**
  * and aux struct to put some order in the
  * */
-struct Cell{
+struct Slice{
     std::vector<Point> reps;
     std::vector<Point> includedPoints;
     std::vector<helib::Ctxt> included;
 
-    Cell(){
+    Slice(){
 //        cout << "init cell" << endl;
         reps.reserve(DIM); //   should be one rep per dimension
         includedPoints.reserve(number_of_points); //   should be one rep per dimension
         included.reserve(number_of_points); //   should be one rep per dimension
     }
 
-    Cell & addRep(const Point &point){
+    Slice & addRep(const Point &point){
         reps.push_back(point);
         return *this;
     }
-    Cell & addPoint(const Point &point, const helib::Ctxt &isIncluded){
+    Slice & addPoint(const Point &point, const helib::Ctxt &isIncluded){
         includedPoints.push_back(point);
         included.push_back(isIncluded);
         return *this;
     }
 
-    void printCell(const KeysServer&keysServer)const ;
+    void printSlice(const KeysServer&keysServer)const ;
 };
 
 #endif //ENCKMEAN_AUX_H

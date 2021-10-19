@@ -27,8 +27,8 @@ int main() {
     logger.log("Starting Protocol", log_trace);
     //  Keys Server
     KeysServer keysServer;
-    DataServer dataServer(keysServer);
     logger.log(printDuration(t0_main, "KeysServer Initialization"));
+    DataServer dataServer(keysServer);
 
     const std::vector<Client> clients = generateDataClients(keysServer);
 
@@ -37,10 +37,13 @@ int main() {
     printPoints(points, keysServer);
     cout << " --- --- --- --- ---" << endl;
 
-    const std::vector<std::vector<Point>> randomPoints = dataServer.pickRandomPoints(points, 0,
-                                                                                     keysServer.tinyRandomPoint());
+    const Point &tinyRandomPoint = keysServer.tinyRandomPoint();
+
+    const std::vector<std::vector<Point>>
+            randomPoints = dataServer.pickRandomPoints(points, 1 / epsilon);
+    
     cout << " --- Random Points  ---" << endl;
-    for (auto vec :randomPoints)         printPoints(vec, keysServer);
+    for (auto vec :randomPoints) printPoints(vec, keysServer);
     cout << " --- --- --- --- ---" << endl;
 
     //  create points-comparing dict - for every 2 points (p1,p2) answers p1[dim]>p2[dim]
@@ -50,80 +53,19 @@ int main() {
                     std::unordered_map<
                             const Point,
                             helib::Ctxt> > >
-            cmpDict = DataServer::createCmpDict(points, randomPoints, keysServer.tinyRandomPoint());
+            cmpDict = DataServer::createCmpDict(points, randomPoints);
 
-//    const std::vector<
-//            std::tuple<
-//                    Point,
-//                    std::vector<Point>,
-//                    std::vector<Ctxt>
-//            >
-//    > groups = DataServer::split(points, randomPoints, cmpDict);
-    std::map<int, //DIM
-            std::vector< //current slices for approp dimension
-                    Cell
-            >
-    >
-    groups = DataServer::splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
-    for (Cell & cell: groups[0]) {
-        cell.printCell(keysServer);
-    }
+    std::map<int, std::vector<Slice> >
+            groups = DataServer::splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
 
-/*
-    std::map<
-            const Point,
-            std::vector<
-                    std::tuple<
-                            const Point,
-                            std::vector<Point>,
-                            std::vector<Ctxt>
-                    >
-            >
-    > allCells;
-    //    allCells.reserve(pow((1 / epsilon), 2));*/
-    /*    printNameVal(groups.size());
-        cout << " --- Random Points  ---" << endl;
-        for (auto g: groups) printPoint(std::get<0>(g), dataServer);
-        cout << " --- Groups  ---" << endl;*//*
-    for (std::tuple groupTuple: groups) {
-        Point randomPoint = std::get<0>(groupTuple);
-        std::vector<Point> group = std::get<1>(groupTuple);
-        std::vector<Ctxt> groupSize = std::get<2>(groupTuple);
-        *//*        cout << "on the left of random point: ";
-                printPoint(randomPoint, dataServer);
-                cout << " these points will be included: \n";
-                printPoints(group, dataServer);
-                cout << "group size: " << dataServer.decryptSize(groupSize) << endl;*//*
-        std::vector<
-                std::tuple<
-                        Point,
-                        std::vector<Point>,
-                        std::vector<Ctxt>
-                >
-        > cells = DataServer::split(group, 1, keysServer);
-        *//*        printNameVal(cells.size());
-                cout << " --- Random Points For Cells ---" << endl;
-                for (auto g: cells)  printPoint(std::get<0>(g), dataServer);
-                cout << " --- Cells  ---" << endl;*//*
-        for (std::tuple cellTuple: cells) {
-            Point randomPointCell = std::get<0>(cellTuple);
-            std::vector<Point> cell = std::get<1>(cellTuple);
-            std::vector<Ctxt> cellSize = std::get<2>(cellTuple);
-            cout << "on the LEFT of random point: ";
-            printPoint(randomPoint, keysServer);
-            cout << "and UNDER the (cell) random point: ";
-            printPoint(randomPointCell, keysServer);
-            cout << "these points will be included: \n";
-            //            printPoints(cell, dataServer);
-            printNonEmptyPoints(cell, keysServer);
-            cout << "cell size: " << keysServer.decryptSize(cellSize) << endl << endl;
+    for (int dim = 0; dim < DIM; ++dim) {
+        cout << "   ---   For dim " << dim << "  --- " << endl;
+        for (Slice &cell: groups[dim]) {
+            cell.printSlice(keysServer);
         }
-        allCells.emplace(randomPoint, cells);
+        cout << "   ---     --- " << endl;
+        cout << endl;
     }
-*/
-    //    for (auto &tup:allCells) {
-    //        for
-    //    }
 
     cout << " --- --- --- --- ---" << endl;
 

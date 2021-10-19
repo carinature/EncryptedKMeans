@@ -109,7 +109,7 @@ std::vector<Client> generateDataClients(const KeysServer &keysServer) {
     return clients;
 }
 
-void Cell::printCell(const KeysServer &keysServer) const {
+void Slice::printSlice(const KeysServer &keysServer) const {
     cout << "For the Reps: ";
     printPoints(reps, keysServer);
     cout <<endl<< " These " << keysServer.decryptSize(included) << " Points will be included: " ;//<< endl;

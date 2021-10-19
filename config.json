@@ -1,12 +1,12 @@
 {
   "data_properties": {
-    "number_of_points": 15,
+    "number_of_points": 10,
     "number_of_clients": 10,
     "DIM": 2,
     "range_lim": 1,
     "range_lim_comment": "for python, defines the range of the points (from BOTTOM_LIM to RANGE_LIM)",
     "low_limit": 0,
-    "epsilon": 0.3,
+    "epsilon": 0.5,
     "decimal_digits": 2,
     "conversion_factor": "pow(10, DECIMAL_DIGITS)",
     "conversion_factor_comment": "for conversion from double-type to long-type (helib compatibility)",

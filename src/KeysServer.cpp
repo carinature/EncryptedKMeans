@@ -136,6 +136,7 @@ const Point KeysServer::scratchPoint() const {
 
 const Point KeysServer::tinyRandomPoint() const {
     long arr[DIM];
+    //fixme change rand() to <random>
     for (short dim = 0; dim < DIM; ++dim) arr[dim] = rand() % 1 * epsilon;
     // note that despite the rand illusion, currently this always returns 0
     // which is perfectly for us, but the "real" solution will be ok too

@@ -193,6 +193,8 @@ public:
      * so as to not assign then to one of the cells
      * */
     const Point tinyRandomPoint() const;
+
+    const Point getQuotientPoint(const Point &point, const std::vector<Ctxt> &sizeBitVector) const;
 };
 
 

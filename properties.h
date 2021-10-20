@@ -24,9 +24,9 @@ static json jsonConfig = json::parse(config_json_file);
 /*
  * Global Constatns & Data Properties
  * */
-static const short number_of_points = jsonConfig["data_properties"]["number_of_points"];
-static const short number_of_clients = number_of_points;
-//static const short number_of_clients = jsonConfig["data_properties"]["number_of_clients"];
+static const short NUMBER_OF_POINTS = jsonConfig["data_properties"]["number_of_points"];
+static const short NUMBER_OF_CLIENTS = NUMBER_OF_POINTS;
+//static const short NUMBER_OF_CLIENTS = jsonConfig["data_properties"]["number_of_clients"];
 static const short DIM = jsonConfig["data_properties"]["DIM"];
 static const short range_lim = jsonConfig["data_properties"]["range_lim"];
 static const short low_limit = jsonConfig["data_properties"]["low_limit"];
@@ -36,7 +36,7 @@ static const short NUMBERS_RANGE = pow(2, BIT_SIZE);
 static const short N_Threads = jsonConfig["data_properties"]["N_Threads"];
 static const short decimal_digits = jsonConfig["data_properties"]["decimal_digits"];
 static const short conversion_factor = pow(10, decimal_digits);
-static const double epsilon = jsonConfig["data_properties"]["epsilon"];
+static const double EPSILON = jsonConfig["data_properties"]["epsilon"];
 
 [[maybe_unused]] static const std::string range_lim_comment = jsonConfig["data_properties"]["range_lim_comment"];
 [[maybe_unused]] static const std::string conversion_factor_comment = jsonConfig["data_properties"]["conversion_factor_comment"];

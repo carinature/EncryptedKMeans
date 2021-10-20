@@ -24,7 +24,9 @@ public:
 
     static void testCreateCmpDict();
 
-    static void testSplit();
+    static void testSplitIntoEpsNet();
+
+    static void testCalculateCellMeans();
 };
 
 

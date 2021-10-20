@@ -134,14 +134,32 @@ const Point KeysServer::scratchPoint() const {
     return Point(getPublicKey());//, nullptr);
 }
 
-const Point KeysServer::tinyRandomPoint() const {
+const Point
+KeysServer::tinyRandomPoint() const {
     long arr[DIM];
     //fixme change rand() to <random>
-    for (short dim = 0; dim < DIM; ++dim) arr[dim] = rand() % 1 * epsilon;
+    for (short dim = 0; dim < DIM; ++dim) arr[dim] = rand() % 1 * EPSILON;
     // note that despite the rand illusion, currently this always returns 0
     // which is perfectly for us, but the "real" solution will be ok too
     // to create the "real" solution we'll change the `rand()` function (and `long` to `double`)
     return Point(getPublicKey(), arr);
+}
+
+const Point
+KeysServer::getQuotientPoint(
+        const Point &point,
+        const std::vector<Ctxt> &sizeBitVector
+) const {
+    long size = decryptSize(sizeBitVector), arr[DIM];
+    printNameVal(size);
+    if (size)
+        for (int dim = 0; dim < DIM; ++dim) {
+            long pCoor = decryptNum(point[dim]);
+            arr[dim] = pCoor / size;
+            printNameVal(pCoor);
+            printNameVal(arr[dim]);
+        }
+    return Point(point.public_key, arr);
 }
 
 

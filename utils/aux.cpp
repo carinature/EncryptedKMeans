@@ -76,9 +76,9 @@ void printNonEmptyPoints(const std::vector<Point> &points, const KeysServer &key
 */  // todo move to aux ?
 std::vector<Client> generateDataClients(const KeysServer &keysServer) {
     /*        //        Note that rand() is considered harmful, and is discouraged in C++14
-            int uniquePointsNum = 3 + random() % number_of_points,
+            int uniquePointsNum = 3 + random() % NUMBER_OF_POINTS,
                     clientsNum = uniquePointsNum;
-            printNameVal(number_of_points);
+            printNameVal(NUMBER_OF_POINTS);
             printNameVal(uniquePointsNum);
             *//*        //  init coordinate arrays
                 //        long arrs[uniquePointsNum][DIM];
@@ -98,10 +98,11 @@ std::vector<Client> generateDataClients(const KeysServer &keysServer) {
             }*/
 
     std::random_device rd;
-    std::mt19937 mt(rd());
+//    std::mt19937 mt(rd());
+    std::mt19937 mt;
     std::uniform_real_distribution<double> dist(0, NUMBERS_RANGE);
     long tempArr[DIM];
-    std::vector<Client> clients(number_of_clients, Client(keysServer));
+    std::vector<Client> clients(NUMBER_OF_CLIENTS, Client(keysServer));
     for (Client &client:clients) {
         for (int dim = 0; dim < DIM; ++dim) tempArr[dim] = dist(mt);
         client.encryptPoint(tempArr);

@@ -57,11 +57,12 @@ DataServer::pickRandomPoints(const std::vector<Point> &points, int m) {
         std::vector<int> indices(points.size());
         for (int i = 0; i < indices.size(); ++i) indices[i] = i;
         auto rd = std::random_device{};
-        auto rng = std::default_random_engine{rd()};
+//        auto rng = std::default_random_engine{rd()}; //for extra randomness. recommended.
+        auto rng = std::default_random_engine{};
         std::shuffle(std::begin(indices), std::end(indices), rng);
         //todo shuffle only m instead of all ? check which is more efficient
 
-        for (int i = 0; i < m; ++i) randomPoints[dim].emplace_back(points[indices[i]]);
+        for (int i = 0; i < pow(m , dim+1); ++i) randomPoints[dim].emplace_back(points[indices[i]]);
 
     }
 

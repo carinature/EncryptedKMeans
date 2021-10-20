@@ -69,8 +69,8 @@ struct Slice{
     Slice(){
 //        cout << "init cell" << endl;
         reps.reserve(DIM); //   should be one rep per dimension
-        includedPoints.reserve(number_of_points); //   should be one rep per dimension
-        included.reserve(number_of_points); //   should be one rep per dimension
+        includedPoints.reserve(NUMBER_OF_POINTS); //   should be one rep per dimension
+        included.reserve(NUMBER_OF_POINTS); //   should be one rep per dimension
     }
 
     Slice & addRep(const Point &point){

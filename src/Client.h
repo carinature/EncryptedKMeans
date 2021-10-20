@@ -20,8 +20,8 @@ class Client {
 protected:
     //    NTL::Vec<helib::Ctxt> cCoordinatesNTL;
     //    std::vector<std::vector<helib::Ctxt> > cCoordinatesStd;
-    const helib::PubKey &public_key;// = encryptionKey;
-//    helib::PubKey pubKey;// = encryptionKey;
+     helib::PubKey &public_key;// = encryptionKey;
+//   const helib::PubKey pubKey;// = encryptionKey;
     //#if DBG
     //private:
     //    long *pCoordinatesDBG;

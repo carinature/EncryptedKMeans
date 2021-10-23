@@ -40,7 +40,7 @@ int main() {
     const Point &tinyRandomPoint = keysServer.tinyRandomPoint();
 
     const std::vector<std::vector<Point>>
-            randomPoints = dataServer.pickRandomPoints(points, 1 / epsilon);
+            randomPoints = dataServer.pickRandomPoints(points);//, (1 / EPSILON)-1);
     
     cout << " --- Random Points  ---" << endl;
     for (auto vec :randomPoints) printPoints(vec, keysServer);

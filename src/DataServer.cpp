@@ -41,7 +41,7 @@ DataServer::pickRandomPoints(const std::vector<Point> &points, int m) {
 
     if (points.empty() || m > points.size()) return std::vector<std::vector<Point>>();
 
-//    const Point &tinyRandomPoint = keysServer.tinyRandomPoint();
+    //    const Point &tinyRandomPoint = keysServer.tinyRandomPoint();
     std::vector<std::vector<Point>> randomPoints(DIM);
 
     for (int dim = 0; dim < DIM; ++dim) {
@@ -57,12 +57,13 @@ DataServer::pickRandomPoints(const std::vector<Point> &points, int m) {
         std::vector<int> indices(points.size());
         for (int i = 0; i < indices.size(); ++i) indices[i] = i;
         auto rd = std::random_device{};
-//        auto rng = std::default_random_engine{rd()}; //for extra randomness. recommended.
+        //        auto rng = std::default_random_engine{rd()}; //for extra randomness. recommended.
         auto rng = std::default_random_engine{};
         std::shuffle(std::begin(indices), std::end(indices), rng);
         //todo shuffle only m instead of all ? check which is more efficient
 
-        for (int i = 0; i < pow(m , dim+1); ++i) randomPoints[dim].emplace_back(points[indices[i]]);
+        for (int i = 0; i < pow(m, dim + 1); ++i)
+            randomPoints[dim].emplace_back(points[indices[i]]);
 
     }
 
@@ -84,29 +85,64 @@ DataServer::createCmpDict(const std::vector<Point> &allPoints,
                             helib::Ctxt> > >
             cmpsDict(DIM);
 
+    std::vector<helib::Ctxt> res;
+
     for (short dim = 0; dim < DIM; ++dim) {
         // cmpDictForCurrDim.reserve(allPoints.size());
+        cmpsDict[dim].reserve(randomPoints[dim].size());
+        for (const Point &rep : randomPoints[dim]) {
 
-        for (const Point &point : randomPoints[dim]) {
-
-            // todo fills like there is a better or more efficient way to do this
-            const std::vector<helib::Ctxt> res = point.isBiggerThan(tinyRandomPoint, dim);
-            cmpsDict[dim][point].emplace(tinyRandomPoint, res[0]);   //  point > point2
-            cmpsDict[dim][tinyRandomPoint].emplace(point, res[1]);   //  point < point2
-
-            for (const Point &point2 : allPoints) {
-                //                if (!cmpsDict[point].empty() && !cmpsDict[point][point2].isEmpty()))
-                //                if (point.id == point2.id) continue; //this is checked inside isBigger function
+            for (const Point &point : allPoints) {
+                //                if (!cmpsDict[rep].empty() && !cmpsDict[rep][point].isEmpty()))
+                //                if (rep.id == point.id) continue; //this is checked inside isBigger function
                 // todo in the future, for efficiency
                 //  - need to check if exist
                 //  - find a way to utilize the 2nd result of the `isBiggerThan()`
                 //      since you get it for free in helibs cmp
                 //  - maybe useful to use helibs `min/max` somehow?
-                const std::vector<helib::Ctxt> res = point.isBiggerThan(point2, dim);
-                cmpsDict[dim][point].emplace(point2, res[0]);   //  point > point2
-                cmpsDict[dim][point2].emplace(point, res[1]);   //  point < point2
+                res = rep.isBiggerThan(point, dim);
+                /*
+                //  nand = !(mu*nu) = 1-(mu*nu)     meaning both numbers were equal
+                Ctxt nand(res[0]);              // nand = mu
+                (nand *= res[1]).negate();      // nand = - (mu * nu)
+                nand.addConstant(1l);      // nand = 1 - (mu * nu) = !(mu*nu)
+
+                //  beq = mu OR nand = mu + nand - mu * nand
+                Ctxt beq(res[0]);               // beq = mu
+                (beq *= nand).negate();           // beq = - (mu * nand)
+                (beq += res[0]) += nand;            // beq = mu + nand - (mu * nand) = mu OR nand
+
+                cmpsDict[dim][rep].emplace(point, nand);   //  rep > point or rep=point
+                */
+                cmpsDict[dim][rep].emplace(point, res[0]);   //  rep > point
+                cmpsDict[dim][point].emplace(rep, res[1]);   //  rep < point
             }
+            res = rep.isBiggerThan(tinyRandomPoint, dim);
+            cmpsDict[dim][rep].emplace(tinyRandomPoint, res[0]);   //  rep > point2
+            cmpsDict[dim][tinyRandomPoint].emplace(rep, res[1]);   //  rep < point2
         }
+
+        //        for (const Point &rep : randomPoints[dim]) {
+        //            // todo fills like there is a better or more efficient way to do this
+        //            res = tinyRandomPoint.isBiggerThan(rep, dim);
+        //            cmpsDict[dim][rep].emplace(tinyRandomPoint, res[1]);   //  rep > point2
+        //            cmpsDict[dim][tinyRandomPoint].emplace(rep, res[0]);   //  rep < point2
+        //
+        //            //            res = rep.isBiggerThan(tinyRandomPoint, dim);
+        //            //            cmpsDict[dim][rep].emplace(tinyRandomPoint, res[0]);   //  rep > point2
+        //            //            cmpsDict[dim][tinyRandomPoint].emplace(rep, res[1]);   //  rep < point2
+        //
+        //            long tinyid = tinyRandomPoint.id, repid = rep.id;
+        //            long cmpRepTiny = keysServer.decryptCtxt(cmpsDict[dim][rep].at(tinyRandomPoint));
+        //            long cmpTinyRep = keysServer.decryptCtxt(cmpsDict[dim][tinyRandomPoint].at(rep));
+        //            long resRepTiny = keysServer.decryptCtxt(res[0]);
+        //            long resTinyRep = keysServer.decryptCtxt(res[1]);
+        //            printNameVal(cmpRepTiny);
+        //            printNameVal(cmpTinyRep);
+        //            printNameVal(resRepTiny);
+        //            printNameVal(resTinyRep);
+        //            if (resRepTiny && resTinyRep) printPoint(rep, keysServer);
+        //        }
     }
 
     loggerDataServer.log(printDuration(t0_cmpDict, "CmpDict Creation"));

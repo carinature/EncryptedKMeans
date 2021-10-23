@@ -18,13 +18,19 @@ class Point {
     friend class KeysServer;
 
     /*  for DBG */
-    std::vector<long> pCoordinatesDBG;
+    std::vector<long> ORIGpCoordinatesDBG;
     bool isCopyDBG = false;
     bool isEmptyDBG = true;
     const helib::PubKey *pubKeyPtrDBG;
     long cmpCounter, addCounter, multCounter; //todo
 
 public:
+
+    /*  for DBG */
+    std::vector<long> pCoordinatesDBG;
+
+public:
+//     helib::PubKey &public_key;// = encryptionKey;
     const helib::PubKey &public_key;// = encryptionKey;
     std::vector<std::vector<helib::Ctxt> > cCoordinates;
 
@@ -47,18 +53,20 @@ public:
             cmpCounter(0),  //todo maybe better to init to 0, depending future impl & use
             addCounter(0),  //todo maybe better to init to 0, depending future impl & use
             multCounter(0), //todo maybe better to init to 0, depending future impl & use
-    //            public_key(public_key){
             id(counter++),
             public_key(public_key),
             pubKeyPtrDBG(&public_key),
-            cCoordinates(DIM, std::vector(BIT_SIZE, helib::Ctxt(this->public_key))) {
+            cCoordinates(DIM, std::vector(BIT_SIZE, helib::Ctxt(public_key))) {
+//        this->public_key = public_key.;
         //        this->cCoordinates.reserve(DIM);
         pCoordinatesDBG.reserve(DIM);
+        ORIGpCoordinatesDBG.reserve(DIM);
         //        cout << " Point Init" << endl;
         if (coordinates) {
             isEmptyDBG = false;
             for (short dim = 0; dim < DIM; ++dim) {
                 pCoordinatesDBG.push_back(coordinates[dim]);
+                ORIGpCoordinatesDBG.push_back(coordinates[dim]);
                 // Extract the i'th bit of coordinates[dim]
                 for (long bit = 0; bit < BIT_SIZE; ++bit)
                     this->public_key.Encrypt(cCoordinates[dim][bit],
@@ -81,22 +89,30 @@ public:
             //            cCoordinates(DIM, std::vector(BIT_SIZE, helib::Ctxt(public_key))),
             cCoordinates(point.cCoordinates),
             pCoordinatesDBG(point.pCoordinatesDBG),
+            ORIGpCoordinatesDBG(point.ORIGpCoordinatesDBG),
             isEmptyDBG(point.isEmptyDBG),
             isCopyDBG(true) {
         //        cout << " Point copy copy" << endl; //this print is important for later. efficiency...
         if (!point.isEmpty())
-            for (short dim = 0; dim < DIM; ++dim) cCoordinates[dim] = point.cCoordinates[dim];
+            for (short dim = 0; dim < DIM; ++dim) {
+                vecCopy(cCoordinates[dim],point.cCoordinates[dim]); //helibs version of vec copy
+                //                cCoordinates[dim] = point.cCoordinates[dim];
+            }
 
     }
 
-    //  todo need?
-    //    Point operator=(Point &point) {
-    //        cout << " Point assign" << endl;
-    //        public_key. = point.public_key;
-    //        if (point.isEmpty()) return
-    //            for (short dim = 0; dim < DIM; ++dim)
-    //                cCoordinates[dim] = point.cCoordinates[dim];
-    //    }
+        Point &operator=(const Point &point){
+//            cout << " Point assign" << endl;
+            if (point.isEmpty()) return *this;
+                for (short dim = 0; dim < DIM; ++dim) {
+//                    cCoordinates[dim] = point.cCoordinates[dim];
+                    vecCopy(cCoordinates[dim],point.cCoordinates[dim]); //helibs version of vec copy
+
+                    pCoordinatesDBG[dim] = point.pCoordinatesDBG[dim];
+                    ORIGpCoordinatesDBG[dim] = point.ORIGpCoordinatesDBG[dim];
+                }
+    return *this;
+        }
 
 
     const std::vector<helib::Ctxt> &operator[](short int i) const {
@@ -113,7 +129,7 @@ public:
         if (point.isEmpty()) return *this; //todo consider
         if (this->isEmpty()) return point;
         const long arr[] = {0, 0};
-        Point sum(this->public_key, arr);
+        Point sum(public_key, arr);
         for (short dim = 0; dim < DIM; ++dim) {
             helib::CtPtrs_vectorCt result_wrapper(sum.cCoordinates[dim]);
             /*
@@ -134,20 +150,22 @@ public:
                     OUT_SIZE,   // sizeLimit=0 means use as many bits as needed.
                     &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
             );
+            pCoordinatesDBG[dim] += point.pCoordinatesDBG[dim];
+
         }
         return sum;
     }
 
     //todo notice that IT IS 3-for-2 (whoohhoo)
     //// Calculates the sum of many numbers using the 3-for-2 method
-    static Point addManyPoints(std::vector<Point> &points) {
+    static Point addManyPoints(const std::vector<Point> &points) {
         //        if (points.empty()) return static_cast<Point>(nullptr);
         //        const long arr[] = {0, 0};
         //        std::vector<std::vector<helib::Ctxt>>> c
         Point sum(points.back().public_key);//, arr);
         std::vector<std::vector<helib::Ctxt>> summands; // = {encrypted_a, encrypted_b, encrypted_c};
         for (short dim = 0; dim < DIM; ++dim) {
-            for (Point &point : points) summands.push_back(point.cCoordinates[dim]);
+            for (const Point &point : points) summands.push_back(point.cCoordinates[dim]);
             helib::CtPtrMat_vectorCt summands_wrapper(summands);
             helib::CtPtrs_vectorCt result_wrapper(sum.cCoordinates[dim]);
             //            std::vector<helib::Ctxt> encrypted_result;
@@ -173,6 +191,8 @@ public:
             //            sum.cCoordinates[dim] = encrypted_result;
             //            encrypted_result.clear();
             summands.clear();
+
+            //            pCoordinatesDBG[dim] += point.pCoordinatesDBG[dim];
         }
         return sum;
     }
@@ -180,10 +200,9 @@ public:
     /**
      * @brief Multiplies an encrypted point by an encrypted bit
      * */
-    Point operator*(Ctxt &bit) const {
-        if (bit.isEmpty()) return *this; //todo consider
-        if (this->isEmpty()) return Point(this->public_key);
-        //        const long arr[] = {0, 0};
+    const Point operator*(const Ctxt &bit) const {
+//        if (bit.isEmpty()) return *this; //todo consider
+//        if (this->isEmpty()) return Point(this->public_key);
         Point product(*this);
         for (short dim = 0; dim < DIM; ++dim) {
             //todo use operator[]
@@ -191,8 +210,38 @@ public:
             binaryMask(result_wrapper, bit);
             //                for (long i = 0; i < resSize; i++)
             //                    productCoors[i]->multiplyBy(*(lhs[0]));
+
         }
         return product;
+
+        /*  todo notice this two functions from @file binaryArith.cpp :
+                //! Apply mask across the vector of bits slot-wise.
+                void binaryMask(CtPtrs& bits, const Ctxt& mask)        {
+                    for (long i = 0; i < bits.size(); ++i)
+                        bits[i]->multiplyBy(mask);
+                }
+                //! Implementation of output = cond ? trueValue : falseValue
+                void binaryCond(CtPtrs& output,
+                                const Ctxt& cond,
+                                const CtPtrs& trueValue,
+                                const CtPtrs& falseValue)
+                {...}
+         */
+    }
+
+    Point & operator*=(const Ctxt &bit) {
+//        if (bit.isEmpty()) return *this; //todo consider
+//        if (this->isEmpty()) return Point(this->public_key);
+        Point product(*this);
+        for (short dim = 0; dim < DIM; ++dim) {
+            //todo use operator[]
+            helib::CtPtrs_vectorCt result_wrapper(this->cCoordinates[dim]);
+            binaryMask(result_wrapper, bit);
+            //                for (long i = 0; i < resSize; i++)
+            //                    productCoors[i]->multiplyBy(*(lhs[0]));
+
+        }
+        return *this;
 
         /*  todo notice this two functions from @file binaryArith.cpp :
                 //! Apply mask across the vector of bits slot-wise.
@@ -248,7 +297,7 @@ public:
      * @returns a tuple that answers - ((p1[d]>p2[d]), (p2[d]>p1[d])). value are encrypted.
      * @return std::vector<helib::Ctxt>
      * */
-    const std::vector<helib::Ctxt> isBiggerThan(const Point &point, short currentDim = DIM - 1) const {
+    std::vector<helib::Ctxt> isBiggerThan(const Point &point, short currentDim = DIM - 1) const {
         Ctxt mu(public_key), ni(public_key);
         if (!(isEmpty() || point.isEmpty())) {
             if (point.id == id) {
@@ -289,7 +338,7 @@ public:
 public:
     //! @var long id
     //! used in createCmpDict for comparison
-    const long id; // = 0;  //fixme
+    const long id;
 };
 
 /** hash functionality for std::unordered_map of Point  */

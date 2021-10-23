@@ -179,15 +179,25 @@ void TestDataServer::testCreateCmpDict() {
             cmp = dataServer.createCmpDict(points, randomPoints);
 
     cout << "The Dictionary: " << endl;
-    for (int dim = 0; dim < DIM; ++dim) {
+    for (short dim = 0; dim < DIM; ++dim) {
         cout << "    ======   ";
-        printNameVal(DIM);// << " ======" << endl;
+        printNameVal(dim);// << " ======" << endl;
         for (auto const&[point, map] : cmp[dim]) {
             printPoint(point, keysServer);
             cout << endl;
+           
+            long p1c = keysServer.decryptNum(point[dim]);
+           
             for (auto const&[point2, val]: map) {
+
+                long p2c = keysServer.decryptNum(point[dim]);
+
+                long pVal = keysServer.decryptCtxt(val);
+                assert(pVal==(p1c>p2c) || pVal==(p1c==p2c));
+
                 printPoint(point2, keysServer);
-                printNameVal(keysServer.decryptCtxt(val));
+                printNameVal(pVal);
+
             }
             printNameVal(map.size());
             cout << " --- --- ---" << endl;
@@ -201,6 +211,70 @@ void TestDataServer::testCreateCmpDict() {
 
 void TestDataServer::testSplitIntoEpsNet() {
     cout << " ------ testSplitIntoEpsNet ------ " << endl;// << endl;
+    KeysServer keysServer;
+    DataServer dataServer(keysServer);
+
+    std::vector<Client> clients = generateDataClients(keysServer);
+    std::vector<Point> points = DataServer::retrievePoints(clients);
+
+    //    const Point &tinyRandomPoint = keysServer.tinyRandomPoint();
+    std::vector<std::vector<Point>>
+            randomPoints = dataServer.pickRandomPoints(points);//, 1 / EPSILON);
+
+    std::vector<
+            std::unordered_map<
+                    const Point,
+                    std::unordered_map<
+                            const Point,
+                            helib::Ctxt> > >
+            cmpDict = dataServer.createCmpDict(points, randomPoints);
+
+    cout << " --- All Points  ---" << endl;
+    printPoints(points, keysServer);
+    cout << " --- --- --- --- ---" << endl;
+
+    cout << " --- Random Points  ---" << endl;
+    for (auto vec :randomPoints) printPoints(vec, keysServer);
+    cout << " --- --- --- --- ---" << endl;
+
+      cout << "The Dictionary: " << endl;
+        for (int dim = 0; dim < DIM; ++dim) {
+            cout << "    ======   ";
+            printNameVal(dim);// << " ======" << endl;
+            for (auto const&[point, map] : cmpDict[dim]) {
+                printPoint(point, keysServer);
+                cout << endl;
+                for (auto const&[point2, val]: map) {
+                    printPoint(point2, keysServer);
+                    printNameVal(keysServer.decryptCtxt(val));
+                }
+                printNameVal(map.size());
+                cout << " --- --- ---" << endl;
+            }
+            printNameVal(cmpDict[dim].size());
+            cout << " === === ===" << endl;
+        }
+
+    std::map<int, //DIM
+            std::vector< //current slices for approp dimension
+                    Slice
+            >
+    >
+            groups = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
+    for (int dim = 0; dim < DIM; ++dim) {
+        cout << "   ---   For dim " << dim << "  --- " << endl;
+        for (Slice &cell: groups[dim])             cell.printSlice(keysServer);
+        cout << "   ---     --- " << endl;
+        cout << endl;
+    }
+
+    cout << " ------ testSplitIntoEpsNet finished ------ " << endl << endl;
+
+
+}
+
+void TestDataServer::testCalculateCellMeans() {
+    cout << " ------ testCalculateCellMeans ------ " << endl;// << endl;
     KeysServer keysServer;
     DataServer dataServer(keysServer);
 
@@ -227,42 +301,14 @@ void TestDataServer::testSplitIntoEpsNet() {
                             helib::Ctxt> > >
             cmpDict = dataServer.createCmpDict(points, randomPoints);
 
-    /*
-     * cout << "The Dictionary: " << endl;
-        for (int dim = 0; dim < DIM; ++dim) {
-            cout << "    ======   ";
-            printNameVal(DIM);// << " ======" << endl;
-            for (auto const&[point, map] : cmp[dim]) {
-                printPoint(point, keysServer);
-                cout << endl;
-                for (auto const&[point2, val]: map) {
-                    printPoint(point2, keysServer);
-                    printNameVal(keysServer.decryptCtxt(val));
-                }
-                printNameVal(map.size());
-                cout << " --- --- ---" << endl;
-            }
-            printNameVal(cmp[dim].size());
-            cout << " === === ===" << endl;
-        }
-        */
-
-    std::map<int, //DIM
-            std::vector< //current slices for approp dimension
-                    Slice
-            >
-    >
+    std::map<int, std::vector<Slice> >
             groups = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
+
     for (int dim = 0; dim < DIM; ++dim) {
         cout << "   ---   For dim " << dim << "  --- " << endl;
-        for (Slice &cell: groups[dim]) {
-            cell.printSlice(keysServer);
-        }
-        cout << "   ---     --- " << endl;
+        for (Slice &cell: groups[dim]) cell.printSlice(keysServer);
         cout << endl;
     }
-
-    cout << " ------ testSplit finished ------ " << endl << endl;
 
     std::vector<std::tuple<Point, Slice> >
             meanCellTuples = dataServer.caculateCellMeans(groups[DIM-1], keysServer);

@@ -27,6 +27,13 @@ std::string printDuration(const std::chrono::time_point<std::chrono::system_cloc
     return str;
 }
 
+std::vector<long> decryptPoint(const Point &p, const KeysServer &keysServer) {
+    std::vector<long> pPoint(DIM);
+    for (short dim = 0; dim < DIM; ++dim)
+        pPoint[dim] = keysServer.decryptNum(p[dim]);
+    return pPoint;
+}
+
 //    void printPoints(std::vector<Point> & points){ todo not static or move to aux
 void printPoint(const Point &p, const KeysServer &keysServer) {
     cout << "( ";
@@ -63,7 +70,8 @@ void printNonEmptyPoints(const std::vector<Point> &points, const KeysServer &key
             cout << keysServer.decryptNum(p[DIM - 1]) << " ) \t";
         }
     }
-    cout << " \t\t[ total of " << cnt << " points are not empty, out of " << points.size() << " ]    ";
+    cout << " \t\t[ total of " << cnt << " points are not empty, out of " << points.size()
+         << " ]    ";
 }
 
 /*  @brief Generate random data.
@@ -98,7 +106,7 @@ std::vector<Client> generateDataClients(const KeysServer &keysServer) {
             }*/
 
     std::random_device rd;
-//    std::mt19937 mt(rd());
+    //    std::mt19937 mt(rd());
     std::mt19937 mt;
     std::uniform_real_distribution<double> dist(0, NUMBERS_RANGE);
     long tempArr[DIM];
@@ -113,8 +121,17 @@ std::vector<Client> generateDataClients(const KeysServer &keysServer) {
 void Slice::printSlice(const KeysServer &keysServer) const {
     cout << "For the Reps: ";
     printPoints(reps, keysServer);
-    cout <<endl<< " These " << keysServer.decryptSize(included) << " Points will be included: " ;//<< endl;
-    printNonEmptyPoints(includedPoints, keysServer);
-    //    printPoints(includedPoints, keysServer);
+    cout << endl << " These " << keysServer.decryptSize(counter)
+         << " Points will be included: ";//<< endl;
+    printNonEmptyPoints(points, keysServer);
+    //    printPoints(points, keysServer);
     cout << "   ---     --- " << endl;
+}
+
+Slice &Slice::addPoint(const Point &point, const Ctxt &isIncluded) {
+    points.push_back(point);
+    counter.push_back(isIncluded);
+    //        std::tuple<Point, CBit> pointTuple;
+    pointTuples.emplace_back(point, isIncluded);
+    return *this;
 }

@@ -2,6 +2,8 @@
 #ifndef ENCKMEAN_CLIENT_H
 #define ENCKMEAN_CLIENT_H
 
+#include <utils/aux.h>
+
 #include "Point.h"
 
 /**
@@ -64,6 +66,5 @@ public:
     }
 
 };
-
 
 #endif //ENCKMEAN_CLIENT_H

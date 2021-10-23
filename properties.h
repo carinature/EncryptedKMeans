@@ -7,8 +7,8 @@
 #include <helib/helib.h>
 
 using DecryptedPoint = std::vector<long>;     // typedef std::vector<long> DecryptedPoint;  // same as `typedef/using`
-using Bit = helib::Ctxt;  // typedef helib::Ctxt Bit;   // same as `typedef/using`
-using EncNumber = NTL::Vec<Bit>;  // typedef NTL::Vec<helib::Ctxt> EncNumber;   // same as `typedef/using`
+using CBit = helib::Ctxt;  // typedef helib::Ctxt CBit;   // same as `typedef/using`
+using EncNumber = NTL::Vec<CBit>;  // typedef NTL::Vec<helib::Ctxt> EncNumber;   // same as `typedef/using`
 using CLOCK = std::chrono::high_resolution_clock;
 static std::ofstream fcout("fcout");  //for DBG
 

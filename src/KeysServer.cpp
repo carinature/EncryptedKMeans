@@ -148,17 +148,20 @@ KeysServer::tinyRandomPoint() const {
 const Point
 KeysServer::getQuotientPoint(
         const Point &point,
-        const std::vector<Ctxt> &sizeBitVector
-) const {
+        const std::vector<Ctxt> &sizeBitVector,
+        const short repsNum) const {
+
     long size = decryptSize(sizeBitVector), arr[DIM];
-    printNameVal(size);
-    if (size)
-        for (int dim = 0; dim < DIM; ++dim) {
-            long pCoor = decryptNum(point[dim]);
-            arr[dim] = pCoor / size;
-//            printNameVal(pCoor);
-//            printNameVal(arr[dim]);
-        }
+        printNameVal(size);
+    //    if (size)
+    long pCoor;
+    for (int dim = 0; dim < DIM; ++dim) {
+        pCoor = decryptNum(point[dim]);
+        arr[dim] = decryptNum(point[dim]) / (repsNum + size);
+                    printNameVal(pCoor);
+                    printNameVal(arr[dim]);
+    }
+
     return Point(point.public_key, arr);
 }
 

@@ -181,13 +181,13 @@ public:
 
                     //  tailSlice.addRep(R);
 
-//                    for (const Point &p:baseSlice.points) {
+                    //                    for (const Point &p:baseSlice.points) {
                     for (const PointTuple &pointTuple:baseSlice.pointTuples) {
 
                         //                        const Point &p = pointTuple.point;
                         const Point &p = pointTuple.first;
 
-//                        CBit isPointInPrevSlice(pointTuple.isIn);
+                        //                        CBit isPointInPrevSlice(pointTuple.isIn);
                         CBit isPointInPrevSlice(pointTuple.second);
 
                         /*
@@ -198,14 +198,14 @@ public:
 
                         cout << endl;
 
-//                        if (7 == p.id) cout << "*******";// << endl;
+                        //                        if (7 == p.id) cout << "*******";// << endl;
                         cout << " ~~~~~~ current point: { id=" << p.id
                              << " [" << p.pCoordinatesDBG[0] << "," << p.pCoordinatesDBG[1] << "] ";
                         printPoint(p, keysServer);
                         cout << "}";
 
                         CBit isInGroup = isRepInPrevSlice;
-                         isInGroup *= isPointInPrevSlice; //fixme new   <--------------
+                        isInGroup *= isPointInPrevSlice; //fixme new   <--------------
 
                         // p < R
                         CBit pIsBelowCurrentRep(cmpDict[dim].at(R).at(p));
@@ -214,7 +214,7 @@ public:
                         CBit pIsAboveAllSmallerReps(pIsBelowCurrentRep); //todo other init
 
                         for (const Point &r: randomPoints[dim]) {
-                            cout << "           --- other r: ";
+                            cout << "       --- other r: ";
                             printPoint(r, keysServer);
                             if ((r.id == R.id) || (p.id == r.id)) continue;
                             // make sure with adi and dan current solution makes sense
@@ -269,8 +269,8 @@ public:
                         PisInGroup = keysServer.decryptCtxt(isInGroup);
 
                         Point pointIsInSlice = p * isInGroup;
-//                                                Point pointIsInSlice(p);
-//                                                pointIsInSlice*= isInGroup;
+                        //                                                Point pointIsInSlice(p);
+                        //                                                pointIsInSlice*= isInGroup;
 
                         const std::vector<long>
                                 &decP = decryptPoint(p, keysServer);
@@ -358,18 +358,23 @@ public:
         std::vector<std::tuple<Point, Slice> > cellsMeans;//(cells.size());
 
         for (const Slice &slice: cells) {
-            const std::vector<Point> slicePoints = slice.points;
-            const std::vector<Ctxt> sliceSize = slice.counter;
-            Point sum = Point::addManyPoints(slicePoints);
-            //            Point sum(cells[0].points[0].public_key);
-            //            for (Point &point: slicePoints) sum = sum + point;
-            const Point mean = keysServer.getQuotientPoint(sum, sliceSize);
-            Ctxt size(sliceSize[0].getPubKey());
-            for (const Ctxt &ctxt: sliceSize) size += ctxt;
-            printNameVal(keysServer.decryptCtxt(size));
-            printNameVal(keysServer.decryptSize(sliceSize));
 
-            cout << "in calcMeans, the currnt mean: ";
+            std::vector<Point> points;
+            points.reserve(slice.reps.size() + slice.points.size()); // preallocate memory
+            points.insert(points.end(), slice.reps.begin(), slice.reps.end());
+            points.insert(points.end(), slice.points.begin(), slice.points.end());
+            Point sum = Point::addManyPoints(points);
+
+            std::vector<Ctxt> sliceSize(slice.counter);
+
+            const Point mean = keysServer.getQuotientPoint(sum, sliceSize, DIM);
+
+            cout << "slice reps: ";
+            printPoints(slice.reps, keysServer);
+            cout << "slice points: ";
+            printNonEmptyPoints(slice.points, keysServer);
+            cout<<endl;
+            cout << "the currnt mean: ";
             printPoint(mean, keysServer);
             cellsMeans.emplace_back(mean, slice);
         }

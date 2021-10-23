@@ -194,7 +194,8 @@ public:
      * */
     const Point tinyRandomPoint() const;
 
-    const Point getQuotientPoint(const Point &point, const std::vector<Ctxt> &sizeBitVector) const;
+    const Point getQuotientPoint(const Point &point, const std::vector<Ctxt> &sizeBitVector,
+                                 const short repsNum) const;
 };
 
 

@@ -56,8 +56,8 @@ int main() {
 //    TestDataServer::testminirand();
 //    TestDataServer::testPickRandomPoints();
 //    TestDataServer::testCreateCmpDict();
-    TestDataServer::testSplitIntoEpsNet();
-//    TestDataServer::testCalculateCellMeans();
+//    TestDataServer::testSplitIntoEpsNet();
+    TestDataServer::testCalculateCellMeans();
 
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
 

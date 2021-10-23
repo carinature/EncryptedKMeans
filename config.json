@@ -1,6 +1,6 @@
 {
   "data_properties": {
-    "number_of_points": 10,
+    "number_of_points": 15,
     "number_of_clients": 10,
     "DIM": 2,
     "range_lim": 1,

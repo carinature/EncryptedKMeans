@@ -156,8 +156,8 @@ KeysServer::getQuotientPoint(
         for (int dim = 0; dim < DIM; ++dim) {
             long pCoor = decryptNum(point[dim]);
             arr[dim] = pCoor / size;
-            printNameVal(pCoor);
-            printNameVal(arr[dim]);
+//            printNameVal(pCoor);
+//            printNameVal(arr[dim]);
         }
     return Point(point.public_key, arr);
 }

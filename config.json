@@ -1,6 +1,7 @@
 {
   "data_properties": {
     "number_of_points": 15,
+    "number_of_points_comment": "40 points w/ epsilon 0.3 causes weird PubKey bug",
     "number_of_clients": 10,
     "DIM": 2,
     "range_lim": 1,
@@ -35,5 +36,9 @@
     "rands_bad_file": "/home/fares/CLionProjects/rbd/io/rands_bad_file",
     "point_csv_file": "/home/fares/CLionProjects/rbd/point_csv"
   },
-  "just_some_example_array": [0, "one", ""]
+  "just_some_example_array": [
+    0,
+    "one",
+    ""
+  ]
 }

@@ -35,14 +35,14 @@ DataServer::retrievePoints(
 }
 
 
-std::vector<std::vector<Point>>
+std::vector<std::vector<Point> >
 DataServer::pickRandomPoints(const std::vector<Point> &points, int m) {
     auto t0_rndPoints = CLOCK::now();     //  for logging, profiling, DBG
 
-    if (points.empty() || m > points.size()) return std::vector<std::vector<Point>>();
+    if (points.empty() || m > points.size()) return std::vector<std::vector<Point> >();
 
     //    const Point &tinyRandomPoint = keysServer.tinyRandomPoint();
-    std::vector<std::vector<Point>> randomPoints(DIM);
+    std::vector<std::vector<Point> > randomPoints(DIM);
 
     for (int dim = 0; dim < DIM; ++dim) {
 
@@ -72,9 +72,9 @@ DataServer::pickRandomPoints(const std::vector<Point> &points, int m) {
 
 }
 
-std::vector<std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt>>>
+CmpDict
 DataServer::createCmpDict(const std::vector<Point> &allPoints,
-                          const std::vector<std::vector<Point>> &randomPoints) {
+                          const std::vector<std::vector<Point> > &randomPoints) {
     auto t0_cmpDict = CLOCK::now();     //  for logging, profiling, DBG
 
     std::vector<
@@ -88,10 +88,8 @@ DataServer::createCmpDict(const std::vector<Point> &allPoints,
     std::vector<helib::Ctxt> res;
 
     for (short dim = 0; dim < DIM; ++dim) {
-        // cmpDictForCurrDim.reserve(allPoints.size());
         cmpsDict[dim].reserve(randomPoints[dim].size());
         for (const Point &rep : randomPoints[dim]) {
-
             for (const Point &point : allPoints) {
                 //                if (!cmpsDict[rep].empty() && !cmpsDict[rep][point].isEmpty()))
                 //                if (rep.id == point.id) continue; //this is checked inside isBigger function
@@ -121,32 +119,278 @@ DataServer::createCmpDict(const std::vector<Point> &allPoints,
             cmpsDict[dim][rep].emplace(tinyRandomPoint, res[0]);   //  rep > point2
             cmpsDict[dim][tinyRandomPoint].emplace(rep, res[1]);   //  rep < point2
         }
-
-        //        for (const Point &rep : randomPoints[dim]) {
-        //            // todo fills like there is a better or more efficient way to do this
-        //            res = tinyRandomPoint.isBiggerThan(rep, dim);
-        //            cmpsDict[dim][rep].emplace(tinyRandomPoint, res[1]);   //  rep > point2
-        //            cmpsDict[dim][tinyRandomPoint].emplace(rep, res[0]);   //  rep < point2
-        //
-        //            //            res = rep.isBiggerThan(tinyRandomPoint, dim);
-        //            //            cmpsDict[dim][rep].emplace(tinyRandomPoint, res[0]);   //  rep > point2
-        //            //            cmpsDict[dim][tinyRandomPoint].emplace(rep, res[1]);   //  rep < point2
-        //
-        //            long tinyid = tinyRandomPoint.id, repid = rep.id;
-        //            long cmpRepTiny = keysServer.decryptCtxt(cmpsDict[dim][rep].at(tinyRandomPoint));
-        //            long cmpTinyRep = keysServer.decryptCtxt(cmpsDict[dim][tinyRandomPoint].at(rep));
-        //            long resRepTiny = keysServer.decryptCtxt(res[0]);
-        //            long resTinyRep = keysServer.decryptCtxt(res[1]);
-        //            printNameVal(cmpRepTiny);
-        //            printNameVal(cmpTinyRep);
-        //            printNameVal(resRepTiny);
-        //            printNameVal(resTinyRep);
-        //            if (resRepTiny && resTinyRep) printPoint(rep, keysServer);
-        //        }
     }
 
-    loggerDataServer.log(printDuration(t0_cmpDict, "CmpDict Creation"));
+    loggerDataServer.log(printDuration(t0_cmpDict, "createCmpDict"));
     return cmpsDict;
+}
+
+std::map<int, //DIM
+        std::vector< //current slices for approp dimension
+                Slice
+        >
+>
+DataServer::splitIntoEpsNet(const std::vector<Point> &points,
+                              const std::vector<std::vector<Point> > &randomPoints,
+                              const CmpDict &cmpDict,
+                              const KeysServer &keysServer) {
+    auto t0_split = CLOCK::now();     //  for logging, profiling, DBG
+
+    std::map<int, std::vector<Slice> > slices;
+    if (points.empty()) return slices;        // sanity check
+
+    // initialize base level of data
+    Slice startingSlice;
+    for (auto const &point:points)
+        startingSlice.addPoint(point, cmpDict[0].at(point).at(tinyRandomPoint));
+    slices[-1].push_back(startingSlice);
+
+    /**     for DBG  (todo remove)    **/
+    long PisRepInPrevSlice;// = keysServer.decryptCtxt(isRepInPrevSlice);
+    long PisInGroup;// = keysServer.decryptCtxt(isInGroup);
+    long PpIsBelowCurrentRep;// = keysServer.decryptCtxt(pIsBelowCurrentRep);
+    long PpIsAboveAllSmallerReps;// = keysServer.decryptCtxt(pIsAboveAllSmallerReps);
+    long PotherRepIsAboveCurrentRep;// = keysServer.decryptCtxt(otherRepIsAboveCurrentRep);
+    long PpIsAboveOtherSmallerRep;// = keysServer.decryptCtxt(pIsAboveOtherSmallerRep);
+    long PpIsBelowCurrentRepAndAboveOtherRep;// = keysServer.decryptCtxt(pIsBelowCurrentRepAndAboveOtherRep);
+
+    for (int dim = 0; dim < DIM; ++dim) {
+        auto t0_itr_dim = CLOCK::now();     //  for logging, profiling, DBG
+
+        for (const Slice &baseSlice:slices[dim - 1]) {
+            auto t0_itr_slice = CLOCK::now();     //  for logging, profiling, DBG
+            /*
+            // for each slice from the previous iteration
+            // slices[-1][m^0] = { p | p form all_points }
+            // slices[0] [m^1] = { p < Ri | p from slices[-1] | Ri from random_points[0] }
+            // slices[1] [m^2] = { p < Ri & p < Rj | p from slices[0] | Ri from random_points[0]
+            //                                                          | Rj from random_points[1] }
+            //  ...
+            // slices[DIM-1][m^DIM]  = { p < Ri & p < Rj & .... & p < Rj | p from slices[1]
+            //                                                          | Rj from random_points[0]
+            //                                                          | Rj from random_points[1]
+            //                                                          |   ...
+            //                                                          | Rj from random_points[DIM-1] }
+            */
+
+            for (const Point &R: randomPoints[dim]) {
+                auto t0_itr_rep = CLOCK::now();     //  for logging, profiling, DBG
+
+                /*
+                                    cout << endl << endl;
+                                    printNameVal(dim) << "Base Slice (prev) reps: ";
+                                    for (auto const &baseRep: baseSlice.reps)
+                                        printPoint(baseRep, keysServer);
+                                    cout << endl << " ========== R: ";
+                                    printPoint(R, keysServer);
+                                    cout << " ========== " << endl;
+                */
+
+                Slice newSlice;
+                newSlice.addReps(baseSlice.reps);
+                newSlice.addRep(R);
+
+                CBit isRepInPrevSlice(cmpDict[dim].at(R).at(
+                        R)); //todo or cmpDict[dim].at(R).at(tinyRandPoint)
+
+                if (0 < dim && !baseSlice.reps.empty())
+                    // does this rep belong to the slice
+                    isRepInPrevSlice *= cmpDict[dim - 1].at(baseSlice.reps[dim - 1]).at(R);
+                PisRepInPrevSlice = keysServer.decryptCtxt(isRepInPrevSlice);
+                // todo why cmp at prev dim and not current?
+
+                //  tailSlice.addRep(R);
+
+                //                    for (const Point &p:baseSlice.points) {
+                for (const PointTuple &pointTuple:baseSlice.pointTuples) {
+
+                    //                        const Point &p = pointTuple.point;
+                    const Point &p = pointTuple.first;
+                    // if current poins is the current Rep no need to add it now - it will be added to the group later
+                    //                        if (R==p) continue; //  R==p means R.id==p.id
+                    //                        CBit isPointInPrevSlice(pointTuple.isIn);
+                    CBit isPointInPrevSlice(pointTuple.second);
+
+                    /*
+                     if (p.id == R.id) continue;
+                    // todo what about cases of p (non random point) that is equal to representative?
+                    // make sure with adi and dan current solution makes sense
+                    */
+                    /*
+                                            cout << endl;
+                                            //                        if (7 == p.id) cout << "*******";// << endl;
+                                            cout << " ~~~~~~ current point: { id=" << p.id
+                                                 << " [" << p.pCoordinatesDBG[0] << "," << p.pCoordinatesDBG[1] << "] ";
+                                            printPoint(p, keysServer);
+                                            cout << "}";
+                    */
+
+                    CBit isInGroup = isRepInPrevSlice;
+                    isInGroup *= isPointInPrevSlice; //fixme new   <--------------
+
+                    // p < R
+                    CBit pIsBelowCurrentRep(cmpDict[dim].at(R).at(p));
+                    PpIsBelowCurrentRep = keysServer.decryptCtxt(pIsBelowCurrentRep);
+
+                    CBit pIsAboveAllSmallerReps(pIsBelowCurrentRep); //todo other init
+
+                    for (const Point &r: randomPoints[dim]) {
+                        /*                            cout << "       --- other r: ";
+                                                    printPoint(r, keysServer);*/
+                        if ((r.id == R.id) || (p.id == r.id)) continue;
+                        // make sure with adi and dan current solution makes sense
+
+                        //  r > R (in which case we don't care about cmpDict results of p and r)
+                        CBit otherRepIsAboveCurrentRep = cmpDict[dim].at(r).at(R);
+                        // results in: CBit otherRepIsAboveCurrentRep = (r > R)
+
+                        //  R > r    AND     p > r
+                        CBit pIsAboveOtherSmallerRep(cmpDict[dim].at(R).at(r));
+                        // results in: CBit pIsAboveOtherSmallerRep = (R > r)
+                        pIsAboveOtherSmallerRep *= (cmpDict[dim].at(p).at(r));
+                        // results in: CBit pIsAboveOtherSmallerRep = (R > r) * (p > r)
+
+                        //   [ R > r    AND     p > r ]   OR   r > R
+                        //  should be   [ (R > r) * (p > r) ] + (r > R) - [ (R > r) * (p > r) ] * (r > R)
+                        //  actually is [ (R > r) * (p > r) ] + (r > R) - [ (R > r) * (p > r) ] * (r > R)
+                        CBit pIsBelowCurrentRepAndAboveOtherRep = pIsAboveOtherSmallerRep;
+                        // results in: CBit pIsBelowCurrentRepAndAboveOtherRep
+                        // = (R > r) * (p > r)
+                        pIsBelowCurrentRepAndAboveOtherRep *= otherRepIsAboveCurrentRep;
+                        // results in: CBit pIsBelowCurrentRepAndAboveOtherRep
+                        // = [(R > r) * (p > r)] * (r > R)
+                        pIsBelowCurrentRepAndAboveOtherRep.negate();
+                        // results in: CBit pIsBelowCurrentRepAndAboveOtherRep
+                        // =  - [(R > r) * (p > r)] * (r > R)
+                        pIsBelowCurrentRepAndAboveOtherRep += pIsAboveOtherSmallerRep;
+                        // results in: CBit pIsBelowCurrentRepAndAboveOtherRep
+                        // = [(R > r) * (p > r)] - [(R > r) * (p > r)] * (r > R)
+                        pIsBelowCurrentRepAndAboveOtherRep += otherRepIsAboveCurrentRep;
+                        PpIsBelowCurrentRepAndAboveOtherRep = keysServer.decryptCtxt(
+                                pIsBelowCurrentRepAndAboveOtherRep);
+
+                        // results in: CBit pIsBelowCurrentRepAndAboveOtherRep
+                        // = (r > R) + [(R > r) * (p > r)]- [(R > r) * (p > r)] * (r > R)
+                        // results in: CBit pIsBelowCurrentRepAndAboveOtherRep =
+                        // pIsAboveOtherSmallerRep + otherRepIsAboveCurrentRep
+                        // - pIsAboveOtherSmallerRep * otherRepIsAboveCurrentRep
+                        PotherRepIsAboveCurrentRep = keysServer.decryptCtxt(
+                                otherRepIsAboveCurrentRep);
+                        PpIsAboveOtherSmallerRep = keysServer.decryptCtxt(
+                                pIsAboveOtherSmallerRep);
+
+                        // this will hold the Product[ (R > r) && (p > r) | foreach r in randomPoints ]
+                        pIsAboveAllSmallerReps *= pIsBelowCurrentRepAndAboveOtherRep;
+                        PpIsAboveAllSmallerReps = keysServer.decryptCtxt(
+                                pIsAboveAllSmallerReps);
+                    }
+
+                    isInGroup *= pIsBelowCurrentRep;
+                    isInGroup *= pIsAboveAllSmallerReps;
+                    PisInGroup = keysServer.decryptCtxt(isInGroup);
+
+                    Point pointIsInSlice = p * isInGroup;
+                    //                                                Point pointIsInSlice(p);
+                    //                                                pointIsInSlice*= isInGroup;
+
+                    const std::vector<long>
+                            &decP = decryptPoint(p, keysServer);
+                    const std::vector<long>
+                            &decPInSlice = decryptPoint(pointIsInSlice, keysServer);
+
+                    /**     for DBG     (todo remove)   **/
+                    /*   if (PisInGroup) {
+                           *//*
+                             cout << endl;
+                            cout << endl << "  ******  ";
+                            printPoint(pointIsInSlice, keysServer);
+                            cout << "      Point is in group of       ";
+                            printNameVal(dim);
+                            cout << "Base Slice (prev) reps: ";
+                            for (auto const &baseRep: baseSlice.reps)
+                                printPoint(baseRep, keysServer);
+                            //                            cout << endl;
+                            cout << " ========== current R: ";
+                            printPoint(R, keysServer);
+                            cout << "  ******  " << endl;
+
+                            long psum = 0;
+                            for (auto item:decPInSlice)
+                                psum += item;
+                            if (!psum)
+                                cout << "$$$$" << endl;*//*
+                            cout << "\t\t$$$$$$";
+                        }*/
+
+                    newSlice.addPoint(pointIsInSlice, isInGroup);
+                }
+
+                slices[dim].emplace_back(newSlice);
+
+                loggerDataServer.log(printDuration(t0_itr_rep, "Split Random Rep iteration"));
+            }
+            /*
+            // todo handle tail points - points bigger than all the random points at current slice
+            // init separate slice for tail points
+            Slice tailSlice;
+            for (const Point &p:baseSlice.points) {
+                // init separate counter for tail points
+                CBit pIsAboveAllReps = cmpDict[dim].at(p).at(tinyRandomPoint);
+                for (const Point &R: randomPoints[dim])
+                    pIsAboveAllReps *= cmpDict[dim].at(p).at(R);
+                tailSlice.addPoint(p * pIsAboveAllReps, pIsAboveAllReps);
+            }
+            slices[dim].emplace_back(tailSlice);
+             */
+            cout << endl;
+            loggerDataServer.log(printDuration(t0_itr_slice, "Split Slice iteration"));
+        }
+        cout << endl;
+        loggerDataServer.log(printDuration(
+                t0_itr_dim,
+                "Split iteration for #" + std::to_string(dim) + " dimension"));
+    }
+    loggerDataServer.log(printDuration(t0_split, "splitIntoEpsNet"));
+
+    /*       todo  checkout this function, from @file Ctxt.h, could be used for all iterarion of 2nd rep at once?
+            // set out=prod_{i=0}^{n-1} v[j], takes depth log n and n-1 products
+            // out could point to v[0], but having it pointing to any other v[i]
+            // will make the result unpredictable.
+            void totalProduct(Ctxt& out, const std::vector<Ctxt>& v);
+            */
+    return slices;
+}
+
+std::vector<std::tuple<Point, Slice> >
+DataServer::calculateSlicesMeans(const std::vector<Slice> &slices,
+                                 const KeysServer &keysServer) {
+    auto t0_means = CLOCK::now();     //  for logging, profiling, DBG
+
+    std::vector<std::tuple<Point, Slice> > slicesMeans;//(slices.size());
+
+    for (const Slice &slice: slices) {
+
+        std::vector<Point> points;
+        points.reserve(slice.reps.size() + slice.points.size()); // preallocate memory
+        points.insert(points.end(), slice.reps.begin(), slice.reps.end());
+        points.insert(points.end(), slice.points.begin(), slice.points.end());
+        Point sum(Point::addManyPoints(points));
+
+        const Point mean(keysServer.getQuotientPoint(sum, slice.counter, DIM));
+
+        cout << "slice reps: ";
+        printPoints(slice.reps, keysServer);
+        cout << "slice points: ";
+        printNonEmptyPoints(slice.points, keysServer);
+        cout << endl;
+        cout << "the currnt mean: ";
+        printPoint(mean, keysServer);
+        slicesMeans.emplace_back(mean, slice);
+    }
+
+    loggerDataServer.log(printDuration(t0_means, "calculateSlicesMeans"));
+
+    return slicesMeans;
 }
 
 void KT_packed_arithmetic() {
@@ -627,7 +871,7 @@ void BGV_binary_arithmetic() {/*  Example of binary arithmetic using the BGV sch
     // object but merely provide access to it.
     //
     // helib::CtPtrMat_vectorCt is a wrapper for
-    // std::vector<std::vector<helib::Ctxt>>, used for representing a list of
+    // std::vector<std::vector<helib::Ctxt> >, used for representing a list of
     // encrypted binary numbers.
 
     // Perform the multiplication first and put it in encrypted_product.
@@ -661,7 +905,7 @@ void BGV_binary_arithmetic() {/*  Example of binary arithmetic using the BGV sch
     // Now calculate the sum of a, b and c using the addManyNumbers function.
     encrypted_result.clear();
     decrypted_result.clear();
-    std::vector<std::vector<helib::Ctxt>> summands = {encrypted_a,
+    std::vector<std::vector<helib::Ctxt> > summands = {encrypted_a,
                                                       encrypted_b,
                                                       encrypted_c};
     helib::CtPtrMat_vectorCt summands_wrapper(summands);

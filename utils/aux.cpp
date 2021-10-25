@@ -74,47 +74,35 @@ void printNonEmptyPoints(const std::vector<Point> &points, const KeysServer &key
          << " ]    ";
 }
 
-/*  @brief Generate random data.
- *  Returns a vector of clients with random points.
-*      client [0] stays empty
-*      client [1] has 1 point - {point0}
-*      client [2] has 2 points - {point0, point1}
-*      ...
-*      client [n] has n points -  {point0, point1, ... , pointN}
-*/  // todo move to aux ?
+/** @brief Generate random data.
+    @returns a vector of clients with random points.
+       client [0] stays empty
+       client [1] has 1 point - {point0}
+       client [2] has 2 points - {point0, point1}
+       ...
+       client [n] has n points -  {point0, point1, ... , pointN}
+*/
 std::vector<Client> generateDataClients(const KeysServer &keysServer) {
-    /*        //        Note that rand() is considered harmful, and is discouraged in C++14
-            int uniquePointsNum = 3 + random() % NUMBER_OF_POINTS,
-                    clientsNum = uniquePointsNum;
-            printNameVal(NUMBER_OF_POINTS);
-            printNameVal(uniquePointsNum);
-            *//*        //  init coordinate arrays
-                //        long arrs[uniquePointsNum][DIM];
-                //        for (auto &arr: arrs)
-                //            for (short dim = 0; dim < DIM; ++dim)
-                //                arr[dim] = rand() % NUMBERS_RANGE;*//*
-        long arr[DIM];
-        std::vector<Client> clients(clientsNum, Client(keysServer));
-        for (int i = 1; i < clients.size(); ++i)
-            for (int j = 0; j < i; ++j) {
-                //  pick random coordinates
-                for (short dim = 0; dim < DIM; ++dim)
-                    arr[dim] = random() % NUMBERS_RANGE;
-                //  encrypt coordinates and add to client
-                clients[i].encryptPoint(arr);
-                //                clients[i].encryptPoint(arrs[j]);}
-            }*/
-
     std::random_device rd;
     //    std::mt19937 mt(rd());
     std::mt19937 mt;
-    std::uniform_real_distribution<double> dist(0, NUMBERS_RANGE);
+    //    std::uniform_real_distribution<double> dist(0, NUMBERS_RANGE);
+    std::uniform_int_distribution<long> dist(0, NUMBERS_RANGE);
     long tempArr[DIM];
     std::vector<Client> clients(NUMBER_OF_CLIENTS, Client(keysServer));
     for (Client &client:clients) {
         for (int dim = 0; dim < DIM; ++dim) tempArr[dim] = dist(mt);
         client.encryptPoint(tempArr);
     }
+    /*
+    //  another option
+    for (int i = 1; i < clients.size(); ++i)
+        for (int j = 0; j < i; ++j) {
+            for (short dim = 0; dim < DIM; ++dim)
+                arr[dim] = random() % NUMBERS_RANGE;
+            clients[i].encryptPoint(arr);
+         }
+     */
     return clients;
 }
 

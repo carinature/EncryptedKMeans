@@ -28,10 +28,11 @@ int main() {
 //    TestPoint::testOperatorSubscript();
 //    TestPoint::testIsEmpty();
 //    TestPoint::testAddition();
-//    TestPoint::testAddManyPoints(); //fixme weird bug when huge #points
+//    TestPoint::testAddManyPoints();
 //    TestPoint::testMultiplication();
 //    TestPoint::testMultiplicationByBit();
 //    TestPoint::testCompare();
+    TestPoint::testCalculateDistanceFromAnotherPoint();
 //    cout << " ============ Test Point Finished ============ " << endl << endl;
 //
 //    cout << " ============ Test Client ============ " << endl;
@@ -39,14 +40,14 @@ int main() {
 //    TestClient::testEncryptCoordinates();
 //    TestClient::testDecryptCoordinates();
 //    TestClient::testEncryptScratchPoint();
-//    TestClient::testCompare(); //todo refine
+//    TestClient::testCompare();
 //    cout << " ============ Test Client Finished ============ " << endl << endl;
 //
 //    cout << " ============ Test Aux ============ " << endl;
 //    TestAux::testGenerateDataClients();
 //    cout << " ============ Test Client Finished ============ " << endl << endl;
-
-    cout << " ============ Test DataServer ============ " << endl;
+//
+//    cout << " ============ Test DataServer ============ " << endl;
 //    TestDataServer::testConstructor();
 //    TestDataServer::testComparePoints();
 //    TestDataServer::testAddition();
@@ -57,8 +58,7 @@ int main() {
 //    TestDataServer::testPickRandomPoints();
 //    TestDataServer::testCreateCmpDict();
 //    TestDataServer::testSplitIntoEpsNet();
-    TestDataServer::testCalculateCellMeans();
-
-    cout << " ============ Test DataServer Finished ============ " << endl << endl;
+//    TestDataServer::testCalculateCellMeans(); //fixme weird bug when huge #points
+//    cout << " ============ Test DataServer Finished ============ " << endl << endl;
 
 }

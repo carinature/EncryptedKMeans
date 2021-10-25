@@ -23,7 +23,7 @@ Client::Client(const KeysServer &keysServer) :
     cout << "Initializing Client Protocol Finished" << endl;
 }
 
-std::vector<std::vector<helib::Ctxt>> Client::encryptPoint(const long coordinates[]) {
+std::vector<std::vector<helib::Ctxt> > Client::encryptPoint(const long coordinates[]) {
 #if VERBOSE
     printNameVal(ea.size());
         cout << "encryptPoint for coordinates: " << endl;

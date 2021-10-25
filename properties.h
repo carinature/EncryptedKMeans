@@ -10,7 +10,7 @@ using DecryptedPoint = std::vector<long>;     // typedef std::vector<long> Decry
 using CBit = helib::Ctxt;  // typedef helib::Ctxt CBit;   // same as `typedef/using`
 using EncNumber = NTL::Vec<CBit>;  // typedef NTL::Vec<helib::Ctxt> EncNumber;   // same as `typedef/using`
 using CLOCK = std::chrono::high_resolution_clock;
-static std::ofstream fcout("fcout");  //for DBG
+static std::ofstream fcout("/home/karina/CLionProjects/EncryptedKMeans/fcout");  //for DBG
 
 /*
  * Parse JSON config file

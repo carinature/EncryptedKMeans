@@ -84,7 +84,6 @@ void TestClient::testCompare() {
             assert((arr2[dim] > arr1[dim]) == server.decryptCtxt(res2));
         }
 
-    //    loggerTestClient.print_log();
     cout << " ------ testCompare finished ------ " << endl << endl;
 }
 

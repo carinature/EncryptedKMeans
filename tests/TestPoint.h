@@ -13,6 +13,8 @@ public:
     static void testMultiplicationByBit();
 
     static void testCompare();
+
+    static void testCalculateDistanceFromAnotherPoint();
 };
 
 #endif //ENCRYPTEDKMEANS_TESTPOINT_H

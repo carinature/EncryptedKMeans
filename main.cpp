@@ -39,7 +39,7 @@ int main() {
 
     const Point &tinyRandomPoint = keysServer.tinyRandomPoint();
 
-    const std::vector<std::vector<Point>>
+    const std::vector<std::vector<Point> >
             randomPoints = dataServer.pickRandomPoints(points);//, (1 / EPSILON)-1);
     
     cout << " --- Random Points  ---" << endl;
@@ -86,8 +86,8 @@ int main() {
         //todo in future remove this `if`,
         // currently serves as an example for init/enc of 2 different-sized numbers
         if (i < BIT_SIZE)
-            encryptionKey.Encrypt(enca[i], NTL::ZZX((pa >> i) & 1));
-        encryptionKey.Encrypt(encb[i], NTL::ZZX((pb >> i) & 1));
+            encryptionKey.Encrypt(enca[i], NTL::ZZX((pa > > i) & 1));
+        encryptionKey.Encrypt(encb[i], NTL::ZZX((pb > > i) & 1));
         //        if (helib_bootstrap) { // put them at a lower level
         //            if (i < BIT_SIZE)
         //                enca[i].bringToSet(dataServer.getCtxtPrimes(5));
@@ -172,7 +172,7 @@ int main() {
     // object but merely provide access to it.
     //
     // helib::CtPtrMat_vectorCt is a wrapper for
-    // std::vector<std::vector<helib::Ctxt>>, used for representing a list of
+    // std::vector<std::vector<helib::Ctxt> >, used for representing a list of
     // encrypted binary numbers.
 #endif
 

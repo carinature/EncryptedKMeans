@@ -371,46 +371,129 @@ public:
      * @return std::vector<Ctxt>
      * */
     EncryptedNum
-    calculateDistanceFromPoint(Point &point, const KeysServer &  keysServer) {
-        std::vector<std::vector<helib::Ctxt> > sqaredDiffs(DIM);
+    calculateDistanceFromPoint(Point &point, const KeysServer &keysServer) {
+        auto t0 = CLOCK::now();
+
+        // c1 = p1.coor[dim]      
+        // c2 = p2.coor[dim]      
+
+        /*
+                std::vector<std::vector<helib::Ctxt> > sqaredDiffs(DIM);
+                for (int dim = 0; dim < DIM; ++dim) {
+                    // subtract: c1 - c2
+                    std::vector<helib::Ctxt> sub_vector(BIT_SIZE, helib::Ctxt(public_key));
+                    helib::CtPtrs_vectorCt sub_wrapper(sub_vector);
+                    helib::subtractBinary(sub_wrapper,
+                                          helib::CtPtrs_vectorCt(this->cCoordinates[dim]),
+                                          helib::CtPtrs_vectorCt(point.cCoordinates[dim]));
+                    printNameVal(keysServer.decryptNum(sub_vector));
+
+                    // fixme this creates a problem when the diff between the original values is negative
+                    //   (meaning when c1 is smaller then c2) -
+                    //   the result of `subtractBinary` is a (positive) 2's compliment.
+                    //   in other words it would be
+                    //   sub_result = [ NUMBERS_RANGE + (c1-c2) ] mod NUMBERS_RANGE
+                    // todo
+                    //  two options to fix:
+                    //  1. use helib cmp w/ min/max ptrs
+                    //  2. calculate (c1^2)+(c2^2)-2(c1*c2) = (c1-c2)^2  <<---------------- follows this imp
+                    //  3. consult adidanny
+                    // square: ( c1 - c2 )^2
+                    helib::CtPtrs_vectorCt sqr_wrapper(sqaredDiffs[dim]);
+                    helib::multTwoNumbers(sqr_wrapper,
+                                          sub_wrapper,
+                                          sub_wrapper);
+                    printNameVal(keysServer.decryptNum(sqaredDiffs[dim]));
+                }
+                // sum: SUM[ ( c1-c2 )^2 | for all dim ]
+                helib::CtPtrMat_vectorCt summands_wrapper(sqaredDiffs);
+                std::vector<helib::Ctxt> result_vector;//(BIT_SIZE, helib::Ctxt(public_key));
+                helib::CtPtrs_vectorCt output_wrapper(result_vector);
+                helib::addManyNumbers(output_wrapper, summands_wrapper);
+                printNameVal(keysServer.decryptNum(result_vector));
+                */
+
+        std::vector<std::vector<helib::Ctxt> >
+                sqaredDiffs(DIM,
+                            std::vector<helib::Ctxt>(2 * BIT_SIZE,
+                                                     helib::Ctxt(point.public_key)));
 
         for (int dim = 0; dim < DIM; ++dim) {
+            // subtract: c1 - c2
+            helib::CtPtrs_vectorCt p1c(this->cCoordinates[dim]);
+            helib::CtPtrs_vectorCt p2c(point.cCoordinates[dim]);
 
-            // subtract: p1.coor[dim] - p2.coor[dim]
-            std::vector<helib::Ctxt> sub_vector(BIT_SIZE, helib::Ctxt(public_key));
-            helib::CtPtrs_vectorCt sub_wrapper(sub_vector);
-            helib::subtractBinary(sub_wrapper,
-                                  helib::CtPtrs_vectorCt(this->cCoordinates[dim]),
-                                  helib::CtPtrs_vectorCt(point.cCoordinates[dim]));
-            printNameVal(keysServer.decryptNum(sub_vector));
+            //  (c1) ^ 2
+            std::vector<helib::Ctxt> c1sqr;
+            helib::CtPtrs_vectorCt sqr_wrapper1(c1sqr);
+            helib::multTwoNumbers(sqr_wrapper1,
+                                  p1c,
+                                  p1c,
+                                  false,
+                                  2 * BIT_SIZE
+            );
+            printNameVal(keysServer.decryptNum(c1sqr));
 
-            // fixme this creates a problem when the diff between the original values is negative
-            //   (meaning when c1 is smaller then c2) -
-            //   the result of `subtractBinary` is a (positive) 2's compliment.
-            //   in other words it would be
-            //   sub_result = [ NUMBERS_RANGE + (c1-c2) ] mod NUMBERS_RANGE
-            // todo
-            //  two options to fix:
-            //  1. use helib cmp w/ min/max ptrs
-            //  2. calculate (c1^2)+(c2^2)-2(c1*c2) = (c1-c2)^2
-            //  3. consult adidanny
+            //  (c2) ^ 2
+            std::vector<helib::Ctxt> c2sqr;
+            helib::CtPtrs_vectorCt sqr_wrapper2(c2sqr);
+            helib::multTwoNumbers(sqr_wrapper2,
+                                  p2c,
+                                  p2c,
+                                  false,
+                                  2 * BIT_SIZE
+            );
+            printNameVal(keysServer.decryptNum(c2sqr));
 
-            // square: ( p1.coor[dim] - p2.coor[dim] )^2
-            helib::CtPtrs_vectorCt sqr_wrapper(sqaredDiffs[dim]);
-            helib::multTwoNumbers(sqr_wrapper,
-                                  sub_wrapper,
-                                  sub_wrapper);
+            //  (c1)^2 + (c2)^2
+            std::vector<helib::Ctxt> sumSqrs;
+            helib::CtPtrs_vectorCt sum_wrapper(sumSqrs);
+            helib::addTwoNumbers(sum_wrapper,
+                                 sqr_wrapper1,
+                                 sqr_wrapper2,
+                                 2 * BIT_SIZE
+            );
+            printNameVal(keysServer.decryptNum(sumSqrs));
+
+            //  (c1) * (c2)
+            std::vector<helib::Ctxt> multC1C2;
+            helib::CtPtrs_vectorCt mult_wrapper(multC1C2);
+            helib::multTwoNumbers(mult_wrapper,
+                                  p1c,
+                                  p2c,
+                                  false,
+                                  2 * BIT_SIZE
+            );
+            printNameVal(keysServer.decryptNum(multC1C2));
+
+            //  2 * [(c1) * (c2)]
+            std::vector<helib::Ctxt> dblMultC1C2;
+            helib::CtPtrs_vectorCt dbl_wrapper(dblMultC1C2);
+            helib::addTwoNumbers(dbl_wrapper,
+                                 mult_wrapper,
+                                 mult_wrapper,
+                                 2 * BIT_SIZE
+            );
+            printNameVal(keysServer.decryptNum(dblMultC1C2));
+
+            // sum: (c1^2) + (c2^2) - 2(c2*c2)
+            helib::CtPtrs_vectorCt output(sqaredDiffs[dim]);
+            helib::subtractBinary(output,
+                                  sum_wrapper,
+                                  dbl_wrapper);
             printNameVal(keysServer.decryptNum(sqaredDiffs[dim]));
+
         }
 
-        // sum: SUM[ ( p1.coor[dim]-p2.coor[dim] )^2 | for all dim ]
+        // sum: SUM[ ( c1-c2 )^2 | for all dim ]
         helib::CtPtrMat_vectorCt summands_wrapper(sqaredDiffs);
-        std::vector<helib::Ctxt> result_vector;//(BIT_SIZE, helib::Ctxt(public_key));
+        std::vector<helib::Ctxt> result_vector;
         helib::CtPtrs_vectorCt output_wrapper(result_vector);
         helib::addManyNumbers(output_wrapper,
                               summands_wrapper);
-
         printNameVal(keysServer.decryptNum(result_vector));
+
+        printDuration(t0, "dist");
 
         return result_vector;
     }

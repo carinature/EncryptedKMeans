@@ -213,8 +213,8 @@ void TestPoint::testCompare() {
     cout << " ------ testCompare finished ------ " << endl << endl;
 }
 
-void TestPoint::testCalculateDistanceFromAnotherPoint() {
-    cout << " ------ testCalculateDistanceFromAnotherPoint ------ " << endl;
+void TestPoint::testCalculateDistanceFromPoint() {
+    cout << " ------ testCalculateDistanceFromPoint ------ " << endl;
     KeysServer keysServer;
     std::random_device rd;
     std::mt19937 mt(rd());
@@ -231,13 +231,13 @@ void TestPoint::testCalculateDistanceFromAnotherPoint() {
     printPoints(points, keysServer);
     cout << endl;
     for (int i = 0; i < n - 1; ++i) {
-        printNameVal(i)<<"  ----------  "<<endl;
+        printNameVal(i) << "  ----------  " << endl;
         EncryptedNum distSquared =
                 points[i].calculateDistanceFromPoint(points[i + 1],
                                                      keysServer);
         long dDistSquared = keysServer.decryptNum(distSquared);
         printPoint(points[i], keysServer);
-        printPoint(points[i+1], keysServer);
+        printPoint(points[i + 1], keysServer);
         printNameVal(dDistSquared);
 
         long pDistSquared = 0;
@@ -254,6 +254,87 @@ void TestPoint::testCalculateDistanceFromAnotherPoint() {
 
     }
 
-    cout << " ------ testCalculateDistanceFromAnotherPoint finished ------ " << endl << endl;
+    cout << " ------ testCalculateDistanceFromPoint finished ------ " << endl << endl;
+}
+
+void TestPoint::negate() {
+
+    KeysServer keysServer;
+    //    std::random_device rd;
+    //    std::mt19937 mt(rd());
+    std::mt19937 mt;
+    //    std::uniform_real_distribution<double> dist(0, NUMBERS_RANGE);
+    std::uniform_int_distribution<long> dist(0, NUMBERS_RANGE);
+    long tempArr[] = {4, 7};
+    Point point(keysServer.getPublicKey(), tempArr);
+
+    printPoint(point, keysServer);
+    cout << "----------" << endl;
+
+    /*
+        std::vector<helib::Ctxt> sub_vectorc1c2(BIT_SIZE, helib::Ctxt(point.public_key));
+        helib::CtPtrs_vectorCt sub_wrapperc1c2(sub_vectorc1c2);
+        helib::subtractBinary(sub_wrapperc1c2,
+                              helib::CtPtrs_vectorCt(point.cCoordinates[0]),
+                              helib::CtPtrs_vectorCt(point.cCoordinates[1]));
+        printNameVal(keysServer.decryptNum(sub_vectorc1c2));
+
+        std::vector<helib::Ctxt> sub_vectorc2c1(BIT_SIZE, helib::Ctxt(point.public_key));
+        helib::CtPtrs_vectorCt sub_wrapperc2c1(sub_vectorc2c1);
+        helib::subtractBinary(sub_wrapperc2c1,
+                              helib::CtPtrs_vectorCt(point.cCoordinates[1]),
+                              helib::CtPtrs_vectorCt(point.cCoordinates[0]));
+        printNameVal(keysServer.decryptNum(sub_vectorc2c1));
+        */
+    /*
+
+            std::vector<helib::Ctxt> sub_vector(2*BIT_SIZE, helib::Ctxt(point.public_key));
+            helib::CtPtrs_vectorCt sub_wrapper(sub_vector);
+            helib::subtractBinary(sub_wrapper,
+                                  helib::CtPtrs_vectorCt(point.cCoordinates[0]),
+                                  helib::CtPtrs_vectorCt(point.cCoordinates[1]));
+            printNameVal(keysServer.decryptNum(sub_vector));
+
+            std::vector<helib::Ctxt> sub_vector2(2*BIT_SIZE, helib::Ctxt(point.public_key));
+            helib::CtPtrs_vectorCt sub_wrapper2(sub_vector2);
+            helib::subtractBinary(sub_wrapper2,
+                                  helib::CtPtrs_vectorCt(point.cCoordinates[1]),
+                                  helib::CtPtrs_vectorCt(point.cCoordinates[0]));
+            printNameVal(keysServer.decryptNum(sub_vector));
+        *//*
+
+
+
+    std::vector<helib::Ctxt> result_vector(BIT_SIZE, helib::Ctxt(point.public_key));
+    helib::CtPtrs_vectorCt output_wrapper(result_vector);
+    helib::negateBinary(output_wrapper, helib::CtPtrs_vectorCt(sub_wrapperc1c2));
+    printNameVal(keysServer.decryptNum(result_vector));
+    helib::negateBinary(output_wrapper, helib::CtPtrs_vectorCt(sub_wrapperc2c1));
+    printNameVal(keysServer.decryptNum(result_vector));
+*/
+
+    /*
+// Negate a binary number that is already in 2's complement. Note: input must
+// not alias negation.
+void negateBinary(CtPtrs& negation, const CtPtrs& input)
+{
+  assertEq(negation.size(), input.size(), "Arguments must have matching size.");
+  std::vector<Ctxt> bitFlippedInput;
+  vecCopy(bitFlippedInput, input);
+  // First flip all bits of the input.
+  for (auto& bit : bitFlippedInput)
+    bit.addConstant(NTL::ZZX(1L));
+  // Deep copy of input into negation.
+  vecCopy(negation, bitFlippedInput);
+  // Now add one.
+  negation[0]->addConstant(NTL::ZZX(1L));
+  // Calculate the resultant carry bits.
+  std::vector<Ctxt>& carryBits = bitFlippedInput;
+  incrementalProduct(carryBits);
+  for (std::size_t i = 1; i < bitFlippedInput.size(); ++i)
+    *(negation[i]) += carryBits[i - 1];
+}*/
+
+
 }
 

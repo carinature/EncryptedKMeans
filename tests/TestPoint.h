@@ -14,7 +14,9 @@ public:
 
     static void testCompare();
 
-    static void testCalculateDistanceFromAnotherPoint();
+    static void testCalculateDistanceFromPoint();
+
+    static void negate();
 };
 
 #endif //ENCRYPTEDKMEANS_TESTPOINT_H

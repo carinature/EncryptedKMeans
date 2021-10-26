@@ -32,7 +32,8 @@ int main() {
 //    TestPoint::testMultiplication();
 //    TestPoint::testMultiplicationByBit();
 //    TestPoint::testCompare();
-    TestPoint::testCalculateDistanceFromAnotherPoint();
+    TestPoint::testCalculateDistanceFromPoint();
+    TestPoint::negate();
 //    cout << " ============ Test Point Finished ============ " << endl << endl;
 //
 //    cout << " ============ Test Client ============ " << endl;

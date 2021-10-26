@@ -62,17 +62,20 @@ protected:
 public:
 
     //::Values(     prm,    bitSize,    bootstrap,  seed,   nthreads)
-    // Parameters(  1,      5,          false,      0,      1)            // SLOW
-    // Parameters(  0,      5,          false,      0,      1)            // FAST
+    // Parameters(  1,      5,          true,      0,      1)            // SLOW
+    // Parameters(  0,      5,          true,      0,      1)            // FAST
     explicit KeysServer(long prm = 0, // parameter size (0-tiny,...,4-huge)
-                        long bitSize = 5, // itSize of input integers (<=32)
-                        bool bootstrap = false, // comparison with bootstrapping (??)
+                        long bitSize = BIT_SIZE, // bitSize of input integers (<=32)
+                        bool bootstrap = true, // comparison with bootstrapping
+                        // (KT-26.oct.21) definitely make bootstrap true - for cmp w/ min/max (and for huge number of points(?))
                         long seed = 0, // PRG seed
-                        long nthreads = 1) // number of threads
+                        long nthreads = N_Threads // number of threads
+                                )
             :
             prm(validatePrm(prm)),
             bitSize(correctBitSize(5, bitSize)),
             bootstrap(bootstrap),
+            // (KT-26.oct.21) definitely make bootstrap true - for cmp w/ min/max (and for huge number of points(?))
             seed(seed),
             nthreads(nthreads),
             vals(mValues[prm]),
@@ -100,7 +103,7 @@ public:
             // SecKey class is a subclass of PubKey, this particular PubKey object is
             // ultimately a SecKey object, and through the magic of C++ polymorphism,
             // encryptions done via publicKey will actually use the secret key, which has
-            // certain advantages.  If one left out the "&", then encryptions done via
+            // certain advantages. If one left out the "&", then encryptions done via
             // publicKey will NOT use the secret key.
             pubKey(secKey) {
 
@@ -134,11 +137,11 @@ public:
         return cl;
     }
 
-    long decryptCtxt(const helib::Ctxt &cBit)const;
+    long decryptCtxt(const helib::Ctxt &cBit) const;
 
-    long decryptNum(const std::vector<helib::Ctxt> &cNum)const;
+    long decryptNum(const std::vector<helib::Ctxt> &cNum) const;
 
-    long decryptSize(const std::vector<helib::Ctxt> &size)const;
+    long decryptSize(const std::vector<helib::Ctxt> &size) const;
     /* * *  end for DBG    * * */
 
 

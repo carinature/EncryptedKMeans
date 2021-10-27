@@ -79,7 +79,7 @@ void TestPoint::testAddition() {
     //      but the way it is now (asking the serv for a pubKey for each point)
     //      makes more sense in a "real world" application
     Point point(keysServer.getPublicKey(), arr);
-    Point point2(keysServer.getPublicKey(), arr2);
+    const Point point2(keysServer.getPublicKey(), arr2);
     Point sum = point + point2;
     for (short dim = 0; dim < DIM; ++dim) {
         printNameVal(arrSum[dim]);
@@ -218,10 +218,9 @@ void TestPoint::testCalculateDistanceFromPoint() {
     KeysServer keysServer;
     std::random_device rd;
     std::mt19937 mt(rd());
-    //    std::uniform_real_distribution<double> dist(0, NUMBERS_RANGE);
     std::uniform_int_distribution<long> dist(0, NUMBERS_RANGE);
     std::vector<Point> points;
-    int n = 4;
+    int n = NUMBER_OF_POINTS;
     points.reserve(n);
     long tempArrs[n][DIM];
     for (int i = 0; i < n; ++i) {
@@ -232,23 +231,17 @@ void TestPoint::testCalculateDistanceFromPoint() {
     cout << endl;
     for (int i = 0; i < n - 1; ++i) {
         printNameVal(i) << "  ----------  " << endl;
-        EncryptedNum distSquared =
-                points[i].calculateDistanceFromPoint(points[i + 1],
-                                                     keysServer);
+        EncryptedNum distSquared = points[i].distanceFrom(points[i + 1], keysServer);
         long dDistSquared = keysServer.decryptNum(distSquared);
+
         printPoint(points[i], keysServer);
         printPoint(points[i + 1], keysServer);
-        printNameVal(dDistSquared);
+                printNameVal(dDistSquared);
 
         long pDistSquared = 0;
-        for (int dim = 0; dim < DIM; ++dim) {
-            long diff = tempArrs[i][dim] - tempArrs[i + 1][dim];
-            printNameVal(tempArrs[i][dim]);
-            printNameVal(tempArrs[i + 1][dim]);
-            printNameVal(diff);
-            pDistSquared += std::pow(diff, 2);
-            printNameVal(pDistSquared);
-        }
+        for (int dim = 0; dim < DIM; ++dim)
+            pDistSquared += std::pow((tempArrs[i][dim] - tempArrs[i + 1][dim]), 2);
+
         printNameVal(pDistSquared);
         assert(pDistSquared == dDistSquared);
 
@@ -257,84 +250,142 @@ void TestPoint::testCalculateDistanceFromPoint() {
     cout << " ------ testCalculateDistanceFromPoint finished ------ " << endl << endl;
 }
 
-void TestPoint::negate() {
-
+void TestPoint::testFindMinimalDistancesFromMeans() {
+    cout << " ------ testFindMinimalDistancesFromMeans ------ " << endl;
     KeysServer keysServer;
-    //    std::random_device rd;
-    //    std::mt19937 mt(rd());
+    std::random_device rd;
+//    std::mt19937 mt(rd());
     std::mt19937 mt;
-    //    std::uniform_real_distribution<double> dist(0, NUMBERS_RANGE);
-    std::uniform_int_distribution<long> dist(0, NUMBERS_RANGE);
-    long tempArr[] = {4, 7};
+    std::uniform_int_distribution<long> dist(1, NUMBERS_RANGE);
+    int n = NUMBER_OF_POINTS;
+    std::vector<Point> points;
+    points.reserve(n);
+    std::vector<std::pair<Point, long> > distPairs;
+    distPairs.reserve(n);
+    long tempArrs[n][DIM], tempArr[DIM];
+    for (int dim = 0; dim < DIM; ++dim)  tempArr[dim] = dist(mt);
     Point point(keysServer.getPublicKey(), tempArr);
-
+    for (int i = 0; i < n; ++i) {
+        long pDist = 0;
+        for (int dim = 0; dim < DIM; ++dim) {
+            tempArrs[i][dim] = dist(mt);
+            pDist += std::pow(tempArrs[i][dim] - tempArr[dim], 2);
+            printNameVal(tempArr[dim]);
+            printNameVal(tempArrs[i][dim]);
+            printNameVal(pDist);
+        }
+        Point pointi(keysServer.getPublicKey(), tempArrs[i]);
+        points.push_back(pointi);
+        distPairs.emplace_back(pointi, pDist);
+    }
     printPoint(point, keysServer);
-    cout << "----------" << endl;
+    cout << endl;
+    printPoints(points, keysServer);
+    cout << endl;
 
-    /*
-        std::vector<helib::Ctxt> sub_vectorc1c2(BIT_SIZE, helib::Ctxt(point.public_key));
-        helib::CtPtrs_vectorCt sub_wrapperc1c2(sub_vectorc1c2);
-        helib::subtractBinary(sub_wrapperc1c2,
-                              helib::CtPtrs_vectorCt(point.cCoordinates[0]),
-                              helib::CtPtrs_vectorCt(point.cCoordinates[1]));
-        printNameVal(keysServer.decryptNum(sub_vectorc1c2));
+    std::pair<Point, EncryptedNum>
+            minimalDistance = point.findMinDistFromMeans(points, keysServer);
 
-        std::vector<helib::Ctxt> sub_vectorc2c1(BIT_SIZE, helib::Ctxt(point.public_key));
-        helib::CtPtrs_vectorCt sub_wrapperc2c1(sub_vectorc2c1);
-        helib::subtractBinary(sub_wrapperc2c1,
-                              helib::CtPtrs_vectorCt(point.cCoordinates[1]),
-                              helib::CtPtrs_vectorCt(point.cCoordinates[0]));
-        printNameVal(keysServer.decryptNum(sub_vectorc2c1));
-        */
-    /*
+    printPoint(minimalDistance.first, keysServer);
+    printNameVal(keysServer.decryptNum(minimalDistance.second)) << endl;
 
-            std::vector<helib::Ctxt> sub_vector(2*BIT_SIZE, helib::Ctxt(point.public_key));
-            helib::CtPtrs_vectorCt sub_wrapper(sub_vector);
-            helib::subtractBinary(sub_wrapper,
-                                  helib::CtPtrs_vectorCt(point.cCoordinates[0]),
-                                  helib::CtPtrs_vectorCt(point.cCoordinates[1]));
-            printNameVal(keysServer.decryptNum(sub_vector));
+    for (int i = 0; i < n; ++i) {
+        printPoint(distPairs[i].first, keysServer);
+        printNameVal(distPairs[i].second);
+    }
+    Point &minDistPoint = distPairs[0].first;
+    long pMinDist = distPairs[0].second;
+    for (int i = 0; i < n; ++i) {
+        if (pMinDist >= distPairs[i].second) {
+            cout<< "inside if"<<endl;
+            printNameVal(pMinDist) << endl;
+            printNameVal(distPairs[i].second) << endl;
+            minDistPoint = distPairs[i].first;
+            pMinDist = distPairs[i].second;
+        }
+    }
 
-            std::vector<helib::Ctxt> sub_vector2(2*BIT_SIZE, helib::Ctxt(point.public_key));
-            helib::CtPtrs_vectorCt sub_wrapper2(sub_vector2);
-            helib::subtractBinary(sub_wrapper2,
-                                  helib::CtPtrs_vectorCt(point.cCoordinates[1]),
-                                  helib::CtPtrs_vectorCt(point.cCoordinates[0]));
-            printNameVal(keysServer.decryptNum(sub_vector));
-        *//*
+    printPoint(minDistPoint, keysServer);
+    printNameVal(pMinDist) << endl;
+
+    assert(pMinDist == keysServer.decryptNum(minimalDistance.second));
+    assert(minDistPoint.id == minimalDistance.first.id);
 
 
+    cout << " ------ testFindMinimalDistancesFromMeans finished ------ " << endl << endl;
 
-    std::vector<helib::Ctxt> result_vector(BIT_SIZE, helib::Ctxt(point.public_key));
-    helib::CtPtrs_vectorCt output_wrapper(result_vector);
-    helib::negateBinary(output_wrapper, helib::CtPtrs_vectorCt(sub_wrapperc1c2));
-    printNameVal(keysServer.decryptNum(result_vector));
-    helib::negateBinary(output_wrapper, helib::CtPtrs_vectorCt(sub_wrapperc2c1));
-    printNameVal(keysServer.decryptNum(result_vector));
-*/
 
-    /*
-// Negate a binary number that is already in 2's complement. Note: input must
-// not alias negation.
-void negateBinary(CtPtrs& negation, const CtPtrs& input)
-{
-  assertEq(negation.size(), input.size(), "Arguments must have matching size.");
-  std::vector<Ctxt> bitFlippedInput;
-  vecCopy(bitFlippedInput, input);
-  // First flip all bits of the input.
-  for (auto& bit : bitFlippedInput)
-    bit.addConstant(NTL::ZZX(1L));
-  // Deep copy of input into negation.
-  vecCopy(negation, bitFlippedInput);
-  // Now add one.
-  negation[0]->addConstant(NTL::ZZX(1L));
-  // Calculate the resultant carry bits.
-  std::vector<Ctxt>& carryBits = bitFlippedInput;
-  incrementalProduct(carryBits);
-  for (std::size_t i = 1; i < bitFlippedInput.size(); ++i)
-    *(negation[i]) += carryBits[i - 1];
-}*/
+}
 
+void TestPoint::minitest() {
+    cout << " ------ minitest ------ " << endl;
+    KeysServer keysServer;
+    std::random_device rd;
+    std::mt19937 mt;//(rd());
+    std::uniform_int_distribution<long> dist(1, NUMBERS_RANGE);
+    int n = NUMBER_OF_POINTS;
+//    std::vector<Point> points;
+//    points.reserve(n);
+//    long tempArrs[n][DIM], tempArr[DIM];
+//    for (int dim = 0; dim < DIM; ++dim)  tempArr[dim] = dist(mt);
+//    Point point(keysServer.getPublicKey(), tempArr);
+    helib::PubKey &key = keysServer.getPublicKey();
+    helib::Ctxt ctxt(key),ctxt2(key), ctxt3(key),ctxt4(key);
+    long arr[] = {0,1,2,3};
+    key.Encrypt(ctxt3, NTL::ZZX(3));
+    for (int i = 0; i < n; ++i) {
+        cout << "================";
+        printNameVal(i);
+//        cout << "================"<<endl;
+        key.Encrypt(ctxt, NTL::ZZX(i));
+        key.Encrypt(ctxt2, NTL::ZZX(i));
+        printNameVal(keysServer.decryptCtxt(ctxt));
+        printNameVal(keysServer.decryptCtxt(ctxt2));
+        printNameVal((ctxt)==(ctxt2));
+        printNameVal(ctxt.equalsTo(ctxt2));
+        printNameVal(&(ctxt)==&(ctxt2));
+        cout << "-------------"<<endl;
+        ctxt=ctxt3;
+        ctxt2=ctxt3;
+        printNameVal((ctxt)==(ctxt2));      //  true when both initialized to the same ctxt, false when initialize to the same (p)
+        printNameVal(ctxt.equalsTo(ctxt2)); //  true when both initialized to the same ctxt, false when initialize to the same (p)value
+        printNameVal(&(ctxt)==&(ctxt2));    //  never true
+
+        cout << "-------1------"<<endl;
+        ctxt*=ctxt3;
+        ctxt2*=ctxt3;
+        printNameVal((ctxt)==(ctxt2));      //  true when both initialized to the same ctxt, false when initialize to the same (p)
+        printNameVal(ctxt.equalsTo(ctxt2)); //  true when both initialized to the same ctxt, false when initialize to the same (p)value
+        printNameVal(&(ctxt)==&(ctxt2));    //  never true
+
+        cout << "-------2------"<<endl;
+        ctxt*=ctxt4;
+        ctxt2*=ctxt4;
+        printNameVal((ctxt)==(ctxt2));      //  true when both initialized to the same ctxt, false when initialize to the same (p)
+        printNameVal(ctxt.equalsTo(ctxt2)); //  true when both initialized to the same ctxt, false when initialize to the same (p)value
+        printNameVal(&(ctxt)==&(ctxt2));    //  never true
+
+        cout << "-------3------"<<endl;
+        ctxt=ctxt3;
+        ctxt2=ctxt4;
+        ctxt*=ctxt4;
+        ctxt2*=ctxt3;
+        printNameVal((ctxt)==(ctxt2));      //  true when both initialized to the same ctxt, false when initialize to the same (p)
+        printNameVal(ctxt.equalsTo(ctxt2)); //  true when both initialized to the same ctxt, false when initialize to the same (p)value
+        printNameVal(&(ctxt)==&(ctxt2));    //  never true
+        cout << "================"<<endl;
+
+    }
+    key.Encrypt(ctxt, NTL::ZZX(3));
+    key.Encrypt(ctxt2, NTL::ZZX(4));
+    key.Encrypt(ctxt3, NTL::ZZX(3));
+    key.Encrypt(ctxt4, NTL::ZZX(4));
+    ctxt*=ctxt4;
+    ctxt2*=ctxt3;
+    printNameVal((ctxt)==(ctxt2));      //  true when both initialized to the same ctxt, false when initialize to the same (p)
+    printNameVal(ctxt.equalsTo(ctxt2)); //  true when both initialized to the same ctxt, false when initialize to the same (p)value
+    printNameVal(&(ctxt)==&(ctxt2));    //  never true
+    cout << " ------ minitest finished ------ " << endl << endl;
 
 }
 

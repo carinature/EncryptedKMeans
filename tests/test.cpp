@@ -33,8 +33,9 @@ int main() {
 //    TestPoint::testMultiplicationByBit();
 //    TestPoint::testCompare();
 //    TestPoint::testCalculateDistanceFromPoint();
-    TestPoint::testFindMinimalDistancesFromMeans();
-//    cout << " ============ Test Point Finished ============ " << endl << endl;
+//    TestPoint::testFindMinimalDistancesFromMeans();
+    TestPoint::minitest();
+    cout << " ============ Test Point Finished ============ " << endl << endl;
 //
 //    cout << " ============ Test Client ============ " << endl;
 //    TestClient::testConstructor();
@@ -59,7 +60,7 @@ int main() {
 //    TestDataServer::testPickRandomPoints();
 //    TestDataServer::testCreateCmpDict();
 //    TestDataServer::testSplitIntoEpsNet();
-    TestDataServer::testCalculateCellMeans(); //FIXED! fixme weird bug when huge #points
+//    TestDataServer::testCalculateCellMeans(); //FIXED! fixme weird bug when huge #points
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
 
 

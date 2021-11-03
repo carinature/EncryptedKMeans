@@ -6,6 +6,7 @@
 #include <helib/helib.h>
 #include <helib/binaryCompare.h>
 #include <helib/binaryArith.h>
+#include <NTL/ZZX.h>
 
 #include "utils/aux.h" // for including KeysServer.h
 #include "KeysServer.h"
@@ -22,10 +23,14 @@ public:
     //! @var long id
     //! used in createCmpDict for comparison
     const long id;
+    Point *originalPointAddress;
+    EncryptedNum cid; //    Ctxt cid;
+    //    Ctxt &cidref;
+    //    Ctxt *cidptr;
 
     //     helib::PubKey &public_key;// = encryptionKey;
     const helib::PubKey &public_key;// = encryptionKey;
-    std::vector<std::vector<helib::Ctxt> > cCoordinates;
+    std::vector<EncryptedNum> cCoordinates;
 
     /*
      Each bit of the binary number is encoded into a single ciphertext. Thus
@@ -48,12 +53,16 @@ public:
             cmpCounter(0),  //todo maybe better to init to 0, depending future impl & use
             addCounter(0),  //todo maybe better to init to 0, depending future impl & use
             multCounter(0), //todo maybe better to init to 0, depending future impl & use
-            id(counter++),
             public_key(public_key),
+            id(counter++),
+            cid(NUMBER_OF_POINTS, Ctxt(public_key)),
+            //            cidref(cid),
             pubKeyPtrDBG(&public_key),
             cCoordinates(DIM, std::vector(BIT_SIZE, helib::Ctxt(public_key))) {
-        //        this->public_key = public_key.;
-        //        this->cCoordinates.reserve(DIM);
+        originalPointAddress = this;
+        for (long bit = 0; bit < BIT_SIZE; ++bit)
+            this->public_key.Encrypt(cid[bit],
+                                     NTL::to_ZZX((id >> bit) & 1));
         pCoordinatesDBG.reserve(DIM);
         //        cout << " Point Init" << endl;
         if (coordinates) {
@@ -73,23 +82,30 @@ public:
         //         * @brief Returns a number as a vector of bits with LSB on the left.
         //         * @param num Number to be converted.
         //         * @param bitSize Number of bits of the input and output.
-        //         * @return Bit vector representation of num.
+        //         * @return CBit vector representation of num.
         //         * @note `bitSize` must be non-negative.
         //         **/
         //        std::vector<long> longToBitVector(long num, long bitSize);
     }
 
-    explicit Point(const std::vector<std::vector<helib::Ctxt> > &cCoordinates) :
+    explicit Point(const std::vector<EncryptedNum> &cCoordinates) :
             cmpCounter(0),  //todo maybe better to init to 0, depending future impl & use
             addCounter(0),  //todo maybe better to init to 0, depending future impl & use
             multCounter(0), //todo maybe better to init to 0, depending future impl & use
-            id(counter++),
             public_key(cCoordinates[0][0].getPubKey()),
+            id(counter++),
+            cid(NUMBER_OF_POINTS,
+                Ctxt(cCoordinates[0][0].getPubKey())),
             pubKeyPtrDBG(&public_key),
             pCoordinatesDBG(DIM),
             cCoordinates(cCoordinates)
     //  cCoordinates(DIM, std::vector(BIT_SIZE, helib::Ctxt(public_key)))
     {
+        originalPointAddress = this;
+        for (long bit = 0; bit < BIT_SIZE; ++bit)
+            this->public_key.Encrypt(cid[bit],
+                                     NTL::to_ZZX((id >> bit) & 1));
+
         //        public_key.keyExists()
         //        this->pCoordinatesDBG.reserve(DIM);
         //        this->cCoordinates.reserve(DIM);
@@ -111,10 +127,13 @@ public:
             cmpCounter(point.cmpCounter),
             addCounter(point.addCounter),
             multCounter(point.multCounter),
+            public_key(point.public_key),
             //todo make sure this approach won't cuase some unpredictable behaviour later
             // (e.g in cases of EXPLICIT copy (instead of implicit, in which this way makes sense))
             id(point.id),
-            public_key(point.public_key),
+            cid(point.cid),//.Encrypt(cid,NTL::ZZX(id))),
+            //            cidref(point.cidref),
+            originalPointAddress(point.originalPointAddress),
             pubKeyPtrDBG(&(point.public_key)),
             cCoordinates(point.cCoordinates),
             pCoordinatesDBG(point.pCoordinatesDBG),
@@ -133,30 +152,49 @@ public:
     Point &operator=(const Point &point) {
         //            cout << " Point assign" << endl;
         if (&point == this || point.isEmpty()) return *this;
+        //        id=point.id;
+        cid = point.cid;
+        //        cidref = point.cidref;
+        originalPointAddress = point.originalPointAddress;
         for (short dim = 0; dim < DIM; ++dim) {
             //   cCoordinates[dim] = point.cCoordinates[dim];
             vecCopy(cCoordinates[dim], point.cCoordinates[dim]); //helibs version of vec copy
             if (!point.pCoordinatesDBG.empty())
-            pCoordinatesDBG[dim] = point.pCoordinatesDBG[dim];
+                pCoordinatesDBG[dim] = point.pCoordinatesDBG[dim];
         }
         return *this;
     }
 
-    const std::vector<helib::Ctxt> &operator[](short int i) const {
-        //        if (isEmpty()) return std::vector<helib::Ctxt>(helib::Ctxt(public_key));
+    const EncryptedNum &operator[](short int i) const {
+        //        if (isEmpty()) return EncryptedNum(helib::Ctxt(public_key));
         return cCoordinates[i];
     }
 
-    std::vector<helib::Ctxt> operator[](short int i) {
-        //        if (isEmpty()) return std::vector<helib::Ctxt>(helib::Ctxt(public_key));
+    EncryptedNum operator[](short int i) {
+        //        if (isEmpty()) return EncryptedNum(helib::Ctxt(public_key));
         return cCoordinates[i];
     }
 
     Point operator+(Point &point) {
 
-        if (point.isEmpty()) return *this; //todo consider
-        if (this->isEmpty()) return point;
+        if (point.isEmpty()) {
+            std::cerr << "point is empty" << endl;
+            return *this; //todo consider
+        }
+        if (this->isEmpty()) {
+            std::cerr << "this is empty" << endl;
+            return point;
+        }
         Point sum(this->public_key);
+        //        cout << "operator+ sum.id is: "<<id<<endl;
+        helib::CtPtrs_vectorCt cid_wrapper(sum.cid);
+        helib::addTwoNumbers(
+                cid_wrapper,
+                helib::CtPtrs_vectorCt(point.cid),
+                helib::CtPtrs_vectorCt(this->cid),
+                0,   // sizeLimit=0 means use as many bits as needed.
+                &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
+        );
         for (short dim = 0; dim < DIM; ++dim) {
             helib::CtPtrs_vectorCt result_wrapper(sum.cCoordinates[dim]);
             //             * @brief Adds two numbers in binary representation where each ciphertext of the
@@ -186,6 +224,15 @@ public:
         if (point.isEmpty()) return *this; //todo consider
         if (this->isEmpty()) return point;
         Point sum(this->public_key);
+        //        cout << "operator+ sum.id is: "<<id<<endl;
+        helib::CtPtrs_vectorCt cid_wrapper(sum.cid);
+        helib::addTwoNumbers(
+                cid_wrapper,
+                helib::CtPtrs_vectorCt(point.cid),
+                helib::CtPtrs_vectorCt(this->cid),
+                0,   // sizeLimit=0 means use as many bits as needed.
+                &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
+        );
         for (short dim = 0; dim < DIM; ++dim) {
             helib::CtPtrs_vectorCt result_wrapper(sum.cCoordinates[dim]);
             //             * @brief Adds two numbers in binary representation where each ciphertext of the
@@ -211,10 +258,11 @@ public:
     }
 
     //// Calculates the sum of many numbers using the 3-for-2 method
-    static Point addManyPoints(const std::vector<Point> &points) {
+    static Point addManyPoints(const std::vector<Point> &points, const KeysServer &keysServer) {
         //        if (points.empty()) return static_cast<Point>(nullptr);
         //        Point sum(points.back().public_key);
-        std::vector<std::vector<std::vector<helib::Ctxt> > >
+
+        std::vector<std::vector<EncryptedNum> >
                 summandsVec(
                 DIM,
                 std::vector<EncryptedNum>(
@@ -223,12 +271,12 @@ public:
                                 BIT_SIZE,
                                 helib::Ctxt(
                                         points[0].public_key))));
-        std::vector<std::vector<helib::Ctxt> > encrypted_results(DIM);
+        std::vector<EncryptedNum> encrypted_results(DIM);
 
         for (short dim = 0; dim < DIM; ++dim) {
             summandsVec[dim].reserve(points.size());
             for (const Point &point : points) {
-                std::vector<helib::Ctxt> copyVec;
+                EncryptedNum copyVec;
                 summandsVec[dim].push_back(point.cCoordinates[dim]);
                 //                sum.pCoordinatesDBG[dim] += point.pCoordinatesDBG[dim];
             }
@@ -272,6 +320,11 @@ public:
         //        if (bit.isEmpty()) return *this; //todo consider
         //        if (this->isEmpty()) return Point(this->public_key);
         Point product(*this);
+
+        //        cout << "operator+ sum.id is: "<<id<<endl;
+        helib::CtPtrs_vectorCt cid_wrapper(product.cid);
+        binaryMask(cid_wrapper, bit);
+
         for (short dim = 0; dim < DIM; ++dim) {
             helib::CtPtrs_vectorCt result_wrapper(product.cCoordinates[dim]);
             binaryMask(result_wrapper, bit);
@@ -285,6 +338,11 @@ public:
     Point &operator*=(const Ctxt &bit) {
         //        if (bit.isEmpty()) return *this; //todo consider
         //        if (this->isEmpty()) return Point(this->public_key);
+        //        cout << "operator+ sum.id is: "<<id<<endl;
+        helib::CtPtrs_vectorCt cid_wrapper(
+                this->cid); //fixme DANGER ZONE maybe needs to be left w/out change
+        binaryMask(cid_wrapper, bit);
+
         for (short dim = 0; dim < DIM; ++dim) {
             helib::CtPtrs_vectorCt result_wrapper(this->cCoordinates[dim]);
             binaryMask(result_wrapper, bit);
@@ -320,9 +378,9 @@ public:
      * @param point - a point with encrypted coordinate values.
      * @param currentDim - the index of the coordinates to be compared.
      * @returns a tuple that answers - ((p1[d]>p2[d]), (p2[d]>p1[d])). value are encrypted.
-     * @return std::vector<helib::Ctxt>
+     * @return EncryptedNum
      * */
-    std::vector<helib::Ctxt>
+    std::vector<CBit>
     isBiggerThan(const Point &point, short int currentDim = DIM - 1) const {
         Ctxt mu(public_key), ni(public_key);
         if (!(isEmpty() || point.isEmpty())) {
@@ -332,8 +390,8 @@ public:
                 public_key.Encrypt(mu, NTL::to_ZZX((true)));
                 public_key.Encrypt(ni, NTL::to_ZZX((true))); // make sure
             } else {
-                std::vector<helib::Ctxt> c = (*this)[currentDim];
-                std::vector<helib::Ctxt> coor = point[currentDim];
+                EncryptedNum c = (*this)[currentDim];
+                EncryptedNum coor = point[currentDim];
                 compareTwoNumbers(mu,
                                   ni,
                                   helib::CtPtrs_vectorCt(c),
@@ -343,7 +401,7 @@ public:
                 );
             }
         }
-        return std::vector<helib::Ctxt>{mu, ni};
+        return std::vector<CBit>{mu, ni};
         /* todo notice there is also // comparison with max and min
          *  maybe useful later
          *      compareTwoNumbers(wMax,
@@ -367,31 +425,30 @@ public:
     }
 
     bool operator==(const Point &point) const {
-        return id == point.id;
+        return cid == point.cid;
+        //        return id == point.id;
     }
 
     /**
      * @brief return the encrypted (square of the) distance
      * @param point from which we measure our distance
-     * @return encrypted (square of the) distance from @param point
-     * @return std::vector<Ctxt>
+     * @return encrypted (square of the) distance from point
+     * @return EncryptedNum
      * */
     EncryptedNum
     distanceFrom(
-            Point &point,
+            const Point &point,
             const KeysServer &keysServer
-    ) {
-        // fixme this creates a problem when the diff between the original values is negative
+    ) const {
+        // this creates a problem when the diff between the original values is negative
         //   (meaning when c1 is smaller then c2) -
         //   the result of `subtractBinary` is a (positive) 2's compliment.
         //   in other words it would be
         //   sub_result = [ NUMBERS_RANGE + (c1-c2) ] mod NUMBERS_RANGE
-        // todo
-        //  two options to fix:
+        // two options to fix:
         //  1. use helib cmp w/ min/max ptrs <<---------------- this version is much faster (X4)
         //  2. calculate (c1^2)+(c2^2)-2(c1*c2) = (c1-c2)^2
         //  3. consult adidanny
-
 
         // c1 = p1.coor[dim]      
         // c2 = p2.coor[dim]
@@ -399,12 +456,14 @@ public:
         /**     option 1    */
         auto t0_cmp_version = CLOCK::now();
 
-        std::vector<std::vector<helib::Ctxt> > sqaredDiffs(DIM);
+        std::vector<EncryptedNum> sqaredDiffs(DIM);
         for (int dim = 0; dim < DIM; ++dim) {
 
-            helib::CtPtrs_vectorCt p1c(this->cCoordinates[dim]);
-            helib::CtPtrs_vectorCt p2c(point.cCoordinates[dim]);
-            std::vector<helib::Ctxt> eMax, eMin;//(BIT_SIZE, helib::Ctxt(public_key));
+            std::vector<Ctxt> thisCoor = this->cCoordinates[dim];
+            helib::CtPtrs_vectorCt p1c(thisCoor);
+            std::vector<Ctxt> pointCoor = point.cCoordinates[dim];
+            helib::CtPtrs_vectorCt p2c(pointCoor);
+            EncryptedNum eMax, eMin;//(BIT_SIZE, helib::Ctxt(public_key));
             helib::CtPtrs_vectorCt max(eMax), min(eMin);
 
             // max{(c1-c2),(c2-c1)} will be equal to |c1 - c2|
@@ -419,7 +478,7 @@ public:
             // if c1 > c2 use (c1 - c2), else (c2 - c1)
 
             // subtract: |c1 - c2|
-            std::vector<helib::Ctxt> sub_vector(BIT_SIZE, helib::Ctxt(public_key));
+            EncryptedNum sub_vector(BIT_SIZE, helib::Ctxt(public_key));
             helib::CtPtrs_vectorCt sub_wrapper(sub_vector);
             helib::subtractBinary(sub_wrapper,
                                   max,
@@ -433,21 +492,21 @@ public:
                     //                                  , true
             );
 
-//            printNameVal(keysServer.decryptNum(p1c.v));
-//            printNameVal(keysServer.decryptNum(p2c.v));
-//            printNameVal(keysServer.decryptNum(eMax));
-//            printNameVal(keysServer.decryptNum(eMin));
-//            printNameVal(keysServer.decryptNum(sub_wrapper.v));
-//            printNameVal(keysServer.decryptNum(sqaredDiffs[dim]));
+            //            printNameVal(keysServer.decryptNum(p1c.v));
+            //            printNameVal(keysServer.decryptNum(p2c.v));
+            //            printNameVal(keysServer.decryptNum(eMax));
+            //            printNameVal(keysServer.decryptNum(eMin));
+            //            printNameVal(keysServer.decryptNum(sub_wrapper.v));
+            //            printNameVal(keysServer.decryptNum(sqaredDiffs[dim]));
 
         }
 
         // sum: SUM[ ( c1-c2 )^2 | for all dim ]
         helib::CtPtrMat_vectorCt summands_wrapper(sqaredDiffs);
-        std::vector<helib::Ctxt> result_vector;//(BIT_SIZE, helib::Ctxt(public_key));
+        EncryptedNum result_vector;//(BIT_SIZE, helib::Ctxt(public_key));
         helib::CtPtrs_vectorCt output_wrapper(result_vector);
         helib::addManyNumbers(output_wrapper, summands_wrapper);
-//        printNameVal(keysServer.decryptNum(result_vector));
+        //        printNameVal(keysServer.decryptNum(result_vector));
 
         printDuration(t0_cmp_version, "dist cmp version");
 
@@ -455,9 +514,9 @@ public:
         /*
                 auto t0_long_version = CLOCK::now();
 
-                std::vector<std::vector<helib::Ctxt> >
+                std::vector<EncryptedNum >
                         parts(DIM,
-                              std::vector<helib::Ctxt>(2 * BIT_SIZE,
+                              EncryptedNum(2 * BIT_SIZE,
                                                        helib::Ctxt(point.public_key)));
 
                 for (int dim = 0; dim < DIM; ++dim) {
@@ -466,7 +525,7 @@ public:
                     helib::CtPtrs_vectorCt p2c(point.cCoordinates[dim]);
 
                     //  (c1) ^ 2
-                    std::vector<helib::Ctxt> c1sqr;
+                    EncryptedNum c1sqr;
                     helib::CtPtrs_vectorCt sqr_wrapper1(c1sqr);
                     helib::multTwoNumbers(sqr_wrapper1,
                                           p1c,
@@ -477,7 +536,7 @@ public:
                     //            printNameVal(keysServer.decryptNum(c1sqr));
 
                     //  (c2) ^ 2
-                    std::vector<helib::Ctxt> c2sqr;
+                    EncryptedNum c2sqr;
                     helib::CtPtrs_vectorCt sqr_wrapper2(c2sqr);
                     helib::multTwoNumbers(sqr_wrapper2,
                                           p2c,
@@ -488,7 +547,7 @@ public:
                     //            printNameVal(keysServer.decryptNum(c2sqr));
 
                     //  (c1)^2 + (c2)^2
-                    std::vector<helib::Ctxt> sumSqrs;
+                    EncryptedNum sumSqrs;
                     helib::CtPtrs_vectorCt sum_wrapper(sumSqrs);
                     helib::addTwoNumbers(sum_wrapper,
                                          sqr_wrapper1,
@@ -498,7 +557,7 @@ public:
                     //            printNameVal(keysServer.decryptNum(sumSqrs));
 
                     //  (c1) * (c2)
-                    std::vector<helib::Ctxt> multC1C2;
+                    EncryptedNum multC1C2;
                     helib::CtPtrs_vectorCt mult_wrapper(multC1C2);
                     helib::multTwoNumbers(mult_wrapper,
                                           p1c,
@@ -509,7 +568,7 @@ public:
                     //            printNameVal(keysServer.decryptNum(multC1C2));
 
                     //  2 * [(c1) * (c2)]
-                    std::vector<helib::Ctxt> dblMultC1C2;
+                    EncryptedNum dblMultC1C2;
                     helib::CtPtrs_vectorCt dbl_wrapper(dblMultC1C2);
                     helib::addTwoNumbers(dbl_wrapper,
                                          mult_wrapper,
@@ -528,7 +587,7 @@ public:
 
                 // sum: SUM[ ( c1-c2 )^2 | for all dim ]
                 helib::CtPtrMat_vectorCt summands_wrapper2(parts);
-                std::vector<helib::Ctxt> result_vector2;
+                EncryptedNum result_vector2;
                 helib::CtPtrs_vectorCt output_wrapper2(result_vector2);
                 helib::addManyNumbers(output_wrapper2,
                                       summands_wrapper2);
@@ -541,40 +600,33 @@ public:
     }
 
     /**
- * @brief return the encrypted (square of the) distance
- * @param point from which we measure our distance
- * @return encrypted (square of the) distance from @param point
- * @return std::vector<Ctxt>
- * */
+     * @brief find closest point, from a list, and minimal distance from it
+     * @param points list of points from which we measure our distance
+     * @return minimal distance and corresponding closest point
+     * @return std::pair<Point, EncryptedNum>
+     * */
     std::pair<Point, EncryptedNum>
     findMinDistFromMeans(
-            std::vector<Point> &means,
+            const std::vector<Point> &points,
             const KeysServer &keysServer
-    ) {
+    ) const {
         //  Collect Distancses from Means
-        std::vector<std::pair<Point&, EncryptedNum> > distances;
-        distances.reserve(means.size());
-        for (Point &mean:means)
-            distances.emplace_back(mean, distanceFrom(mean, keysServer));
+        std::vector<std::pair<const Point &, EncryptedNum> > distances;
+        distances.reserve(points.size());
+        for (const Point &mean:points)
+            distances.push_back(
+                    std::pair<const Point &, EncryptedNum>(mean, distanceFrom(mean, keysServer)));
 
         // init minimal distance
-        std::pair<Point&, EncryptedNum> minimalDistance(distances[0]);
-        printPoint(minimalDistance.first, keysServer);
-        printNameVal(keysServer.decryptNum(minimalDistance.second));
-        //        printNameVal(&minimalDistance.second) << endl;
-        cout << "------------------------" << endl;
+        Point closestPoint(distances[0].first);
+        EncryptedNum minimalDistance(distances[0].second);
 
-        cout << " === lets begin! ===     " << endl;
-        for (std::pair<Point&, std::vector<Ctxt>> &distance:distances) {
-            printPoint(distance.first, keysServer);
-            printNameVal(keysServer.decryptNum(distance.second));
-            //            printNameVal(&distance.second) << endl;
+        for (std::pair<const Point &, EncryptedNum> &distance:distances) {
 
-            std::vector<helib::Ctxt> eMax,//(BIT_SIZE, helib::Ctxt(public_key)),
+            EncryptedNum eMax,//(BIT_SIZE, helib::Ctxt(public_key)),
             eMin;//(BIT_SIZE, helib::Ctxt(public_key));
             helib::CtPtrs_vectorCt max(eMax), min(eMin);
-            // this means that max.v=eMax && min.v=eMin (same address)
-            helib::CtPtrs_vectorCt distMin(minimalDistance.second);
+            helib::CtPtrs_vectorCt distMin(minimalDistance);
             helib::CtPtrs_vectorCt dist(distance.second);
 
             helib::Ctxt mu(public_key), ni(public_key);
@@ -586,44 +638,35 @@ public:
                                      false,
                                      &(KeysServer::unpackSlotEncoding));
 
-            //            printNameVal(min.v == minimalDistance.second);
-            //            printNameVal(&min.v == &minimalDistance.second);
-            //            printNameVal(&(min.v) == &(minimalDistance.second));
-            //            printNameVal(max.v == minimalDistance.second);
-            //            printNameVal(&max.v == &minimalDistance.second);
-            //            printNameVal(&(max.v) == &(minimalDistance.second));
-            //            printNameVal(&min);
-            //            printNameVal(&min.v);
-            //            printNameVal(&(min.v));
-            //            printNameVal(&max);
-            //            printNameVal(&max.v);
-            //            printNameVal(&(max.v));
-            //            printNameVal(&eMin);
-            //            printNameVal(&eMin.front());
-            //            printNameVal(&eMax);
-            //            printNameVal(&eMax.front());
-            //            printNameVal(&minimalDistance.second);
-            //            printNameVal(&distance.second);
-
-            cout << "---------" << endl;
-
             //  eMin (and min.v) created by vecCopy
             //  and therefore will always have a different address from distance.first
             //  ... so need to use helib's compare again?
             //            helib::binaryCond(minimalDistance.first, mu, distMin, dist);
             Ctxt negated_cond(mu);
             negated_cond.addConstant(NTL::ZZX(1L));
-            minimalDistance.first = minimalDistance.first * negated_cond + distance.first * mu;
-            minimalDistance.second = eMin;
-            printPoint(minimalDistance.first, keysServer);
-            printNameVal(keysServer.decryptNum(minimalDistance.second));
-            //            printNameVal(&minimalDistance.second) << endl;
-
-            cout << "------------------------" << endl;
-            cout << "------------------------" << endl;
-
+            //            cout << endl << "min" << endl;
+            //            printPoint(minimalDistance.first, keysServer);
+            //            cout << endl << "min*(!mu)" << endl;
+            //            printPoint(minimalDistance.first * negated_cond, keysServer);
+            //            cout << endl << "dist" << endl;
+            //            printPoint(distance.first, keysServer);
+            //            cout << endl << "dist*(mu)" << endl;
+            //            printPoint(distance.first * mu, keysServer);
+            //            cout << endl << "min*(!mu) + dist*(mu)" << endl;
+            closestPoint = closestPoint * negated_cond + distance.first * mu;
+            minimalDistance = eMin;
+            //            minimalDistance.first = minimalDistance.first * negated_cond + distance.first * mu;
+            //            minimalDistance.second = eMin;
+            //        printPoint(closestPoint, keysServer);
+            //        printNameVal(keysServer.decryptNum(minimalDistance));
+            //            cout << "------------------------" << endl;
         }
-        return distances;
+
+        //        cout << "     Final: " << endl;
+        //        printPoint(closestPoint, keysServer);
+        //        printNameVal(keysServer.decryptNum(minimalDistance));
+
+        return {closestPoint, minimalDistance};
     }
 
 
@@ -662,6 +705,7 @@ struct cmpPoints {
     }
 
     bool operator==(const Point &p) const {
+        //        return this == p;
         return id == p.id;
     }
 };

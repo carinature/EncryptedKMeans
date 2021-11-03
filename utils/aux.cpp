@@ -37,9 +37,9 @@ std::vector<long> decryptPoint(const Point &p, const KeysServer &keysServer) {
 //    void printPoints(std::vector<Point> & points){ todo not static or move to aux
 void printPoint(const Point &p, const KeysServer &keysServer) {
     cout << "( ";
-    for (short dim = 0; dim < DIM - 1; ++dim)
+    for (short dim = 0; dim < DIM ; ++dim)
         cout << keysServer.decryptNum(p[dim]) << ",";
-    cout << keysServer.decryptNum(p[short(DIM - 1)]) << " ) ";
+    cout << "id="<<p.id<< ",cid="<<keysServer.decryptNum(p.cid)<<" ) ";
 }
 
 void printPoints(const std::vector<Point> &points, const KeysServer &keysServer) {

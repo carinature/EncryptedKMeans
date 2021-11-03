@@ -36,7 +36,7 @@ DataServer::retrievePoints(
 
 
 std::vector<std::vector<Point> >
-DataServer::pickRandomPoints(const std::vector<Point> &points, int m) {
+DataServer::pickRandomPoints(const std::vector<Point> &points, int m) const {
     auto t0_rndPoints = CLOCK::now();     //  for logging, profiling, DBG
 
     if (points.empty() || m > points.size()) return std::vector<std::vector<Point> >();
@@ -51,7 +51,7 @@ DataServer::pickRandomPoints(const std::vector<Point> &points, int m) {
         //        to avoid cases of null (zero) points being assigned to group and blowing up in size,
         //          we add a rep for null points to whom those points will be assigned
         //        randomPoints.push_back(keysServer.tinyRandomPoint());
-        randomPoints[dim].push_back(tinyRandomPoint);
+        randomPoints[dim].emplace_back(tinyRandomPoint);
 
         // choose random indices
         std::vector<int> indices(points.size());
@@ -85,14 +85,14 @@ DataServer::createCmpDict(const std::vector<Point> &allPoints,
                             helib::Ctxt> > >
             cmpsDict(DIM);
 
-    std::vector<helib::Ctxt> res;
+    std::vector<CBit> res;
 
     for (short dim = 0; dim < DIM; ++dim) {
         cmpsDict[dim].reserve(randomPoints[dim].size());
         for (const Point &rep : randomPoints[dim]) {
             for (const Point &point : allPoints) {
                 //                if (!cmpsDict[rep].empty() && !cmpsDict[rep][point].isEmpty()))
-                //                if (rep.id == point.id) continue; //this is checked inside isBigger function
+                //                if (rep == point) continue; //this is checked inside isBigger function
                 // todo in the future, for efficiency
                 //  - need to check if exist
                 //  - find a way to utilize the 2nd result of the `isBiggerThan()`
@@ -212,7 +212,7 @@ DataServer::splitIntoEpsNet(const std::vector<Point> &points,
                     CBit isPointInPrevSlice(pointTuple.second);
 
                     /*
-                     if (p.id == R.id) continue;
+                     if (p == R) continue;
                     // todo what about cases of p (non random point) that is equal to representative?
                     // make sure with adi and dan current solution makes sense
                     */
@@ -237,7 +237,7 @@ DataServer::splitIntoEpsNet(const std::vector<Point> &points,
                     for (const Point &r: randomPoints[dim]) {
                         /*                            cout << "       --- other r: ";
                                                     printPoint(r, keysServer);*/
-                        if ((r.id == R.id) || (p.id == r.id)) continue;
+                        if ((r == R) || (p == r)) continue;
                         // make sure with adi and dan current solution makes sense
 
                         //  r > R (in which case we don't care about cmpDict results of p and r)
@@ -374,7 +374,7 @@ DataServer::calculateSlicesMeans(const std::vector<Slice> &slices,
         points.reserve(slice.reps.size() + slice.points.size()); // preallocate memory
         points.insert(points.end(), slice.reps.begin(), slice.reps.end());
         points.insert(points.end(), slice.points.begin(), slice.points.end());
-        Point sum(Point::addManyPoints(points));
+        Point sum(Point::addManyPoints(points, keysServer));
 
         const Point mean(keysServer.getQuotientPoint(sum, slice.counter, DIM));
 

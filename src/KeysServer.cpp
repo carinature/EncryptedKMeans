@@ -12,7 +12,9 @@ Logger keysServerLogger(log_debug, "keysServerLogger");//todo change to log_trac
 // Validates the prm value, throwing if invalid
 // [prm] Corresponds to the number of entry in mValues table
 long KeysServer::validatePrm(long prm) {
-    if (prm < 0 || prm >= 5) throw std::invalid_argument("prm must be in the interval [0, 4]");
+    //    if (prm < 0 || prm >= 5) throw std::invalid_argument("prm must be in the interval [0, 4]");
+    //todo this says which row is chosen from mValues so prm only needs to be in the range of [0, mValue.size()]
+    if (prm < 0 || prm >= 6) throw std::invalid_argument("prm must be in the interval [0, 4]");
     return prm;
 };
 
@@ -94,15 +96,32 @@ std::vector<helib::zzX> KeysServer::unpackSlotEncoding; //todo move? already def
 //KeysServer::KeysServer(long prm, long bitSize, bool bootstrap, long seed, long nthreads)
 
 
-long KeysServer::decryptCtxt(const helib::Ctxt &cBit) const {
-    if (cBit.isEmpty()) return -1; //todo should return 0?
-    NTL::ZZX pp;
-    secKey.Decrypt(pp, cBit);
-    return IsOne(pp);
+long KeysServer::decryptCtxt(const helib::Ctxt &ctxt) const {
+    if (ctxt.isEmpty()) return -1; //todo should return 0?
+
+    // Create a plaintext for decryption
+    helib::Ptxt<helib::BGV> plaintext_result(context);
+    // Decrypt the modified ciphertext
+    secKey.Decrypt(plaintext_result, ctxt);
+
+    cout << "decryptCtxt: " << plaintext_result << endl;
+    cout << "decryptCtxt[0].getp2r(): " << plaintext_result[0].getp2r() << endl;
+    //    cout << "decryptCtxt: "<<plaintext_result.totalProduct()<<endl;
+    //    cout << "decryptCtxt: "<<plaintext_result.totalSums()<<endl;
+
+    for (int i = 0; i < plaintext_result.size(); ++i) {
+        auto x = plaintext_result[i];
+        printNameVal(x);
+    }
+
+    return long(plaintext_result[0]); //fixme
+    //    NTL::ZZX pp;
+    //    secKey.Decrypt(pp, ctxt);
+    //    return IsOne(pp);
 }
 
-//long KeysServer::decryptNum(std::vector<helib::Ctxt> cNum, bool isProduct) {
-long KeysServer::decryptNum(const std::vector<helib::Ctxt> &cNum) const {
+//long KeysServer::decryptNum(EncryptedNum cNum, bool isProduct) {
+long KeysServer::decryptNum(const EncryptedNum &cNum) const {
     if (!cNum.size()) return -1; //todo should return 0?
     long pNum = 0;
     NTL::ZZX pp;
@@ -117,7 +136,7 @@ long KeysServer::decryptNum(const std::vector<helib::Ctxt> &cNum) const {
     return pNum;
 }
 
-long KeysServer::decryptSize(const std::vector<helib::Ctxt> &cSize) const {
+long KeysServer::decryptSize(const std::vector<CBit> &cSize) const {
     long size = 0;
     NTL::ZZX pp;
     for (const Ctxt &ctxt: cSize) {
@@ -134,35 +153,55 @@ const Point KeysServer::scratchPoint() const {
     return Point(getPublicKey());//, nullptr);
 }
 
+#include <random>
+
 const Point
 KeysServer::tinyRandomPoint() const {
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    //    std::uniform_int_distribution<long> dist(0, EPSILON);
+    std::uniform_real_distribution<double> dist(0, EPSILON);
     long arr[DIM];
-    //fixme change rand() to <random>
-    for (short dim = 0; dim < DIM; ++dim) arr[dim] = rand() % 1 * EPSILON;
+    for (short dim = 0; dim < DIM; ++dim) arr[dim] = dist(mt);
+    //    for (short dim = 0; dim < DIM; ++dim) printNameVal(arr[dim]);
+
     // note that despite the rand illusion, currently this always returns 0
-    // which is perfectly for us, but the "real" solution will be ok too
-    // to create the "real" solution we'll change the `rand()` function (and `long` to `double`)
-    return Point(getPublicKey(), arr);
+    // which works perfectly for us, but the "real" solution will be ok too
+    const Point &point = Point(getPublicKey(), arr);
+    return point;
 }
 
 const Point
 KeysServer::getQuotientPoint(
         const Point &point,
-        const std::vector<Ctxt> &sizeBitVector,
+        const std::vector<CBit> &sizeBitVector,
         const short repsNum) const {
 
     long size = decryptSize(sizeBitVector), arr[DIM];
-        printNameVal(size);
+    printNameVal(size);
     //    if (size)
     long pCoor;
-    for (int dim = 0; dim < DIM; ++dim) {
+    for (short dim = 0; dim < DIM; ++dim) {
         pCoor = decryptNum(point[dim]);
         arr[dim] = decryptNum(point[dim]) / (repsNum + size);
-                    printNameVal(pCoor);
-                    printNameVal(arr[dim]);
+        printNameVal(pCoor);
+        printNameVal(arr[dim]);
     }
 
     return Point(point.public_key, arr);
+}
+const EncryptedNum
+KeysServer::getQuotient(
+        const EncryptedNum &encryptedNum,
+        const long num) const {
+
+    long quotient = decryptNum(encryptedNum) / (num);
+    EncryptedNum result;
+    std::vector<long> quotient_vector = helib::longToBitVector(quotient, BIT_SIZE);
+    for (int bit = 0; bit < BIT_SIZE; ++bit)
+        getPublicKey().Encrypt(result[bit], NTL::ZZX(quotient_vector[bit]));
+
+    return result;
 }
 
 

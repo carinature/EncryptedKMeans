@@ -14,33 +14,47 @@ void TestKeysServer::testConstructor() {
 
 void TestKeysServer::testEncryptCtxt() {
     cout << " ------ testConstructor ------ " << endl;
-    KeysServer server;
-    server.encryptCtxt(0);
-    server.encryptCtxt(1);
+    KeysServer keysServer;
+    keysServer.encryptCtxt(0);
+    keysServer.encryptCtxt(1);
     //    loggerTestClient.print_log();
     cout << " ------ testConstructor finished ------ " << endl << endl;
 }
 
 void TestKeysServer::testDecryptCtxt() {
     cout << " ------ testDecryptCtxt ------ " << endl;
-    KeysServer server;
+    KeysServer keysServer;
+    helib::PubKey &publicKey = keysServer.getPublicKey();
+
     long bit0 = 0;
     long bit1 = 1;
-    helib::Ctxt cbit0 = server.encryptCtxt(bit0);
-    helib::Ctxt cbit1 = server.encryptCtxt(bit1);
-    long dbit0 = server.decryptCtxt(cbit0);
-    long dbit1 = server.decryptCtxt(cbit1);
+
+    helib::Ctxt cbit0(publicKey);
+    helib::Ctxt cbit1(publicKey);
+
+    publicKey.Encrypt(cbit0, NTL::ZZX(bit0));
+    publicKey.Encrypt(cbit1, NTL::ZZX(bit1));
+
+    long dbit0 = keysServer.decryptCtxt(cbit0);
+    long dbit1 = keysServer.decryptCtxt(cbit1);
+
     assert(bit0 == dbit0);
     assert(bit1 == dbit1);
     //    loggerTestClient.print_log();
     cout << " ------ testDecryptCtxt finished ------ " << endl << endl;
 }
 
-//todo
+#include <random>
+
 void TestKeysServer::testEncryptNum() {
     cout << " ------ testEncryptNum ------ " << endl;
-    KeysServer server;
-    //    Client client(server);
+    KeysServer keysServer;
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_int_distribution<long> dist(1, NUMBERS_RANGE);
+    const long l = dist(mt);
+    keysServer.encryptNum(l);
+    //    Client client(keysServer);
     //    loggerTestClient.print_log();
     cout << " ------ testEncryptNum finished ------ " << endl << endl;
 }
@@ -48,8 +62,15 @@ void TestKeysServer::testEncryptNum() {
 //todo
 void TestKeysServer::testDecryptNum() {
     cout << " ------ testDecryptNum ------ " << endl;
-    KeysServer server;
-    //    Client client(server);
+    KeysServer keysServer;
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_int_distribution<long> dist(1, NUMBERS_RANGE);
+    const long l = dist(mt);
+    EncryptedNum cl = keysServer.encryptNum(l);
+    const long pl = keysServer.decryptNum(cl);
+    assert(l==pl);
+    //    Client client(keysServer);
     //    loggerTestClient.print_log();
     cout << " ------ testDecryptNum finished ------ " << endl << endl;
 }
@@ -67,9 +88,11 @@ void TestKeysServer::testScratchPoint() {
 
 void TestKeysServer::testTinyRandomPoint() {
     cout << " ------ testTinyRandomPoint ------ " << endl;
-    KeysServer server;
-    Point tiny(server.tinyRandomPoint());
-    printPoint(tiny, server);
+    KeysServer keysServer;
+    for (int i = 0; i < 10; ++i) {
+        Point tiny(keysServer.tinyRandomPoint());
+        printPoint(tiny, keysServer);
+    }
     //    loggerTestClient.print_log();
     cout << " ------ testTinyRandomPoint finished ------ " << endl << endl;
 }

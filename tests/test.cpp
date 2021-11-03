@@ -16,8 +16,8 @@ int main() {
 //    TestKeysServer::testConstructor();
 //    TestKeysServer::testEncryptCtxt();
 //    TestKeysServer::testDecryptCtxt();
-//    TestKeysServer::testEncryptNum();   //  todo
-//    TestKeysServer::testDecryptNum();   //  todo
+    TestKeysServer::testEncryptNum();
+    TestKeysServer::testDecryptNum();
 //    TestKeysServer::testScratchPoint();
 //    TestKeysServer::testTinyRandomPoint();
 //    cout << " ============ Test KeysServer Finished ============ " << endl << endl;
@@ -34,7 +34,8 @@ int main() {
 //    TestPoint::testCompare();
 //    TestPoint::testCalculateDistanceFromPoint();
 //    TestPoint::testFindMinimalDistancesFromMeans();
-    TestPoint::minitest();
+//    TestPoint::minitest();
+//    TestPoint::minitest2();
     cout << " ============ Test Point Finished ============ " << endl << endl;
 //
 //    cout << " ============ Test Client ============ " << endl;

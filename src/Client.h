@@ -23,7 +23,7 @@ protected:
     //    NTL::Vec<helib::Ctxt> cCoordinatesNTL;
     //    std::vector<std::vector<helib::Ctxt> > cCoordinatesStd;
      helib::PubKey &public_key;// = encryptionKey;
-//   const helib::PubKey pubKey;// = encryptionKey;
+//   const helib::PubKey public_key;// = encryptionKey;
     //#if DBG
     //private:
     //    long *pCoordinatesDBG;

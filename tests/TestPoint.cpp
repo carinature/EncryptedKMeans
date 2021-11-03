@@ -75,8 +75,8 @@ void TestPoint::testAddition() {
         //            for (auto a: arr) printNameVal(a);
     }
     //  this option is good for readability
-    //      `const helib::PubKey &pubKey = keysServer.getPublicKey();`
-    //      but the way it is now (asking the serv for a pubKey for each point)
+    //      `const helib::PubKey &public_key = keysServer.getPublicKey();`
+    //      but the way it is now (asking the serv for a public_key for each point)
     //      makes more sense in a "real world" application
     Point point(keysServer.getPublicKey(), arr);
     const Point point2(keysServer.getPublicKey(), arr2);
@@ -127,7 +127,7 @@ void TestPoint::testAddManyPoints() {
         points.emplace_back(Point(keysServer.getPublicKey(), arr3));
         points.emplace_back(Point(keysServer.getPublicKey(), arrSum));
     }
-    Point sum(Point::addManyPoints(points));
+    Point sum(Point::addManyPoints(points, keysServer));
     //        printNameVal(keysServer.decryptNum(sum[0]));
     //        printNameVal(arrSum[0]);
     //        printNameVal(keysServer.decryptNum(sum[1]));
@@ -157,8 +157,8 @@ void TestPoint::testMultiplication() {
         arrProd[dim] = arr[dim] * arr2[dim];
     }
     //  this option is good for readability
-    //      `const helib::PubKey &pubKey = keysServer.getPublicKey();`
-    //      but the way it is now (asking the serv for a pubKey for each point)
+    //      `const helib::PubKey &public_key = keysServer.getPublicKey();`
+    //      but the way it is now (asking the serv for a public_key for each point)
     //      makes more sense in a "real world" application
     Point point(keysServer.getPublicKey(), arr);
     Point point2(keysServer.getPublicKey(), arr2);
@@ -172,16 +172,24 @@ void TestPoint::testMultiplicationByBit() {
     //    loggerTestClient.log("testMultiplicationByBit");
     cout << " ------ testMultiplicationByBit ------ " << endl;
     KeysServer keysServer;
+    helib::PubKey &publicKey = keysServer.getPublicKey();
+
     long arr[DIM], arr0[] = {0, 0};
-    for (short dim = 0; dim < DIM; ++dim) arr[dim] = rand() % NUMBERS_RANGE;
+    for (short dim = 0; dim < DIM; ++dim)
+        arr[dim] = rand() %
+                   NUMBERS_RANGE; //fixme use <random> instead of random()
     //  this option is good for readability
-    //      `const helib::PubKey &pubKey = keysServer.getPublicKey();`
-    //      but the way it is now (asking the serv for a pubKey for each point)
+    //      `const helib::PubKey &public_key = keysServer.getPublicKey();`
+    //      but the way it is now (asking the serv for a public_key for each point)
     //      makes more sense in a "real world" application
     Point point(keysServer.getPublicKey(), arr);
     //    Point point2(keysServer.getPublicKey(), arr2);
-    helib::Ctxt bit0 = keysServer.encryptCtxt(false);
-    helib::Ctxt bit1 = keysServer.encryptCtxt(true);
+    helib::Ctxt bit0(publicKey);
+    helib::Ctxt bit1(publicKey);
+
+    publicKey.Encrypt(bit0, NTL::ZZX(false));
+    publicKey.Encrypt(bit1, NTL::ZZX(true));
+
     Point product0 = point * bit0;
     Point product1 = point * bit1;
     for (short dim = 0; dim < DIM; ++dim) {
@@ -231,19 +239,19 @@ void TestPoint::testCalculateDistanceFromPoint() {
     cout << endl;
     for (int i = 0; i < n - 1; ++i) {
         printNameVal(i) << "  ----------  " << endl;
-        EncryptedNum distSquared = points[i].distanceFrom(points[i + 1], keysServer);
-        long dDistSquared = keysServer.decryptNum(distSquared);
+        EncryptedNum distance = points[i].distanceFrom(points[i + 1], keysServer);
+        long dDistance = keysServer.decryptNum(distance);
 
         printPoint(points[i], keysServer);
         printPoint(points[i + 1], keysServer);
-                printNameVal(dDistSquared);
+        printNameVal(dDistance);
 
         long pDistSquared = 0;
         for (int dim = 0; dim < DIM; ++dim)
             pDistSquared += std::pow((tempArrs[i][dim] - tempArrs[i + 1][dim]), 2);
 
         printNameVal(pDistSquared);
-        assert(pDistSquared == dDistSquared);
+        assert(pDistSquared == dDistance);
 
     }
 
@@ -254,7 +262,7 @@ void TestPoint::testFindMinimalDistancesFromMeans() {
     cout << " ------ testFindMinimalDistancesFromMeans ------ " << endl;
     KeysServer keysServer;
     std::random_device rd;
-//    std::mt19937 mt(rd());
+    //    std::mt19937 mt(rd());
     std::mt19937 mt;
     std::uniform_int_distribution<long> dist(1, NUMBERS_RANGE);
     int n = NUMBER_OF_POINTS;
@@ -263,54 +271,76 @@ void TestPoint::testFindMinimalDistancesFromMeans() {
     std::vector<std::pair<Point, long> > distPairs;
     distPairs.reserve(n);
     long tempArrs[n][DIM], tempArr[DIM];
-    for (int dim = 0; dim < DIM; ++dim)  tempArr[dim] = dist(mt);
+    for (int dim = 0; dim < DIM; ++dim) tempArr[dim] = dist(mt);
     Point point(keysServer.getPublicKey(), tempArr);
     for (int i = 0; i < n; ++i) {
         long pDist = 0;
         for (int dim = 0; dim < DIM; ++dim) {
             tempArrs[i][dim] = dist(mt);
             pDist += std::pow(tempArrs[i][dim] - tempArr[dim], 2);
-            printNameVal(tempArr[dim]);
-            printNameVal(tempArrs[i][dim]);
-            printNameVal(pDist);
+            //            printNameVal(tempArr[dim]);
+            //            printNameVal(tempArrs[i][dim]);
+            //            printNameVal(pDist);
         }
         Point pointi(keysServer.getPublicKey(), tempArrs[i]);
         points.push_back(pointi);
         distPairs.emplace_back(pointi, pDist);
     }
-    printPoint(point, keysServer);
-    cout << endl;
-    printPoints(points, keysServer);
-    cout << endl;
+    //    printPoint(point, keysServer);
+    //    cout << endl;
+    //    printPoints(points, keysServer);
+    //    cout << endl;
 
     std::pair<Point, EncryptedNum>
             minimalDistance = point.findMinDistFromMeans(points, keysServer);
 
-    printPoint(minimalDistance.first, keysServer);
-    printNameVal(keysServer.decryptNum(minimalDistance.second)) << endl;
-
-    for (int i = 0; i < n; ++i) {
-        printPoint(distPairs[i].first, keysServer);
-        printNameVal(distPairs[i].second);
-    }
+    //    printPoint(minimalDistance.first, keysServer);
+    //    printNameVal(keysServer.decryptNum(minimalDistance.second)) << endl;
+    //
+    //    for (int i = 0; i < n; ++i) {
+    //        printPoint(distPairs[i].first, keysServer);
+    //        printNameVal(distPairs[i].second);
+    //    }
     Point &minDistPoint = distPairs[0].first;
     long pMinDist = distPairs[0].second;
+    long minId = -1;
+    const helib::PubKey &publicKey = point.public_key;
+    EncryptedNum minCid(BIT_SIZE, Ctxt(publicKey));
+
     for (int i = 0; i < n; ++i) {
         if (pMinDist >= distPairs[i].second) {
-            cout<< "inside if"<<endl;
-            printNameVal(pMinDist) << endl;
-            printNameVal(distPairs[i].second) << endl;
             minDistPoint = distPairs[i].first;
             pMinDist = distPairs[i].second;
+            minId = distPairs[i].first.id;
+            minCid = distPairs[i].first.cid;
         }
     }
 
-    printPoint(minDistPoint, keysServer);
-    printNameVal(pMinDist) << endl;
-
     assert(pMinDist == keysServer.decryptNum(minimalDistance.second));
-    assert(minDistPoint.id == minimalDistance.first.id);
+    assert(minId == keysServer.decryptNum(minimalDistance.first.cid));
+    //    assert(minDistPoint == minimalDistance.first);
+    //    assert(minDistPoint.id == minimalDistance.first.id);
+    //    assert(minDistPoint.cid == minimalDistance.first.cid);
 
+    //    printPoint(minDistPoint, keysServer);
+    //    printNameVal(pMinDist);// << endl;
+    //    printNameVal(minimalDistance.first.id);// << endl;
+    //    printNameVal(minDistPoint.id);// << endl;
+    //
+    //    printNameVal(keysServer.decryptNum(minimalDistance.first.cid));// << endl;
+    //    printNameVal(keysServer.decryptNum(minDistPoint.cid));// << endl;
+
+
+    //  todo check how long it takes
+    //  todo also consider creating a cmp dict for cid's
+    Ctxt mu(publicKey), ni(publicKey);
+    helib::CtPtrs_vectorCt pMin(minCid);
+    helib::CtPtrs_vectorCt dMin(minimalDistance.first.cid);
+    helib::compareTwoNumbers(mu, ni, dMin, pMin);
+    //    Ctxt a(mu), b(ni), ab(mu), a_b(mu);
+    //    (ab*=ni).negate();
+    //    (a_b += ni) += a_b;
+    assert((0 == keysServer.decryptCtxt(mu)) && (0 == keysServer.decryptCtxt(ni)));
 
     cout << " ------ testFindMinimalDistancesFromMeans finished ------ " << endl << endl;
 
@@ -319,73 +349,120 @@ void TestPoint::testFindMinimalDistancesFromMeans() {
 
 void TestPoint::minitest() {
     cout << " ------ minitest ------ " << endl;
-    KeysServer keysServer;
+    KeysServer keysServer(5);
     std::random_device rd;
     std::mt19937 mt;//(rd());
     std::uniform_int_distribution<long> dist(1, NUMBERS_RANGE);
     int n = NUMBER_OF_POINTS;
-//    std::vector<Point> points;
-//    points.reserve(n);
-//    long tempArrs[n][DIM], tempArr[DIM];
-//    for (int dim = 0; dim < DIM; ++dim)  tempArr[dim] = dist(mt);
-//    Point point(keysServer.getPublicKey(), tempArr);
-    helib::PubKey &key = keysServer.getPublicKey();
-    helib::Ctxt ctxt(key),ctxt2(key), ctxt3(key),ctxt4(key);
-    long arr[] = {0,1,2,3};
-    key.Encrypt(ctxt3, NTL::ZZX(3));
+    //    std::vector<Point> points;
+    //    points.reserve(n);
+    //    long tempArrs[n][DIM], tempArr[DIM];
+    //    for (int dim = 0; dim < DIM; ++dim)  tempArr[dim] = dist(mt);
+    //    Point point(keysServer.getPublicKey(), tempArr);
+    helib::PubKey &pubKey = keysServer.getPublicKey();
+    helib::Ctxt ctxt(pubKey), ctxt2(pubKey), ctxt3(pubKey), ctxt4(pubKey);
+    long arr[] = {0, 1, 2, 3};
+    pubKey.Encrypt(ctxt3, NTL::ZZX(3));
     for (int i = 0; i < n; ++i) {
         cout << "================";
         printNameVal(i);
-//        cout << "================"<<endl;
-        key.Encrypt(ctxt, NTL::ZZX(i));
-        key.Encrypt(ctxt2, NTL::ZZX(i));
+        //        cout << "================"<<endl;
+        pubKey.Encrypt(ctxt, NTL::ZZX(i));
+        pubKey.Encrypt(ctxt2, NTL::ZZX(i));
         printNameVal(keysServer.decryptCtxt(ctxt));
         printNameVal(keysServer.decryptCtxt(ctxt2));
-        printNameVal((ctxt)==(ctxt2));
+        printNameVal((ctxt) == (ctxt2));
         printNameVal(ctxt.equalsTo(ctxt2));
-        printNameVal(&(ctxt)==&(ctxt2));
-        cout << "-------------"<<endl;
-        ctxt=ctxt3;
-        ctxt2=ctxt3;
-        printNameVal((ctxt)==(ctxt2));      //  true when both initialized to the same ctxt, false when initialize to the same (p)
-        printNameVal(ctxt.equalsTo(ctxt2)); //  true when both initialized to the same ctxt, false when initialize to the same (p)value
-        printNameVal(&(ctxt)==&(ctxt2));    //  never true
+        printNameVal(&(ctxt) == &(ctxt2));
+        cout << "-------------" << endl;
+        ctxt = ctxt3;
+        ctxt2 = ctxt3;
+        printNameVal((ctxt) ==
+                     (ctxt2));      //  true when both initialized to the same ctxt, false when initialize to the same (p)
+        printNameVal(ctxt.equalsTo(
+                ctxt2)); //  true when both initialized to the same ctxt, false when initialize to the same (p)value
+        printNameVal(&(ctxt) == &(ctxt2));    //  never true
 
-        cout << "-------1------"<<endl;
-        ctxt*=ctxt3;
-        ctxt2*=ctxt3;
-        printNameVal((ctxt)==(ctxt2));      //  true when both initialized to the same ctxt, false when initialize to the same (p)
-        printNameVal(ctxt.equalsTo(ctxt2)); //  true when both initialized to the same ctxt, false when initialize to the same (p)value
-        printNameVal(&(ctxt)==&(ctxt2));    //  never true
+        cout << "-------1------" << endl;
+        ctxt *= ctxt3;
+        ctxt2 *= ctxt3;
+        printNameVal((ctxt) ==
+                     (ctxt2));      //  true when both initialized to the same ctxt, false when initialize to the same (p)
+        printNameVal(ctxt.equalsTo(
+                ctxt2)); //  true when both initialized to the same ctxt, false when initialize to the same (p)value
+        printNameVal(&(ctxt) == &(ctxt2));    //  never true
 
-        cout << "-------2------"<<endl;
-        ctxt*=ctxt4;
-        ctxt2*=ctxt4;
-        printNameVal((ctxt)==(ctxt2));      //  true when both initialized to the same ctxt, false when initialize to the same (p)
-        printNameVal(ctxt.equalsTo(ctxt2)); //  true when both initialized to the same ctxt, false when initialize to the same (p)value
-        printNameVal(&(ctxt)==&(ctxt2));    //  never true
+        cout << "-------2------" << endl;
+        ctxt *= ctxt4;
+        ctxt2 *= ctxt4;
+        printNameVal((ctxt) ==
+                     (ctxt2));      //  true when both initialized to the same ctxt, false when initialize to the same (p)
+        printNameVal(ctxt.equalsTo(
+                ctxt2)); //  true when both initialized to the same ctxt, false when initialize to the same (p)value
+        printNameVal(&(ctxt) == &(ctxt2));    //  never true
 
-        cout << "-------3------"<<endl;
-        ctxt=ctxt3;
-        ctxt2=ctxt4;
-        ctxt*=ctxt4;
-        ctxt2*=ctxt3;
-        printNameVal((ctxt)==(ctxt2));      //  true when both initialized to the same ctxt, false when initialize to the same (p)
-        printNameVal(ctxt.equalsTo(ctxt2)); //  true when both initialized to the same ctxt, false when initialize to the same (p)value
-        printNameVal(&(ctxt)==&(ctxt2));    //  never true
-        cout << "================"<<endl;
+        cout << "-------3------" << endl;
+        ctxt = ctxt3;
+        ctxt2 = ctxt4;
+        ctxt *= ctxt4;
+        ctxt2 *= ctxt3;
+        printNameVal((ctxt) ==
+                     (ctxt2));      //  true when both initialized to the same ctxt, false when initialize to the same (p)
+        printNameVal(ctxt.equalsTo(
+                ctxt2)); //  true when both initialized to the same ctxt, false when initialize to the same (p)value
+        printNameVal(&(ctxt) == &(ctxt2));    //  never true
+        cout << "================" << endl;
 
     }
-    key.Encrypt(ctxt, NTL::ZZX(3));
-    key.Encrypt(ctxt2, NTL::ZZX(4));
-    key.Encrypt(ctxt3, NTL::ZZX(3));
-    key.Encrypt(ctxt4, NTL::ZZX(4));
-    ctxt*=ctxt4;
-    ctxt2*=ctxt3;
-    printNameVal((ctxt)==(ctxt2));      //  true when both initialized to the same ctxt, false when initialize to the same (p)
-    printNameVal(ctxt.equalsTo(ctxt2)); //  true when both initialized to the same ctxt, false when initialize to the same (p)value
-    printNameVal(&(ctxt)==&(ctxt2));    //  never true
+    pubKey.Encrypt(ctxt, NTL::ZZX(3));
+    pubKey.Encrypt(ctxt2, NTL::ZZX(4));
+    pubKey.Encrypt(ctxt3, NTL::ZZX(3));
+    pubKey.Encrypt(ctxt4, NTL::ZZX(4));
+    ctxt *= ctxt4;
+    ctxt2 *= ctxt3;
+    printNameVal((ctxt) ==
+                 (ctxt2));      //  true when both initialized to the same ctxt, false when initialize to the same (p)
+    printNameVal(ctxt.equalsTo(
+            ctxt2)); //  true when both initialized to the same ctxt, false when initialize to the same (p)value
+    printNameVal(&(ctxt) == &(ctxt2));    //  never true
+
+    cout << "flalallsdf" << endl;
+    // Create a vector of long with nslots elements
+    helib::Ptxt<helib::BGV> ptxt(pubKey);
+    // Set it with numbers 0..nslots - 1
+    // ptxt = [0] [1] [2] ... [nslots-2] [nslots-1]
+    for (int i = 0; i < ptxt.size(); ++i) {
+        ptxt[i] = i;
+        printNameVal(i);
+        printNameVal(ptxt[i]);
+        cout << ptxt << endl;
+    }
+    pubKey.Encrypt(ctxt, ptxt);
+    keysServer.decryptCtxt(ctxt);
+
+
     cout << " ------ minitest finished ------ " << endl << endl;
 
+}
+
+struct Bla {
+    Bla *bla;
+
+    Bla() {
+        bla = this;
+    }
+
+    void printBla() {
+        printNameVal(bla);
+        printNameVal(this);
+    }
+};
+
+void TestPoint::minitest2() {
+    Bla bla;
+    bla.printBla();
+    printNameVal(bla.bla);
+    printNameVal(&bla);
+    cout << "fin" << endl;
 }
 

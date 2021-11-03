@@ -21,22 +21,22 @@ void TestDataServer::testComparePoints() {
     //    loggerTestClient.log("testComparePoints");
     cout << " ------ testComparePoints ------ " << endl << endl;
 
-    KeysServer server;
+    KeysServer keysServer;
     long arr[DIM], arr2[DIM];
     for (short dim = 0; dim < DIM; ++dim) {
         arr[dim] = rand() % NUMBERS_RANGE;
         arr2[dim] = rand() % NUMBERS_RANGE;
     }
-    Point point(server.getPublicKey(), arr);
-    Point point2(server.getPublicKey(), arr2);
+    Point point(keysServer.getPublicKey(), arr);
+    Point point2(keysServer.getPublicKey(), arr2);
 
     for (short dim = 0; dim < DIM; ++dim) {
         //        for (int i = 0; i < NUMBER_OF_POINTS; ++i) {
         helib::Ctxt res = point.isBiggerThan(point2, dim)[0];
-        assert((arr[dim] > arr2[dim]) == server.decryptCtxt(res));
+        assert((arr[dim] > arr2[dim]) == keysServer.decryptCtxt(res));
 
         helib::Ctxt res2 = point2.isBiggerThan(point, dim)[0];
-        assert((arr2[dim] > arr[dim]) == server.decryptCtxt(res2));
+        assert((arr2[dim] > arr[dim]) == keysServer.decryptCtxt(res2));
         //        }
     }
     cout << " ------ testComparePoints finished ------ " << endl << endl;
@@ -44,13 +44,13 @@ void TestDataServer::testComparePoints() {
 
 void TestDataServer::testAddition() {
     cout << " ------ testAddition ------ " << endl << endl;
-    KeysServer server;
-    std::vector<Client> clients = generateDataClients(server);
+    KeysServer keysServer;
+    std::vector<Client> clients = generateDataClients(keysServer);
     std::vector<Point> points = DataServer::retrievePoints(clients);
-    printPoints(points, server);
-    Point sum = Point::addManyPoints(points);
+    printPoints(points, keysServer);
+    Point sum = Point::addManyPoints(points, keysServer);
     for (short dim = 0; dim < DIM; ++dim) {
-        printNameVal(server.decryptNum(sum[dim]));
+        printNameVal(keysServer.decryptNum(sum[dim]));
     }
     cout << " ------ testAddition finished ------ " << endl << endl;
 }
@@ -272,11 +272,10 @@ void TestDataServer::testSplitIntoEpsNet() {
 
     cout << " ------ testSplitIntoEpsNet finished ------ " << endl << endl;
 
-
 }
 
 void TestDataServer::testCalculateCellMeans() {
-    cout << " ------ testCalculateCellMeans ------ " << endl;// << endl;
+    cout << " ------ testCalculateCellMeans ------ " << endl;
     KeysServer keysServer;
     DataServer dataServer(keysServer);
 
@@ -286,7 +285,7 @@ void TestDataServer::testCalculateCellMeans() {
     std::vector<std::vector<Point> > randomPoints = dataServer.pickRandomPoints(points);
     std::vector<std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt> > >
             cmpDict = dataServer.createCmpDict(points, randomPoints);
-    
+
     std::map<int, std::vector<Slice> >
             epsNet = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
 
@@ -297,7 +296,7 @@ void TestDataServer::testCalculateCellMeans() {
     printPoints(points, keysServer);
     cout << " === === === === ===" << endl;
     cout << " === Random Points  ===" << endl;
-    for (auto const & vec :randomPoints) printPoints(vec, keysServer);
+    for (auto const &vec :randomPoints) printPoints(vec, keysServer);
     cout << " === === === === ===" << endl;
     cout << " === Slices  ===" << endl;
     for (int dim = 0; dim < DIM; ++dim) {

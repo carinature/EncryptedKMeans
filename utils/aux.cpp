@@ -44,12 +44,8 @@ void printPoint(const Point &p, const KeysServer &keysServer) {
 
 void printPoints(const std::vector<Point> &points, const KeysServer &keysServer) {
     cout << "   [ total of " << points.size() << " points ]   ";
-    for (const Point &p:points) {
-        cout << "( ";
-        for (short dim = 0; dim < DIM - 1; ++dim)
-            cout << keysServer.decryptNum(p[dim]) << ",";
-        cout << keysServer.decryptNum(p[DIM - 1]) << " ) \t";
-    }
+    for (const Point &p:points)         printPoint(p, keysServer);
+
 }
 
 void printNonEmptyPoints(const std::vector<Point> &points, const KeysServer &keysServer) {
@@ -62,12 +58,7 @@ void printNonEmptyPoints(const std::vector<Point> &points, const KeysServer &key
         }
         if (sum) {
             ++cnt;
-            cout << "( ";
-            for (short dim = 0; dim < DIM - 1; ++dim) {
-                arr[dim] = keysServer.decryptNum(p[dim]);
-                cout << arr[dim] << ",";
-            }
-            cout << keysServer.decryptNum(p[DIM - 1]) << " ) \t";
+            printPoint(p, keysServer);
         }
     }
     cout << " \t\t[ total of " << cnt << " points are not empty, out of " << points.size()
@@ -87,7 +78,7 @@ std::vector<Client> generateDataClients(const KeysServer &keysServer) {
     //    std::mt19937 mt(rd());
     std::mt19937 mt;
     //    std::uniform_real_distribution<double> dist(0, NUMBERS_RANGE);
-    std::uniform_int_distribution<long> dist(0, NUMBERS_RANGE);
+    std::uniform_int_distribution<long> dist(1, NUMBERS_RANGE);
     long tempArr[DIM];
     std::vector<Client> clients(NUMBER_OF_CLIENTS, Client(keysServer));
     for (Client &client:clients) {

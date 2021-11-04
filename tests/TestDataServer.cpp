@@ -192,7 +192,7 @@ void TestDataServer::testCreateCmpDict() {
 
             for (auto const&[point2, val]: map) {
 
-                long p2c = keysServer.decryptNum(point[dim]);
+                long p2c = keysServer.decryptNum(point2[dim]);
 
                 long pVal = keysServer.decryptCtxt(val);
                 assert(pVal == (p1c > p2c) || pVal == (p1c == p2c));
@@ -262,10 +262,10 @@ void TestDataServer::testSplitIntoEpsNet() {
                     Slice
             >
     >
-            groups = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
+            slices = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
     for (int dim = 0; dim < DIM; ++dim) {
         cout << "   ---   For dim " << dim << "  --- " << endl;
-        for (Slice &cell: groups[dim]) cell.printSlice(keysServer);
+        for (Slice &cell: slices[dim]) cell.printSlice(keysServer);
         cout << "   ---     --- " << endl;
         cout << endl;
     }

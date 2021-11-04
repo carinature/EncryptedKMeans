@@ -11,6 +11,8 @@
 #include "utils/aux.h" // for including KeysServer.h
 #include "KeysServer.h"
 
+static Logger loggerPoint(log_debug, "loggerPoint");
+
 static long counter = 0; //fixme move to the cpp file
 
 class Point {
@@ -56,11 +58,10 @@ public:
             public_key(public_key),
             id(counter++),
             cid(NUMBER_OF_POINTS, Ctxt(public_key)),
-            //            cidref(cid),
             pubKeyPtrDBG(&public_key),
             cCoordinates(DIM, std::vector(BIT_SIZE, helib::Ctxt(public_key))) {
         originalPointAddress = this;
-        for (long bit = 0; bit < BIT_SIZE; ++bit)
+        for (long bit = 0; bit < cid.size(); ++bit)
             this->public_key.Encrypt(cid[bit],
                                      NTL::to_ZZX((id >> bit) & 1));
         pCoordinatesDBG.reserve(DIM);
@@ -70,7 +71,8 @@ public:
             for (short dim = 0; dim < DIM; ++dim) {
                 pCoordinatesDBG.push_back(coordinates[dim]);
                 // Extract the i'th bit of coordinates[dim]
-                for (long bit = 0; bit < BIT_SIZE; ++bit)
+                //                for (long bit = 0; bit < BIT_SIZE; ++bit)
+                for (long bit = 0; bit < cCoordinates[dim].size(); ++bit)
                     this->public_key.Encrypt(cCoordinates[dim][bit],
                                              NTL::to_ZZX((coordinates[dim] >> bit) & 1));
 
@@ -94,15 +96,14 @@ public:
             multCounter(0), //todo maybe better to init to 0, depending future impl & use
             public_key(cCoordinates[0][0].getPubKey()),
             id(counter++),
-            cid(NUMBER_OF_POINTS,
-                Ctxt(cCoordinates[0][0].getPubKey())),
+            cid(NUMBER_OF_POINTS, Ctxt(cCoordinates[0][0].getPubKey())),
             pubKeyPtrDBG(&public_key),
             pCoordinatesDBG(DIM),
             cCoordinates(cCoordinates)
     //  cCoordinates(DIM, std::vector(BIT_SIZE, helib::Ctxt(public_key)))
     {
         originalPointAddress = this;
-        for (long bit = 0; bit < BIT_SIZE; ++bit)
+        for (long bit = 0; bit < cid.size(); ++bit)
             this->public_key.Encrypt(cid[bit],
                                      NTL::to_ZZX((id >> bit) & 1));
 
@@ -425,8 +426,8 @@ public:
     }
 
     bool operator==(const Point &point) const {
-        return cid == point.cid;
-        //        return id == point.id;
+        //        return cid == point.cid;
+        return id == point.id;
     }
 
     /**
@@ -454,7 +455,7 @@ public:
         // c2 = p2.coor[dim]
 
         /**     option 1    */
-        auto t0_cmp_version = CLOCK::now();
+        auto t0_distanceFrom_cmp_version = CLOCK::now();
 
         std::vector<EncryptedNum> sqaredDiffs(DIM);
         for (int dim = 0; dim < DIM; ++dim) {
@@ -508,7 +509,8 @@ public:
         helib::addManyNumbers(output_wrapper, summands_wrapper);
         //        printNameVal(keysServer.decryptNum(result_vector));
 
-        printDuration(t0_cmp_version, "dist cmp version");
+        loggerPoint.log(
+                printDuration(t0_distanceFrom_cmp_version, "distanceFrom (cmp version)"));
 
         /**     option 2    */
         /*
@@ -593,7 +595,7 @@ public:
                                       summands_wrapper2);
                 //        printNameVal(keysServer.decryptNum(result_vector));
 
-                printDuration(t0_long_version, "dist long version (without compare)");
+                loggerPoint.log(printDuration(t0_long_version, "dist long version (without compare)"));
                 */
 
         return result_vector;
@@ -610,6 +612,8 @@ public:
             const std::vector<Point> &points,
             const KeysServer &keysServer
     ) const {
+        auto t0_minDist = CLOCK::now();
+
         //  Collect Distancses from Means
         std::vector<std::pair<const Point &, EncryptedNum> > distances;
         distances.reserve(points.size());
@@ -621,13 +625,13 @@ public:
         Point closestPoint(distances[0].first);
         EncryptedNum minimalDistance(distances[0].second);
 
-        for (std::pair<const Point &, EncryptedNum> &distance:distances) {
+        for (std::pair<const Point &, EncryptedNum> &tuplePointDistance:distances) {
 
             EncryptedNum eMax,//(BIT_SIZE, helib::Ctxt(public_key)),
             eMin;//(BIT_SIZE, helib::Ctxt(public_key));
             helib::CtPtrs_vectorCt max(eMax), min(eMin);
             helib::CtPtrs_vectorCt distMin(minimalDistance);
-            helib::CtPtrs_vectorCt dist(distance.second);
+            helib::CtPtrs_vectorCt dist(tuplePointDistance.second);
 
             helib::Ctxt mu(public_key), ni(public_key);
 
@@ -639,7 +643,7 @@ public:
                                      &(KeysServer::unpackSlotEncoding));
 
             //  eMin (and min.v) created by vecCopy
-            //  and therefore will always have a different address from distance.first
+            //  and therefore will always have a different address from tuplePointDistance.first
             //  ... so need to use helib's compare again?
             //            helib::binaryCond(minimalDistance.first, mu, distMin, dist);
             Ctxt negated_cond(mu);
@@ -649,13 +653,13 @@ public:
             //            cout << endl << "min*(!mu)" << endl;
             //            printPoint(minimalDistance.first * negated_cond, keysServer);
             //            cout << endl << "dist" << endl;
-            //            printPoint(distance.first, keysServer);
+            //            printPoint(tuplePointDistance.first, keysServer);
             //            cout << endl << "dist*(mu)" << endl;
-            //            printPoint(distance.first * mu, keysServer);
+            //            printPoint(tuplePointDistance.first * mu, keysServer);
             //            cout << endl << "min*(!mu) + dist*(mu)" << endl;
-            closestPoint = closestPoint * negated_cond + distance.first * mu;
+            closestPoint = closestPoint * negated_cond + tuplePointDistance.first * mu;
             minimalDistance = eMin;
-            //            minimalDistance.first = minimalDistance.first * negated_cond + distance.first * mu;
+            //            minimalDistance.first = minimalDistance.first * negated_cond + tuplePointDistance.first * mu;
             //            minimalDistance.second = eMin;
             //        printPoint(closestPoint, keysServer);
             //        printNameVal(keysServer.decryptNum(minimalDistance));
@@ -665,6 +669,8 @@ public:
         //        cout << "     Final: " << endl;
         //        printPoint(closestPoint, keysServer);
         //        printNameVal(keysServer.decryptNum(minimalDistance));
+
+        loggerPoint.log(printDuration(t0_minDist, "findMinDistFromMeans"));
 
         return {closestPoint, minimalDistance};
     }

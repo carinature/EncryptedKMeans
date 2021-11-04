@@ -31,18 +31,21 @@ void TestPoint::testOperatorSubscript() {
     //    loggerTestClient.log("testOperatorSubscript");
     cout << " ------ testOperatorSubscript ------ " << endl;
     KeysServer keysServer;
+
+    std::random_device rd;
+    std::mt19937 mt;
+//    std::mt19937 mt(rd());
+    std::uniform_int_distribution<long> dist(1, NUMBERS_RANGE);
+
     long arr[DIM];
-    for (long &c :arr) c = rand() % NUMBERS_RANGE;
+    for (int dim = 0; dim < DIM; ++dim) arr[dim] = dist(mt);
     Point point(keysServer.getPublicKey(), arr);
-    std::vector<long> coordinate;
+
     for (short dim = 0; dim < DIM; ++dim) {
-        std::vector<Ctxt> cCoordiante = point[dim];
-        helib::decryptBinaryNums(coordinate,
-                                 helib::CtPtrs_vectorCt(cCoordiante),
-                                 keysServer.getSecKey(),
-                                 keysServer.getEA());
-        assert(coordinate.back() == arr[dim]);
+        EncryptedNum cCoordiante(point[dim]);
         assert(cCoordiante == point.cCoordinates[dim]);
+        long coordinate = keysServer.decryptNum(cCoordiante);
+        assert(coordinate == arr[dim]);
     }
     cout << " ------ testOperatorSubscript finished ------ " << endl << endl;
 
@@ -233,24 +236,24 @@ void TestPoint::testCalculateDistanceFromPoint() {
     long tempArrs[n][DIM];
     for (int i = 0; i < n; ++i) {
         for (int dim = 0; dim < DIM; ++dim) tempArrs[i][dim] = dist(mt);
-        points.push_back(Point(keysServer.getPublicKey(), tempArrs[i]));
+        points.emplace_back(Point(keysServer.getPublicKey(), tempArrs[i]));
     }
     printPoints(points, keysServer);
     cout << endl;
     for (int i = 0; i < n - 1; ++i) {
-        printNameVal(i) << "  ----------  " << endl;
+        //        printNameVal(i) << "  ----------  " << endl;
         EncryptedNum distance = points[i].distanceFrom(points[i + 1], keysServer);
         long dDistance = keysServer.decryptNum(distance);
 
         printPoint(points[i], keysServer);
         printPoint(points[i + 1], keysServer);
-        printNameVal(dDistance);
+        //        printNameVal(dDistance);
 
         long pDistSquared = 0;
         for (int dim = 0; dim < DIM; ++dim)
             pDistSquared += std::pow((tempArrs[i][dim] - tempArrs[i + 1][dim]), 2);
 
-        printNameVal(pDistSquared);
+        //        printNameVal(pDistSquared);
         assert(pDistSquared == dDistance);
 
     }
@@ -262,52 +265,36 @@ void TestPoint::testFindMinimalDistancesFromMeans() {
     cout << " ------ testFindMinimalDistancesFromMeans ------ " << endl;
     KeysServer keysServer;
     std::random_device rd;
-    //    std::mt19937 mt(rd());
-    std::mt19937 mt;
+    std::mt19937 mt(rd());
     std::uniform_int_distribution<long> dist(1, NUMBERS_RANGE);
-    int n = NUMBER_OF_POINTS;
     std::vector<Point> points;
-    points.reserve(n);
+    points.reserve(NUMBER_OF_POINTS);
     std::vector<std::pair<Point, long> > distPairs;
-    distPairs.reserve(n);
-    long tempArrs[n][DIM], tempArr[DIM];
+    distPairs.reserve(NUMBER_OF_POINTS);
+    long tempArrs[NUMBER_OF_POINTS][DIM], tempArr[DIM];
     for (int dim = 0; dim < DIM; ++dim) tempArr[dim] = dist(mt);
     Point point(keysServer.getPublicKey(), tempArr);
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < NUMBER_OF_POINTS; ++i) {
         long pDist = 0;
         for (int dim = 0; dim < DIM; ++dim) {
             tempArrs[i][dim] = dist(mt);
             pDist += std::pow(tempArrs[i][dim] - tempArr[dim], 2);
-            //            printNameVal(tempArr[dim]);
-            //            printNameVal(tempArrs[i][dim]);
-            //            printNameVal(pDist);
         }
         Point pointi(keysServer.getPublicKey(), tempArrs[i]);
         points.push_back(pointi);
         distPairs.emplace_back(pointi, pDist);
     }
-    //    printPoint(point, keysServer);
-    //    cout << endl;
-    //    printPoints(points, keysServer);
-    //    cout << endl;
 
     std::pair<Point, EncryptedNum>
             minimalDistance = point.findMinDistFromMeans(points, keysServer);
 
-    //    printPoint(minimalDistance.first, keysServer);
-    //    printNameVal(keysServer.decryptNum(minimalDistance.second)) << endl;
-    //
-    //    for (int i = 0; i < n; ++i) {
-    //        printPoint(distPairs[i].first, keysServer);
-    //        printNameVal(distPairs[i].second);
-    //    }
     Point &minDistPoint = distPairs[0].first;
     long pMinDist = distPairs[0].second;
     long minId = -1;
     const helib::PubKey &publicKey = point.public_key;
     EncryptedNum minCid(BIT_SIZE, Ctxt(publicKey));
 
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < NUMBER_OF_POINTS; ++i) {
         if (pMinDist >= distPairs[i].second) {
             minDistPoint = distPairs[i].first;
             pMinDist = distPairs[i].second;
@@ -317,10 +304,18 @@ void TestPoint::testFindMinimalDistancesFromMeans() {
     }
 
     assert(pMinDist == keysServer.decryptNum(minimalDistance.second));
-    assert(minId == keysServer.decryptNum(minimalDistance.first.cid));
+    //    printNameVal(minId);
+    //    printNameVal(keysServer.decryptNum(minCid));
+    //    printNameVal(keysServer.decryptNum(minimalDistance.first.cid));
+    //    assert(minId == keysServer.decryptNum(minimalDistance.first.cid));
+    assert(keysServer.decryptNum(minCid) == keysServer.decryptNum(minimalDistance.first.cid));
     //    assert(minDistPoint == minimalDistance.first);
     //    assert(minDistPoint.id == minimalDistance.first.id);
     //    assert(minDistPoint.cid == minimalDistance.first.cid);
+    //    for (int bit = 0; bit < BIT_SIZE; ++bit) {
+    //        printNameVal(minDistPoint.cid[bit] == minimalDistance.first.cid[bit]);
+    //        printNameVal(minDistPoint.cid[bit].equalsTo(minimalDistance.first.cid[bit]));
+    //    }
 
     //    printPoint(minDistPoint, keysServer);
     //    printNameVal(pMinDist);// << endl;

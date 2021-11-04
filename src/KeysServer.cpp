@@ -97,15 +97,20 @@ std::vector<helib::zzX> KeysServer::unpackSlotEncoding; //todo move? already def
 
 
 long KeysServer::decryptCtxt(const helib::Ctxt &ctxt) const {
-    if (ctxt.isEmpty()) return -1; //todo should return 0?
+    if (ctxt.isEmpty()) {
+        std::cerr << "ctxt.isEmpty()" << endl;
+        return -1; //todo should return 0?
+    }
 
     // Create a plaintext for decryption
     helib::Ptxt<helib::BGV> plaintext_result(context);
     // Decrypt the modified ciphertext
     secKey.Decrypt(plaintext_result, ctxt);
 
+    /*
     cout << "decryptCtxt: " << plaintext_result << endl;
-    cout << "decryptCtxt[0].getp2r(): " << plaintext_result[0].getp2r() << endl;
+
+    //    cout << "decryptCtxt[0].getp2r(): " << plaintext_result[0].getp2r() << endl;
     //    cout << "decryptCtxt: "<<plaintext_result.totalProduct()<<endl;
     //    cout << "decryptCtxt: "<<plaintext_result.totalSums()<<endl;
 
@@ -113,26 +118,34 @@ long KeysServer::decryptCtxt(const helib::Ctxt &ctxt) const {
         auto x = plaintext_result[i];
         printNameVal(x);
     }
-
+    */
+    //    printNameVal(plaintext_result[0]);
     return long(plaintext_result[0]); //fixme
-    //    NTL::ZZX pp;
-    //    secKey.Decrypt(pp, ctxt);
-    //    return IsOne(pp);
 }
 
 //long KeysServer::decryptNum(EncryptedNum cNum, bool isProduct) {
 long KeysServer::decryptNum(const EncryptedNum &cNum) const {
     if (!cNum.size()) return -1; //todo should return 0?
     long pNum = 0;
+    /*
+        //    int out_size = (1 + isProduct) * BIT_SIZE;
+        //    for (int bit = 0; bit < out_size; ++bit) {
+        for (int bit = 0; bit < cNum.size(); ++bit) {
+            long pp = decryptCtxt(cNum[bit]);
+                    printNameVal(pp);
+            if (pp) pNum += std::pow(2, bit);
+                    printNameVal(pNum);
+        }
+*/
     NTL::ZZX pp;
-    //    int out_size = (1 + isProduct) * BIT_SIZE;
-    //    for (int bit = 0; bit < out_size; ++bit) {
     for (int bit = 0; bit < cNum.size(); ++bit) {
-        secKey.Decrypt(pp, cNum[bit]);
+        //        secKey.Decrypt(pp, cNum[bit]);
+        long pp = decryptCtxt(cNum[bit]);
         //        printNameVal(pp);
-        if (IsOne(pp)) pNum += std::pow(2, bit);
+        if (NTL::IsOne(NTL::ZZX(pp))) pNum += std::pow(2, bit);
         //        printNameVal(pNum);
     }
+
     return pNum;
 }
 
@@ -190,6 +203,7 @@ KeysServer::getQuotientPoint(
 
     return Point(point.public_key, arr);
 }
+
 const EncryptedNum
 KeysServer::getQuotient(
         const EncryptedNum &encryptedNum,

@@ -1,0 +1,288 @@
+'KeysServer Initialization' Finished in 0 seconds.
+
+'retrievePoints' Finished in 0 seconds.
+
+'pickRandomPoints' Finished in 0 seconds.
+
+'createCmpDict' Finished in 7 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Slice iteration' Finished in 3 seconds.
+
+'Split iteration for #0 dimension' Finished in 3 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Slice iteration' Finished in 6 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Slice iteration' Finished in 6 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Random Rep iteration' Finished in 1 seconds.
+
+'Split Slice iteration' Finished in 7 seconds.
+
+'Split iteration for #1 dimension' Finished in 20 seconds.
+
+'splitIntoEpsNet' Finished in 23 seconds.
+
+'calculateSlicesMeans' Finished in 19 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 3 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 3 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'findMinDistFromMeans' Finished in 78 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'findMinDistFromMeans' Finished in 62 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'findMinDistFromMeans' Finished in 40 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'findMinDistFromMeans' Finished in 48 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'findMinDistFromMeans' Finished in 40 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'findMinDistFromMeans' Finished in 38 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 1 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 2 seconds.
+
+'distanceFrom (cmp version)' Finished in 3 seconds.
+
+'findMinDistFromMeans' Finished in 51 seconds.
+
+'collectMinimalDistancesAndClosestPoints' Finished in 358 seconds.
+
+'Main' Finished in 688 seconds.
+

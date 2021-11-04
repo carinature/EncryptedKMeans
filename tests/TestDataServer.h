@@ -17,7 +17,9 @@ public:
     static void testMultiplication();
 
     static void testGenerateDataClients();
+
     static void testRetrievePoints();
+
     static void testPickRandomPoints();
 
     static void testminirand();
@@ -27,6 +29,10 @@ public:
     static void testSplitIntoEpsNet();
 
     static void testCalculateCellMeans();
+
+    static void testCalculateThreshold();
+
+    static void testGetMinimalDistances();
 };
 
 

@@ -316,5 +316,85 @@ void TestDataServer::testCalculateCellMeans() {
     cout << endl;
 
     cout << " ------ testCalculateCellMeans finished ------ " << endl << endl;
+}
+
+#include <numeric>
+
+void TestDataServer::testGetMinimalDistances() {
+    cout << " ------ testGetMinimalDistances ------ " << endl;
+    const KeysServer keysServer;
+    const DataServer dataServer(keysServer);
+
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_int_distribution<long> dist(1, NUMBERS_RANGE);
+
+    //  Creating Data
+    int n = NUMBER_OF_POINTS, m=1/EPSILON;
+    std::vector<Point> points, points2;
+    points.reserve(n);
+    points2.reserve(DIM);
+    long tempArrs[n][DIM], tempArrs2[m][DIM];
+    for (int i = 0; i < n; ++i) {
+        for (int dim = 0; dim < DIM; ++dim) tempArrs[i][dim] = dist(mt);
+        points.emplace_back(Point(keysServer.getPublicKey(), tempArrs[i]));
+    }
+    for (int i = 0; i < m; ++i) {
+        for (int dim = 0; dim < DIM; ++dim) tempArrs2[i][dim] = dist(mt);
+        points2.emplace_back(Point(keysServer.getPublicKey(), tempArrs2[i]));
+    }
+    std::vector<Point> dummyMeans(points2.begin(), points2.begin() + DIM);
+
+    cout << endl << "Points: ";
+    printPoints(points, keysServer);
+    cout << endl << "Dummies: ";
+    printPoints(dummyMeans, keysServer);
+    cout << endl;
+
+    //  Calculating Algorithm
+    const std::vector<std::tuple<Point, Point, EncryptedNum> >
+            minDistanceTuples =
+            DataServer::collectMinimalDistancesAndClosestPoints(
+                    points,
+                    dummyMeans,
+                    keysServer);
+
+    //  Check results
+    for (int i = 0; i < points.size(); ++i) {
+        long currCoors[DIM];
+        for (int dim = 0; dim < DIM; ++dim) currCoors[dim] = tempArrs[i][dim];
+        long pMinDistance = DIM*std::pow(NUMBERS_RANGE, 2);
+        int closestMinIndex = -1;
+        for (int j = 0; j < dummyMeans.size(); ++j) {
+            long tempsum = 0;
+            for (int dim = 0; dim < DIM; ++dim)
+                tempsum += pow(currCoors[dim] - tempArrs2[j][dim], 2);
+            if (pMinDistance > tempsum) {
+                pMinDistance = tempsum;
+                closestMinIndex = j;
+            }
+        }
+
+//        cout << " Point: ";
+//        printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
+        Point closestMean = std::get<1>(minDistanceTuples[i]);
+        Point pClosestMean = dummyMeans[closestMinIndex];
+//        cout << " pClosestMean: ";
+//        printPoint(pClosestMean, keysServer);
+//        cout << " closestMean: ";
+//        printPoint(closestMean, keysServer);
+//        cout << endl;
+        assert(keysServer.decryptNum(pClosestMean.cid) == keysServer.decryptNum(closestMean.cid));
+
+        long minDistance = keysServer.decryptNum(std::get<2>(minDistanceTuples[i]));
+//        printNameVal(pMinDistance);
+//        printNameVal(minDistance);
+        assert(pMinDistance == minDistance);
+    }
+
+    cout << " ------ testGetMinimalDistances finished ------ " << endl << endl;
+}
+
+void TestDataServer::testCalculateThreshold() {
 
 }

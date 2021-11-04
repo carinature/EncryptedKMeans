@@ -31,7 +31,7 @@ class DataServer {
 
 protected:
     //    const helib::PubKey &public_key;// = encryptionKey;
-    KeysServer &keysServer;
+    const KeysServer &keysServer;
     const Point tinyRandomPoint;
 public:
     /**
@@ -41,7 +41,7 @@ public:
      * ks and ds will create a scratch that will allow to encrypt the results:
      * result bit in case of compare, and result num in case of add/multiplication.
      * */
-    explicit DataServer(KeysServer &keysServer) :
+    explicit DataServer(const KeysServer &keysServer) :
             keysServer(keysServer),
             tinyRandomPoint(keysServer.tinyRandomPoint()) {
         //        dataServerLogger.log("DataServer()");
@@ -72,7 +72,7 @@ public:
             const std::vector<Point> &points,
             int m = 1 / EPSILON   //  -1
             //            const Point & tinyRandomPoint
-    );
+    ) const;
 
     // TODO candidate for multithreading
     /**
@@ -147,6 +147,8 @@ public:
         return means;
     }
 
+
+
     //  collect all minimal distances into one place
     //      for each point
     //          calculate minimal distance from point to all means:
@@ -154,11 +156,69 @@ public:
     //              for each mean
     //                  calculate distance from point to mean:
     //                      tuple<point, distance> point.distance-from(mean)
+    /**
+     * @brief collect all pairs of points and their closest mean point 
+     * (not necessarily from the same slice) 
+     * by calculating minimal distance from point to one of the means
+     * @param points - all original points
+     * @param means - all the means from the epsNet
+     * @return tuples of [point, closest mean, minimal distance]
+     * @returns
+     * */
+    static
+    const std::vector<std::tuple<Point, Point, EncryptedNum> >
+    collectMinimalDistancesAndClosestPoints(
+            const std::vector<Point> &points,
+            //            const std::reference_wrapper<std::vector<Point>> &means,
+            const std::vector<Point> &means,
+            const KeysServer &keysServer
+    ) {
+        auto t0_collectMinDist = CLOCK::now();
+
+        std::vector<std::tuple<Point, Point, EncryptedNum> > minDistanceTuples;
+        minDistanceTuples.reserve(points.size());
+        for (const Point &point: points) {
+            const std::pair<Point, EncryptedNum> &
+                    minDistFromMeans = point.findMinDistFromMeans(means, keysServer);
+            minDistanceTuples.emplace_back(point, minDistFromMeans.first, minDistFromMeans.second);
+        }
+
+        loggerDataServer.log(
+                printDuration(t0_collectMinDist, "collectMinimalDistancesAndClosestPoints"));
+
+        return minDistanceTuples;
+    }
+
+
     //  calculate avg distance
-    //  collect for each mean the points closeset to it
+    /**
+     * @brief calculates the avarage which will be used as a threshold for picking "closest" points
+     * @param minDistanceTuples
+     * @return Encrypted avrage
+     * @returns EncryptedNum
+     * */
+    EncryptedNum
+    calculateThreashold(
+            const std::vector<std::tuple<Point, Point, EncryptedNum> > minDistanceTuples,
+            const KeysServer &keysSserver
+    ) {
+        EncryptedNum sum;//(BIT_SIZE * minDistanceTuples.size(), helib::Ctxt(get<0>(minDistanceTuples[0])));
+        helib::CtPtrs_vectorCt sum_wrapper(sum);
+        std::vector<EncryptedNum> summandsVec(minDistanceTuples.size());
+        for (auto const &tuple:minDistanceTuples) summandsVec.push_back(std::get<2>(tuple));
+        helib::CtPtrMat_vectorCt summands_wrapper(summandsVec);
+        addManyNumbers(
+                sum_wrapper,
+                summands_wrapper,
+                BIT_SIZE *
+                minDistanceTuples.size(), // sizeLimit=0 means use as many bits as needed.
+                &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
+        );
+        return sum;
+    }
+    //  collect for each mean the points closest to it
     //  pick all points with distance bigger than avg
     //
-
 
 
     static
@@ -208,57 +268,4 @@ public:
 
 
 #endif //ENCKMEAN_DATASERVER_H
-
-/*
-    */
-/*  @brief Generate random data.
-     *  Returns a vector of clients with random points.
-    *      client [0] stays empty
-    *      client [1] has 1 point - {point0}
-    *      client [2] has 2 points - {point0, point1}
-    *      ...
-    *      client [n] has n points -  {point0, point1, ... , pointN}
-    *//*
-  // todo move to aux ?
-    static std::vector<Client> generateDataClients(const KeysServer &keysServer) {
-        */
-/*        //        Note that rand() is considered harmful, and is discouraged in C++14
-                int uniquePointsNum = 3 + random() % NUMBER_OF_POINTS,
-                        clientsNum = uniquePointsNum;
-                printNameVal(NUMBER_OF_POINTS);
-                printNameVal(uniquePointsNum);
-                *//*
-*/
-/*        //  init coordinate arrays
-                //        long arrs[uniquePointsNum][DIM];
-                //        for (auto &arr: arrs)
-                //            for (short dim = 0; dim < DIM; ++dim)
-                //                arr[dim] = rand() % NUMBERS_RANGE;*//*
-*/
-/*
-        long arr[DIM];
-        std::vector<Client> clients(clientsNum, Client(keysServer));
-        for (int i = 1; i < clients.size(); ++i)
-            for (int j = 0; j < i; ++j) {
-                //  pick random coordinates
-                for (short dim = 0; dim < DIM; ++dim)
-                    arr[dim] = random() % NUMBERS_RANGE;
-                //  encrypt coordinates and add to client
-                clients[i].encryptPoint(arr);
-                //                clients[i].encryptPoint(arrs[j]);}
-            }*//*
-
-
-        std::random_device rd;
-        std::mt19937 mt(rd());
-        std::uniform_real_distribution<double> dist(0, NUMBERS_RANGE);
-        long tempArr[DIM];
-        std::vector<Client> clients(NUMBER_OF_CLIENTS, Client(keysServer));
-        for (Client &client:clients) {
-            for (int dim = 0; dim < DIM; ++dim) tempArr[dim] = dist(mt);
-            client.encryptPoint(tempArr);
-        }
-        return clients;
-    }
-*/
 

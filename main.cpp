@@ -25,48 +25,154 @@ int main() {
     auto t0_main = CLOCK::now();
     Logger logger;
     logger.log("Starting Protocol", log_trace);
-    //  Keys Server
+    ////  Keys Server
     KeysServer keysServer;
     logger.log(printDuration(t0_main, "KeysServer Initialization"));
     DataServer dataServer(keysServer);
 
+    ////    (generate data)
     const std::vector<Client> clients = generateDataClients(keysServer);
 
+    ////    Retrieve Data from Clients
     const std::vector<Point> points = DataServer::retrievePoints(clients);
-    cout << " --- Points  ---" << endl;
+    cout << " ---   Points  ---" << endl;
     printPoints(points, keysServer);
     cout << " --- --- --- --- ---" << endl;
 
+    ////    Pick Random Representatives
     const Point &tinyRandomPoint = keysServer.tinyRandomPoint();
 
     const std::vector<std::vector<Point> >
             randomPoints = dataServer.pickRandomPoints(points);//, (1 / EPSILON)-1);
-    
-    cout << " --- Random Points  ---" << endl;
+
+    cout << " ---   Random Points  ---" << endl;
     for (auto vec :randomPoints) printPoints(vec, keysServer);
     cout << " --- --- --- --- ---" << endl;
 
-    //  create points-comparing dict - for every 2 points (p1,p2) answers p1[dim]>p2[dim]
+    ////  Create points-comparing dict
+    ///     - for every 2 points (p1,p2) answers p1[dim]>p2[dim]
     const std::vector<
             std::unordered_map<
                     const Point,
                     std::unordered_map<
                             const Point,
                             helib::Ctxt> > >
-            cmpDict = DataServer::createCmpDict(points, randomPoints);
+            cmpDict = dataServer.createCmpDict(points, randomPoints);
 
+    cout << " ---   The Dictionary  ---" << endl;
+    for (short dim = 0; dim < DIM; ++dim) {
+        cout << "    ======   ";
+        printNameVal(dim);// << " ======" << endl;
+        for (auto const&[point, map] : cmpDict[dim]) {
+            printPoint(point, keysServer);
+            //            cout << endl;
+            //            long p1c = keysServer.decryptNum(point[dim]);
+            for (auto const&[point2, val]: map) {
+                printPoint(point2, keysServer);
+                //                long p2c = keysServer.decryptNum(point2[dim]);
+                long pVal = keysServer.decryptCtxt(val);
+                //                assert(pVal == (p1c > p2c) || pVal == (p1c == p2c));
+                printNameVal(pVal);
+
+            }
+            printNameVal(map.size());
+            cout << " --- --- ---" << endl;
+        }
+        printNameVal(cmpDict[dim].size());
+        cout << " === === ===" << endl;
+    }
+    cout << " --- --- --- --- ---" << endl;
+
+
+    ////    Eps-Net - Split Data into Slices
     std::map<int, std::vector<Slice> >
-            groups = DataServer::splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
+            epsNet = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
 
+    cout << " ---   Epsilon-Net  ---" << endl;
     for (int dim = 0; dim < DIM; ++dim) {
         cout << "   ---   For dim " << dim << "  --- " << endl;
-        for (Slice &cell: groups[dim]) {
+        for (Slice &cell: epsNet[dim]) {
             cell.printSlice(keysServer);
         }
         cout << "   ---     --- " << endl;
         cout << endl;
     }
+    cout << " --- --- --- --- ---" << endl;
 
+    ////    Calculate Eps-Net means
+    std::vector<std::tuple<Point, Slice> >
+            meanCellTuples = DataServer::calculateSlicesMeans(epsNet[DIM - 1], keysServer);
+
+    cout << " ---   Means  ---" << endl;
+    for (auto const &tup:meanCellTuples) {
+        cout << "The Mean is: ";
+        printPoint(std::get<0>(tup), keysServer);
+        cout << endl;
+        std::get<1>(tup).printSlice(keysServer);
+    }
+    cout << " --- --- --- --- ---" << endl;
+
+    ////    find Minimal Distances from Means and the Closest Mean
+    std::vector means = DataServer::collectMeans(meanCellTuples, keysServer);
+    std::vector<std::tuple<Point, Point, EncryptedNum> >
+            minDistanceTuples =
+            DataServer::collectMinimalDistancesAndClosestPoints(
+                    points,
+                    means,
+                    keysServer);
+
+    cout << " ---   Minimal Distances and Closest Means  ---" << endl;
+    for (const auto &tuple:minDistanceTuples) {
+        cout << " Point: ";
+        printPoint(std::get<0>(tuple), keysServer);
+        cout << " Closest mean: ";
+        printPoint(std::get<1>(tuple), keysServer);
+        long minDistance = keysServer.decryptNum(std::get<2>(tuple));
+        printNameVal(minDistance);
+    }
+    cout << " --- --- --- --- ---" << endl;
+
+
+    cout << " === === === === === ===" << endl;
+    cout << " === FINAL PRINTOUT ===" << endl;
+    cout << " === === === === === ===" << endl;
+    cout << endl;
+    cout << " ===   All Points  ===" << endl;
+    printPoints(points, keysServer);
+    cout << " === === === === ===" << endl;
+    cout << endl;
+    cout << " ===   Random Points  ===" << endl;
+    for (auto const &vec :randomPoints) printPoints(vec, keysServer);
+    cout << " === === === === ===" << endl;
+    cout << endl;
+    cout << " ===   Slices  ===" << endl;
+    for (int dim = 0; dim < DIM; ++dim) {
+        cout << "   ---   For dim " << dim << "  --- " << endl;
+        for (const Slice &slice: epsNet[dim]) slice.printSlice(keysServer);
+        cout << endl;
+    }
+    cout << " === === === === ===" << endl;
+    cout << endl;
+    cout << " ===   Means  ===" << endl;
+    for (auto const &tup:meanCellTuples) {
+        cout << "The Mean is: ";
+        printPoint(std::get<0>(tup), keysServer);
+        cout << endl;
+        std::get<1>(tup).printSlice(keysServer);
+    }
+    cout << " === === === === ===" << endl;
+    cout << endl;
+    cout << " ===   Minimal Distances and Closest Means  ===" << endl;
+    for (const auto &tuple:minDistanceTuples) {
+        cout << " Point: ";
+        printPoint(std::get<0>(tuple), keysServer);
+        cout << " Closest mean: ";
+        printPoint(std::get<1>(tuple), keysServer);
+        long minDistance = keysServer.decryptNum(std::get<2>(tuple));
+        printNameVal(minDistance);
+    }
+    cout << " === === === === ===" << endl;
+    cout << endl;
     cout << " --- --- --- --- ---" << endl;
 
 #ifdef alt
@@ -132,10 +238,8 @@ int main() {
     std::vector<helib::Ctxt> encrypted_a(bitSize, scratch);
     std::vector<helib::Ctxt> encrypted_b(bitSize, scratch);
     std::vector<helib::Ctxt> encrypted_c(bitSize, scratch);
-//    cout << "odin" << endl;
     // Encrypt the data in binary representation.
     for (long i = 0; i < bitSize; ++i) {
-//        cout << "dva" << endl;
         std::vector<long> a_vec(ea.size());
         std::vector<long> b_vec(ea.size());
         std::vector<long> c_vec(ea.size());
@@ -149,7 +253,6 @@ int main() {
         ea.encrypt(encrypted_a[i], public_key, a_vec);
         ea.encrypt(encrypted_b[i], public_key, b_vec);
         ea.encrypt(encrypted_c[i], public_key, c_vec);
-//        cout << "tri" << endl;
 
         std::vector<long> slotsMin, slotsMax, slotsMu, slotsNi;
         // comparison only
@@ -157,7 +260,6 @@ int main() {
                           helib::CtPtrs_vectorCt(encrypted_a),
                           helib::CtPtrs_vectorCt(encrypted_a),
                           false);
-//        cout << "chetiri" << endl;
         ea.decrypt(mu, encryptionKey, slotsMu);
         ea.decrypt(ni, encryptionKey, slotsNi);
 //        for (auto s : slotsMu) printNameVal(s);

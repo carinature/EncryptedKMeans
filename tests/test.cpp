@@ -12,19 +12,19 @@
 
 int main() {
 
-//    cout << " ============ Test KeysServer ============ " << endl;
-//    TestKeysServer::testConstructor();
-//    TestKeysServer::testEncryptCtxt();
-//    TestKeysServer::testDecryptCtxt();
-//    TestKeysServer::testEncryptNum();
-//    TestKeysServer::testDecryptNum();
-//    TestKeysServer::testScratchPoint();
-//    TestKeysServer::testTinyRandomPoint();
-//    cout << " ============ Test KeysServer Finished ============ " << endl << endl;
-//
-//    cout << " ============ Test Point ============ " << endl;
-//    TestPoint::testConstructor();
-//    TestPoint::testEncryptCoordinates();
+    cout << " ============ Test KeysServer ============ " << endl;
+    TestKeysServer::testConstructor();
+    TestKeysServer::testEncryptCtxt();
+    TestKeysServer::testDecryptCtxt();
+    TestKeysServer::testEncryptNum();
+    TestKeysServer::testDecryptNum();
+    TestKeysServer::testScratchPoint();
+    TestKeysServer::testTinyRandomPoint();
+    cout << " ============ Test KeysServer Finished ============ " << endl << endl;
+
+    cout << " ============ Test Point ============ " << endl;
+    TestPoint::testConstructor();
+    TestPoint::testEncryptCoordinates();
     TestPoint::testOperatorSubscript();
     TestPoint::testIsEmpty();
     TestPoint::testAddition();
@@ -53,16 +53,12 @@ int main() {
     cout << " ============ Test DataServer ============ " << endl;
     TestDataServer::testConstructor();
     TestDataServer::testComparePoints();
-    TestDataServer::testAddition();
-    TestDataServer::testMultiplication();
-    TestDataServer::testGenerateDataClients();
     TestDataServer::testRetrievePoints();
-    TestDataServer::testminirand();
     TestDataServer::testPickRandomPoints();
     TestDataServer::testCreateCmpDict();
     TestDataServer::testSplitIntoEpsNet();
-    TestDataServer::testCalculateCellMeans(); //FIXED! fixme weird bug when huge #points
-    TestDataServer::testGetMinimalDistances();  //  todo change to assert
+    TestDataServer::testCalculateCellMeans();
+    TestDataServer::testGetMinimalDistances();
     TestDataServer::testCalculateThreshold();
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
 

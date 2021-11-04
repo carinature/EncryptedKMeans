@@ -12,17 +12,9 @@ public:
 
     static void testComparePoints();
 
-    static void testAddition();
-
-    static void testMultiplication();
-
-    static void testGenerateDataClients();
-
     static void testRetrievePoints();
 
     static void testPickRandomPoints();
-
-    static void testminirand();
 
     static void testCreateCmpDict();
 

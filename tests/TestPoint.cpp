@@ -1,44 +1,34 @@
 
-#include <random>
 
-//#include <src/Client.h>
 #include "TestPoint.h"
 
-#include "utils/Logger.h"
 #include "src/Point.h"
-//#include "src/Client.h"
 
 void TestPoint::testConstructor() {
-    //    loggerTestClient.log("testConstructor");
     cout << " ------ testConstructor ------ " << endl;
     KeysServer keysServer;
+
     Point point(keysServer.getPublicKey());
-    //    loggerTestClient.print_log();
     cout << " ------ testConstructor finished ------ " << endl << endl;
 }
 
 void TestPoint::testEncryptCoordinates() {
-    //    loggerTestClient.log("testDecryptCoordinates");
     cout << " ------ testEncryptCoordinates ------ " << endl;
     KeysServer keysServer;
+
     long arr[DIM];
-    for (long &c :arr) c = rand() % NUMBERS_RANGE;
+    for (long &a :arr) a = dist(mt);
+
     Point point(keysServer.getPublicKey(), arr);
     cout << " ------ testEncryptCoordinates finished ------ " << endl << endl;
 }
 
 void TestPoint::testOperatorSubscript() {
-    //    loggerTestClient.log("testOperatorSubscript");
     cout << " ------ testOperatorSubscript ------ " << endl;
     KeysServer keysServer;
 
-    std::random_device rd;
-    std::mt19937 mt;
-//    std::mt19937 mt(rd());
-    std::uniform_int_distribution<long> dist(1, NUMBERS_RANGE);
-
     long arr[DIM];
-    for (int dim = 0; dim < DIM; ++dim) arr[dim] = dist(mt);
+    for (long &a :arr) a = dist(mt);
     Point point(keysServer.getPublicKey(), arr);
 
     for (short dim = 0; dim < DIM; ++dim) {
@@ -59,7 +49,7 @@ void TestPoint::testIsEmpty() {
     assert(true == emptyPoint.isEmpty());
 
     long arr[DIM];
-    for (long &c :arr) c = rand() % NUMBERS_RANGE;
+    for (long &a :arr) a = dist(mt);
     Point point(keysServer.getPublicKey(), arr);
     assert(false == point.isEmpty());
 
@@ -72,11 +62,11 @@ void TestPoint::testAddition() {
     KeysServer keysServer;
     long arr[DIM], arr2[DIM], arrSum[DIM];
     for (short dim = 0; dim < DIM; ++dim) {
-        arr[dim] = rand() % NUMBERS_RANGE;
-        arr2[dim] = rand() % NUMBERS_RANGE;
+        arr[dim] = dist(mt);
+        arr2[dim] = dist(mt);
         arrSum[dim] = arr[dim] + arr2[dim];
-        //            for (auto a: arr) printNameVal(a);
     }
+
     //  this option is good for readability
     //      `const helib::PubKey &public_key = keysServer.getPublicKey();`
     //      but the way it is now (asking the serv for a public_key for each point)
@@ -84,11 +74,10 @@ void TestPoint::testAddition() {
     Point point(keysServer.getPublicKey(), arr);
     const Point point2(keysServer.getPublicKey(), arr2);
     Point sum = point + point2;
-    for (short dim = 0; dim < DIM; ++dim) {
-        printNameVal(arrSum[dim]);
-        printNameVal(keysServer.decryptNum(sum[dim]));
+
+    for (short dim = 0; dim < DIM; ++dim)
         assert(arrSum[dim] == keysServer.decryptNum(sum[dim]));
-    }
+
     cout << " ------ testAddition finished ------ " << endl << endl;
 }
 
@@ -98,29 +87,17 @@ void TestPoint::testAddManyPoints() {
     KeysServer keysServer;
     long arr[DIM], arr2[DIM], arr3[DIM], arrSum[DIM];
     for (short dim = 0; dim < DIM; ++dim) {
-        arr[dim] = rand() % (NUMBERS_RANGE / 2); //fixme should be full range?
-        arr2[dim] = rand() % (NUMBERS_RANGE / 2);
-        arr3[dim] = rand() % (NUMBERS_RANGE / 2);
+        arr[dim] = dist(mt);
+        arr2[dim] = dist(mt);
+        arr3[dim] = dist(mt);
         arrSum[dim] = arr[dim] + arr2[dim] + arr3[dim];
     }
+    /*
     //    for (auto a: arr) printNameVal(a);
     //    for (auto a: arr2) printNameVal(a);
     //    for (auto a: arr3) printNameVal(a);
     //    for (auto a: arrSum) printNameVal(a);
-    /*
-    std::vector<Point> points = {
-            Point(keysServer.getPublicKey(), arr),
-            Point(keysServer.getPublicKey(), arr2),
-            Point(keysServer.getPublicKey(), arr3)
-    };
-    Point sum = Point::addManyPoints(points);
-    for (short dim = 0; dim < DIM; ++dim) {
-        printNameVal(arrSum[dim]);
-        printNameVal(keysServer.decryptNum(sum[dim]));
-        assert(arrSum[dim] == keysServer.decryptNum(sum[dim]));
-    }
-    */
-
+*/
     std::vector<Point> points;
     points.reserve(4 * NUMBER_OF_POINTS);
     printNameVal(NUMBER_OF_POINTS);
@@ -128,20 +105,20 @@ void TestPoint::testAddManyPoints() {
         points.emplace_back(Point(keysServer.getPublicKey(), arr));
         points.emplace_back(Point(keysServer.getPublicKey(), arr2));
         points.emplace_back(Point(keysServer.getPublicKey(), arr3));
-        points.emplace_back(Point(keysServer.getPublicKey(), arrSum));
     }
     Point sum(Point::addManyPoints(points, keysServer));
-    //        printNameVal(keysServer.decryptNum(sum[0]));
-    //        printNameVal(arrSum[0]);
-    //        printNameVal(keysServer.decryptNum(sum[1]));
-    //        printNameVal(arrSum[1]);
+
+//    printNameVal(keysServer.decryptNum(sum[0]));
+//    printNameVal(arrSum[0]);
+//    printNameVal(keysServer.decryptNum(sum[1]));
+//    printNameVal(arrSum[1]);
+
     for (short dim = 0; dim < DIM; ++dim) {
         cout << "----" << endl;
-        printNameVal(arrSum[dim]);
-        printNameVal(2 * NUMBER_OF_POINTS * arrSum[dim]);
-        printNameVal(keysServer.decryptNum(sum[dim]));
-        cout << "----" << endl;
-        assert(2 * NUMBER_OF_POINTS * arrSum[dim] == keysServer.decryptNum(sum[dim]));
+        //        printNameVal(arrSum[dim]);
+        //        printNameVal(NUMBER_OF_POINTS * arrSum[dim]);
+        //        printNameVal(keysServer.decryptNum(sum[dim]));
+        assert(NUMBER_OF_POINTS * arrSum[dim] == keysServer.decryptNum(sum[dim]));
         //fixme this part of the test acts weird when running after _all_ the other tests.
         // incidentally, looks like the 2nd coordinate of sum is just a copy of the 1st.
         // could be problem w/ the decryption result?
@@ -150,43 +127,34 @@ void TestPoint::testAddManyPoints() {
 }
 
 void TestPoint::testMultiplication() {
-    //    loggerTestClient.log("testMultiplication");
     cout << " ------ testMultiplication ------ " << endl;
     KeysServer keysServer;
+
     long arr[DIM], arr2[DIM], arrProd[DIM];
     for (short dim = 0; dim < DIM; ++dim) {
-        arr[dim] = rand() % (NUMBERS_RANGE / 8);
-        arr2[dim] = rand() % (NUMBERS_RANGE / 8);
+        arr[dim] = dist(mt);
+        arr2[dim] = dist(mt);
         arrProd[dim] = arr[dim] * arr2[dim];
     }
-    //  this option is good for readability
-    //      `const helib::PubKey &public_key = keysServer.getPublicKey();`
-    //      but the way it is now (asking the serv for a public_key for each point)
-    //      makes more sense in a "real world" application
+
     Point point(keysServer.getPublicKey(), arr);
     Point point2(keysServer.getPublicKey(), arr2);
     Point product = point * point2;
+
     for (short dim = 0; dim < DIM; ++dim)
         assert(arrProd[dim] == keysServer.decryptNum(product[dim]));
     cout << " ------ testMultiplication finished ------ " << endl << endl;
 }
 
 void TestPoint::testMultiplicationByBit() {
-    //    loggerTestClient.log("testMultiplicationByBit");
     cout << " ------ testMultiplicationByBit ------ " << endl;
     KeysServer keysServer;
     helib::PubKey &publicKey = keysServer.getPublicKey();
 
     long arr[DIM], arr0[] = {0, 0};
-    for (short dim = 0; dim < DIM; ++dim)
-        arr[dim] = rand() %
-                   NUMBERS_RANGE; //fixme use <random> instead of random()
-    //  this option is good for readability
-    //      `const helib::PubKey &public_key = keysServer.getPublicKey();`
-    //      but the way it is now (asking the serv for a public_key for each point)
-    //      makes more sense in a "real world" application
+    for (long &a :arr) a = dist(mt);
+
     Point point(keysServer.getPublicKey(), arr);
-    //    Point point2(keysServer.getPublicKey(), arr2);
     helib::Ctxt bit0(publicKey);
     helib::Ctxt bit1(publicKey);
 
@@ -205,13 +173,16 @@ void TestPoint::testMultiplicationByBit() {
 void TestPoint::testCompare() {
     cout << " ------ testCompare ------ " << endl;
     KeysServer keysServer;
+
     long arr[DIM], arr2[DIM];
     for (short dim = 0; dim < DIM; ++dim) {
-        arr[dim] = rand() % NUMBERS_RANGE;
-        arr2[dim] = rand() % NUMBERS_RANGE;
+        arr[dim] = dist(mt);
+        arr2[dim] = dist(mt);
     }
+
     Point point(keysServer.getPublicKey(), arr);
     Point point2(keysServer.getPublicKey(), arr2);
+
     for (short dim = 0; dim < DIM; ++dim) {
         for (int i = 0; i < NUMBER_OF_POINTS; ++i) {
             helib::Ctxt res = point.isBiggerThan(point2, dim)[0];
@@ -227,32 +198,27 @@ void TestPoint::testCompare() {
 void TestPoint::testCalculateDistanceFromPoint() {
     cout << " ------ testCalculateDistanceFromPoint ------ " << endl;
     KeysServer keysServer;
-    std::random_device rd;
-    std::mt19937 mt(rd());
-    std::uniform_int_distribution<long> dist(0, NUMBERS_RANGE);
-    std::vector<Point> points;
     int n = NUMBER_OF_POINTS;
-    points.reserve(n);
-    long tempArrs[n][DIM];
+    std::vector<Point> points;
+
+    long arrs[n][DIM];
     for (int i = 0; i < n; ++i) {
-        for (int dim = 0; dim < DIM; ++dim) tempArrs[i][dim] = dist(mt);
-        points.emplace_back(Point(keysServer.getPublicKey(), tempArrs[i]));
+        for (int dim = 0; dim < DIM; ++dim) arrs[i][dim] = dist(mt);
+        points.emplace_back(Point(keysServer.getPublicKey(), arrs[i]));
     }
-    printPoints(points, keysServer);
-    cout << endl;
+
     for (int i = 0; i < n - 1; ++i) {
-        //        printNameVal(i) << "  ----------  " << endl;
         EncryptedNum distance = points[i].distanceFrom(points[i + 1], keysServer);
         long dDistance = keysServer.decryptNum(distance);
 
-        printPoint(points[i], keysServer);
-        printPoint(points[i + 1], keysServer);
-        //        printNameVal(dDistance);
-
         long pDistSquared = 0;
         for (int dim = 0; dim < DIM; ++dim)
-            pDistSquared += std::pow((tempArrs[i][dim] - tempArrs[i + 1][dim]), 2);
+            pDistSquared += std::pow((arrs[i][dim] - arrs[i + 1][dim]), 2);
 
+        //        printPoint(points[i], keysServer);
+        //        printPoint(points[i + 1], keysServer);
+        //        printNameVal(i) << "  ----------  " << endl;
+        //        printNameVal(dDistance);
         //        printNameVal(pDistSquared);
         assert(pDistSquared == dDistance);
 
@@ -261,45 +227,40 @@ void TestPoint::testCalculateDistanceFromPoint() {
     cout << " ------ testCalculateDistanceFromPoint finished ------ " << endl << endl;
 }
 
+// todo if not workin return to before 18:19 in 04.11.21
 void TestPoint::testFindMinimalDistancesFromMeans() {
     cout << " ------ testFindMinimalDistancesFromMeans ------ " << endl;
     KeysServer keysServer;
-    std::random_device rd;
-    std::mt19937 mt(rd());
-    std::uniform_int_distribution<long> dist(1, NUMBERS_RANGE);
-    std::vector<Point> points;
-    points.reserve(NUMBER_OF_POINTS);
-    std::vector<std::pair<Point, long> > distPairs;
-    distPairs.reserve(NUMBER_OF_POINTS);
-    long tempArrs[NUMBER_OF_POINTS][DIM], tempArr[DIM];
-    for (int dim = 0; dim < DIM; ++dim) tempArr[dim] = dist(mt);
-    Point point(keysServer.getPublicKey(), tempArr);
-    for (int i = 0; i < NUMBER_OF_POINTS; ++i) {
-        long pDist = 0;
-        for (int dim = 0; dim < DIM; ++dim) {
-            tempArrs[i][dim] = dist(mt);
-            pDist += std::pow(tempArrs[i][dim] - tempArr[dim], 2);
-        }
-        Point pointi(keysServer.getPublicKey(), tempArrs[i]);
-        points.push_back(pointi);
-        distPairs.emplace_back(pointi, pDist);
+    int n = NUMBER_OF_POINTS;
+    std::vector<Point> points;  //    points.reserve(n);
+    std::vector<std::pair<Point, long> > distPairs; //    distPairs.reserve(n);
+
+    long arrs[n][DIM], arr[DIM];
+    for (int dim = 0; dim < DIM; ++dim) arr[dim] = dist(mt);
+    Point point(keysServer.getPublicKey(), arr);
+
+    for (int i = 0; i < n; ++i) {
+        for (int dim = 0; dim < DIM; ++dim) arrs[i][dim] = dist(mt);
+        points.push_back(Point(keysServer.getPublicKey(), arrs[i]));
     }
 
     std::pair<Point, EncryptedNum>
             minimalDistance = point.findMinDistFromMeans(points, keysServer);
 
-    Point &minDistPoint = distPairs[0].first;
-    long pMinDist = distPairs[0].second;
+    Point &minDistPoint = points[0];
+    long pMinDist = DIM * pow(NUMBERS_RANGE, 2);
     long minId = -1;
-    const helib::PubKey &publicKey = point.public_key;
-    EncryptedNum minCid(BIT_SIZE, Ctxt(publicKey));
+    EncryptedNum minCid;//(BIT_SIZE, Ctxt(publicKey));
 
-    for (int i = 0; i < NUMBER_OF_POINTS; ++i) {
-        if (pMinDist >= distPairs[i].second) {
-            minDistPoint = distPairs[i].first;
-            pMinDist = distPairs[i].second;
-            minId = distPairs[i].first.id;
-            minCid = distPairs[i].first.cid;
+    for (int i = 0; i < n; ++i) {
+        long pDist = 0;
+        for (int dim = 0; dim < DIM; ++dim) pDist += std::pow(arrs[i][dim] - arr[dim], 2);
+
+        if (pMinDist >= pDist) {
+            minDistPoint = points[i];
+            pMinDist = pDist;
+            minId = points[i].id;
+            minCid = points[i].cid;
         }
     }
 
@@ -328,13 +289,12 @@ void TestPoint::testFindMinimalDistancesFromMeans() {
 
     //  todo check how long it takes
     //  todo also consider creating a cmp dict for cid's
+    const helib::PubKey &publicKey = point.public_key;
     Ctxt mu(publicKey), ni(publicKey);
-    helib::CtPtrs_vectorCt pMin(minCid);
-    helib::CtPtrs_vectorCt dMin(minimalDistance.first.cid);
-    helib::compareTwoNumbers(mu, ni, dMin, pMin);
-    //    Ctxt a(mu), b(ni), ab(mu), a_b(mu);
-    //    (ab*=ni).negate();
-    //    (a_b += ni) += a_b;
+    helib::CtPtrs_vectorCt origMinCid(minCid);
+    helib::CtPtrs_vectorCt resMinCid(minimalDistance.first.cid);
+    helib::compareTwoNumbers(mu, ni, resMinCid, origMinCid);
+    //  mu==ni==0   means that  resMinCid==origMinCid
     assert((0 == keysServer.decryptCtxt(mu)) && (0 == keysServer.decryptCtxt(ni)));
 
     cout << " ------ testFindMinimalDistancesFromMeans finished ------ " << endl << endl;
@@ -345,15 +305,8 @@ void TestPoint::testFindMinimalDistancesFromMeans() {
 void TestPoint::minitest() {
     cout << " ------ minitest ------ " << endl;
     KeysServer keysServer(5);
-    std::random_device rd;
-    std::mt19937 mt;//(rd());
-    std::uniform_int_distribution<long> dist(1, NUMBERS_RANGE);
     int n = NUMBER_OF_POINTS;
-    //    std::vector<Point> points;
-    //    points.reserve(n);
-    //    long tempArrs[n][DIM], tempArr[DIM];
-    //    for (int dim = 0; dim < DIM; ++dim)  tempArr[dim] = dist(mt);
-    //    Point point(keysServer.getPublicKey(), tempArr);
+
     helib::PubKey &pubKey = keysServer.getPublicKey();
     helib::Ctxt ctxt(pubKey), ctxt2(pubKey), ctxt3(pubKey), ctxt4(pubKey);
     long arr[] = {0, 1, 2, 3};

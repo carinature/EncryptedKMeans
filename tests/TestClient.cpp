@@ -1,26 +1,23 @@
 
 #include "TestClient.h"
 
-#include "utils/Logger.h"
 #include "src/Client.h"
 
-//static Logger loggerTestClient(log_debug, "loggerTestClient");
-
 void TestClient::testConstructor() {
-    //    loggerTestClient.log("testConstructor");
     cout << " ------ testConstructor ------ " << endl;
     KeysServer keysServer;
+
     Client client(keysServer);
-    //    loggerTestClient.print_log();
     cout << " ------ testConstructor finished ------ " << endl << endl;
 }
 
 void TestClient::testEncryptCoordinates() {
-    //    loggerTestClient.log("testDecryptCoordinates");
     cout << " ------ testEncryptCoordinates ------ " << endl;
     KeysServer keysServer;
+
     long arr[DIM];
-    for (short dim = 0; dim < DIM; ++dim) arr[dim] = rand() % NUMBERS_RANGE;
+    for (long &a :arr) a = dist(mt);
+
     Client client(keysServer);
     client.encryptPoint(arr);
     cout << " ------ testEncryptCoordinates finished ------ " << endl << endl;
@@ -28,29 +25,29 @@ void TestClient::testEncryptCoordinates() {
 
 
 void TestClient::testDecryptCoordinates() {
-    //    loggerTestClient.log("testDecryptCoordinates");
     cout << " ------ testDecryptCoordinates ------ " << endl;
     KeysServer keysServer;
+    
     long arr[DIM];
-    for (short dim = 0; dim < DIM; ++dim) arr[dim] = rand() % NUMBERS_RANGE;
+    for (long &a :arr) a = dist(mt);
+    
     Client client(keysServer);
     client.encryptPoint(arr);
+    
     std::vector<long> decryptCoordinates = client.decryptCoordinate(0);
-    for (int i = 0; i < DIM; ++i) {
-        //        printNameVal(arr[i]);
-        //        printNameVal(decryptCoordinate[i]);
-        assert(decryptCoordinates[i] == arr[i]);
-    }
-    //    loggerTestClient.print_log();
+    for (int i = 0; i < DIM; ++i) assert(decryptCoordinates[i] == arr[i]);
+
     cout << " ------ testDecryptCoordinates finished ------ " << endl << endl;
 }
 
 
 void TestClient::testEncryptScratchPoint() {
     cout << " ------ testEncryptScratchPoint ------ " << endl << endl;
-    KeysServer keysServer;// = KeysServer();
+    KeysServer keysServer;
+
     Client client(keysServer);
     client.encryptPoint();
+
     std::vector<long> decryptCoordinates = client.decryptCoordinate(0);
     for (auto ds:decryptCoordinates) assert(0 == ds);
     cout << " ------ testEncryptScratchPoint finished ------ " << endl << endl;
@@ -58,13 +55,12 @@ void TestClient::testEncryptScratchPoint() {
 
 
 void TestClient::testCompare() {
-    //    loggerTestClient.log("testComparePoints");
     cout << " ------ testCompare ------ " << endl << endl;
     KeysServer keysServer;
     long arr1[DIM], arr2[DIM];
     for (short dim = 0; dim < DIM; ++dim) {
-        arr1[dim] = rand() % NUMBERS_RANGE;
-        arr2[dim] = rand() % NUMBERS_RANGE;
+        arr1[dim] = dist(mt);
+        arr2[dim] = dist(mt);
     }
 
     Client client1(keysServer);

@@ -20,14 +20,18 @@
 #include "properties.h"
 #include "Logger.h"
 
-//#include "src/KeysServer.h"
-
 using std::cout;
 using std::endl;
 
 using helib::Ctxt;
 //using EncryptedBit = helib::Ctxt;
 using EncryptedNum = std::vector<helib::Ctxt>;
+
+#include <random>
+static std::random_device rd;
+static std::mt19937 mt(rd());
+//static std::mt19937 mt;
+static std::uniform_int_distribution<long> dist(0, NUMBERS_RANGE);
 
 class KeysServer;
 

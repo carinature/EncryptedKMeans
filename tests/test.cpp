@@ -34,8 +34,6 @@ int main() {
     TestPoint::testCompare();
     TestPoint::testCalculateDistanceFromPoint();
     TestPoint::testFindMinimalDistancesFromMeans();
-    TestPoint::minitest();
-    TestPoint::minitest2();
     cout << " ============ Test Point Finished ============ " << endl << endl;
 
     cout << " ============ Test Client ============ " << endl;
@@ -48,6 +46,9 @@ int main() {
 
     cout << " ============ Test Aux ============ " << endl;
     TestAux::testGenerateDataClients();
+    TestAux::minitest();
+    TestAux::minitest2();
+    TestAux::testBGVPackedArithmetics_Original();
     cout << " ============ Test Client Finished ============ " << endl << endl;
 
     cout << " ============ Test DataServer ============ " << endl;
@@ -61,6 +62,5 @@ int main() {
     TestDataServer::testGetMinimalDistances();
     TestDataServer::testCalculateThreshold();
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
-
 
 }

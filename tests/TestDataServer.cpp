@@ -235,7 +235,6 @@ void TestDataServer::testCalculateCellMeans() {
     cout << " ------ testCalculateCellMeans finished ------ " << endl << endl;
 }
 
-
 void TestDataServer::testGetMinimalDistances() {
     cout << " ------ testGetMinimalDistances ------ " << endl;
     const KeysServer keysServer;

@@ -5,6 +5,12 @@
 class TestAux {
 public:
     static void testGenerateDataClients();
+
+    static void minitest();
+
+    static void minitest2();
+
+    static void testBGVPackedArithmetics_Original();
 };
 
 

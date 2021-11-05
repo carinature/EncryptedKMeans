@@ -24,10 +24,6 @@ public:
     static void testCalculateDistanceFromPoint();
 
     static void testFindMinimalDistancesFromMeans();
-
-    static void minitest();
-
-    static void minitest2();
 };
 
 #endif //ENCRYPTEDKMEANS_TESTPOINT_H

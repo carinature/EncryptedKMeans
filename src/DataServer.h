@@ -1,14 +1,8 @@
 
-
 #ifndef ENCKMEAN_DATASERVER_H
 #define ENCKMEAN_DATASERVER_H
 
-
 #include "Client.h"
-
-//move to the cpp file
-#include <algorithm> //for the random shuffle
-#include <random>
 
 static Logger loggerDataServer(log_debug, "loggerDataServer");
 
@@ -24,10 +18,6 @@ const std::vector<
 >;
 
 class DataServer {
-
-    //    const helib::PubKey encryptionKey;
-    //     const helib::EncryptedArray ea;
-    //    const helib::Ctxt scratch;
 
 protected:
     //    const helib::PubKey &public_key;// = encryptionKey;
@@ -136,16 +126,11 @@ public:
     /**
      * @brief collect mean point from epsNet*/
     static
-    const std::vector<Point>
+    std::vector<Point>
     collectMeans(
             const std::vector<std::tuple<Point, Slice> > &slices,
             const KeysServer &keysServer
-    ) {
-        std::vector<Point> means;
-        means.reserve(slices.size());
-        for (auto const &slice:slices) means.push_back(std::get<0>(slice));
-        return means;
-    }
+    );
 
 
 
@@ -166,28 +151,13 @@ public:
      * @returns
      * */
     static
-    const std::vector<std::tuple<Point, Point, EncryptedNum> >
+    std::vector<std::tuple<Point, Point, EncryptedNum> >
     collectMinimalDistancesAndClosestPoints(
             const std::vector<Point> &points,
             //            const std::reference_wrapper<std::vector<Point>> &means,
             const std::vector<Point> &means,
             const KeysServer &keysServer
-    ) {
-        auto t0_collectMinDist = CLOCK::now();
-
-        std::vector<std::tuple<Point, Point, EncryptedNum> > minDistanceTuples;
-        minDistanceTuples.reserve(points.size());
-        for (const Point &point: points) {
-            const std::pair<Point, EncryptedNum> &
-                    minDistFromMeans = point.findMinDistFromMeans(means, keysServer);
-            minDistanceTuples.emplace_back(point, minDistFromMeans.first, minDistFromMeans.second);
-        }
-
-        loggerDataServer.log(
-                printDuration(t0_collectMinDist, "collectMinimalDistancesAndClosestPoints"));
-
-        return minDistanceTuples;
-    }
+    );
 
 
     //  calculate avg distance
@@ -197,26 +167,61 @@ public:
      * @return Encrypted avrage
      * @returns EncryptedNum
      * */
+    static
     EncryptedNum
     calculateThreashold(
             const std::vector<std::tuple<Point, Point, EncryptedNum> > minDistanceTuples,
-            const KeysServer &keysSserver
+            const KeysServer &keysSserver,
+            int iterationNumber = 0
     ) {
-        EncryptedNum sum;//(BIT_SIZE * minDistanceTuples.size(), helib::Ctxt(get<0>(minDistanceTuples[0])));
+        //  collect minimal distances
+        EncryptedNum sum;
         helib::CtPtrs_vectorCt sum_wrapper(sum);
         std::vector<EncryptedNum> summandsVec(minDistanceTuples.size());
         for (auto const &tuple:minDistanceTuples) summandsVec.push_back(std::get<2>(tuple));
         helib::CtPtrMat_vectorCt summands_wrapper(summandsVec);
+
+        //  sum all distance
         addManyNumbers(
                 sum_wrapper,
-                summands_wrapper,
-                BIT_SIZE *
-                minDistanceTuples.size(), // sizeLimit=0 means use as many bits as needed.
-                &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
+                summands_wrapper
+                // ,
+                //0,    // BIT_SIZE * minDistanceTuples.size(), // sizeLimit=0 means use as many bits as needed.
+                // &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
         );
-        return sum;
+
+        //  find average distance
+        EncryptedNum
+                threshold =
+                keysSserver.getQuotient(
+                        sum,
+                        NUMBER_OF_POINTS / pow(2, iterationNumber));
+        return threshold;
     }
+
+
     //  collect for each mean the points closest to it
+    //  for each Point also includes a bit signifying if the point is included returns
+    static
+    std::pair<
+            std::vector<std::pair<Point, CBit> >,
+            std::vector<std::pair<Point, CBit> >
+    >
+    choosePointsByDistance(
+            const std::vector<Point> means,
+            const std::vector<std::tuple<Point, Point, EncryptedNum> > minDistanceTuples,
+            const EncryptedNum threshold
+    ) {
+        for (const Point & mean:means) {
+
+        }
+//        std::pair<
+//                std::vector<std::pair<Point, CBit> >,
+//                std::vector<std::pair<Point, CBit> >
+//        > chosenPoints;
+//        return chosenPoints;
+    }
+
     //  pick all points with distance bigger than avg
     //
 

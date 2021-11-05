@@ -62,24 +62,17 @@ int main() {
     cout << " ---   The Dictionary  ---" << endl;
     for (short dim = 0; dim < DIM; ++dim) {
         cout << "    ======   ";
-        printNameVal(dim);// << " ======" << endl;
+        printNameVal(dim);
         for (auto const&[point, map] : cmpDict[dim]) {
             printPoint(point, keysServer);
-            //            cout << endl;
-            //            long p1c = keysServer.decryptNum(point[dim]);
             for (auto const&[point2, val]: map) {
                 printPoint(point2, keysServer);
-                //                long p2c = keysServer.decryptNum(point2[dim]);
                 long pVal = keysServer.decryptCtxt(val);
-                //                assert(pVal == (p1c > p2c) || pVal == (p1c == p2c));
                 printNameVal(pVal);
-
             }
-            printNameVal(map.size());
-            cout << " --- --- ---" << endl;
+            printNameVal(map.size()) << " --- --- ---" << endl;
         }
-        printNameVal(cmpDict[dim].size());
-        cout << " === === ===" << endl;
+        printNameVal(cmpDict[dim].size()) << " === === ===" << endl;
     }
     cout << " --- --- --- --- ---" << endl;
 
@@ -112,7 +105,7 @@ int main() {
     }
     cout << " --- --- --- --- ---" << endl;
 
-    ////    find Minimal Distances from Means and the Closest Mean
+    ////    Find Minimal Distances from Means and the Closest Mean
     std::vector means = DataServer::collectMeans(meanCellTuples, keysServer);
     std::vector<std::tuple<Point, Point, EncryptedNum> >
             minDistanceTuples =
@@ -131,6 +124,17 @@ int main() {
         printNameVal(minDistance);
     }
     cout << " --- --- --- --- ---" << endl;
+
+//    ////    Calculate Threshold
+//    const EncryptedNum
+//            threshold =
+//            DataServer::calculateThreashold(
+//                    minDistanceTuples,
+//                    keysServer,
+//                    0);
+//
+//    printNameVal(keysServer.decryptNum(threshold));
+
 
 
     cout << " === === === === === ===" << endl;
@@ -280,7 +284,7 @@ int main() {
 
     //-----------------------------------------------------------
 
-    printDuration(t0_main, "Main");
+    logger.log(printDuration(t0_main, "Main"));
     logger.print_log(log_trace);//, false);
     //    clientLogger.print_log(log_error, false);
 

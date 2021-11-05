@@ -71,7 +71,7 @@ public:
             for (short dim = 0; dim < DIM; ++dim) {
                 pCoordinatesDBG.push_back(coordinates[dim]);
                 // Extract the i'th bit of coordinates[dim]
-                //                for (long bit = 0; bit < BIT_SIZE; ++bit)
+                //                                for (long bit = 0; bit < BIT_SIZE; ++bit)
                 for (long bit = 0; bit < cCoordinates[dim].size(); ++bit)
                     this->public_key.Encrypt(cCoordinates[dim][bit],
                                              NTL::to_ZZX((coordinates[dim] >> bit) & 1));
@@ -98,8 +98,9 @@ public:
             id(counter++),
             cid(NUMBER_OF_POINTS, Ctxt(cCoordinates[0][0].getPubKey())),
             pubKeyPtrDBG(&public_key),
-            pCoordinatesDBG(DIM),
-            cCoordinates(cCoordinates)
+            pCoordinatesDBG(DIM)
+    //            ,
+    //            cCoordinates(cCoordinates)
     //  cCoordinates(DIM, std::vector(BIT_SIZE, helib::Ctxt(public_key)))
     {
         originalPointAddress = this;
@@ -107,14 +108,13 @@ public:
             this->public_key.Encrypt(cid[bit],
                                      NTL::to_ZZX((id >> bit) & 1));
 
-        //        public_key.keyExists()
         //        this->pCoordinatesDBG.reserve(DIM);
-        //        this->cCoordinates.reserve(DIM);
-        //        for (int dim = 0; dim < DIM; ++dim) {
-        ////            this->cCoordinates.push_back(cCoordinates[dim]);
-        //            vecCopy(this->cCoordinates[dim], cCoordinates[dim]);
-        //            //            this->cCoordinates[dim] = cCoordinates[dim];
-        //        }
+        this->cCoordinates.resize(DIM);//reserve(DIM);
+        for (int dim = 0; dim < DIM; ++dim) {
+            //            this->cCoordinates.push_back(cCoordinates[dim]);
+            vecCopy(this->cCoordinates[dim], cCoordinates[dim]);
+            //            this->cCoordinates[dim] = cCoordinates[dim];
+        }
         //        cout << "Point c'tor from encrypted data" << endl;
 
     }
@@ -211,9 +211,10 @@ public:
             helib::addTwoNumbers(
                     result_wrapper,
                     helib::CtPtrs_vectorCt(point.cCoordinates[dim]),
-                    helib::CtPtrs_vectorCt(this->cCoordinates[dim]),
-                    OUT_SIZE,   // sizeLimit=0 means use as many bits as needed.
-                    &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
+                    helib::CtPtrs_vectorCt(this->cCoordinates[dim])
+                    //                    ,
+                    //                    OUT_SIZE,   // sizeLimit=0 means use as many bits as needed.
+                    //                    &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
             );
             sum.pCoordinatesDBG[dim] += point.pCoordinatesDBG[dim];
         }
@@ -277,7 +278,6 @@ public:
         for (short dim = 0; dim < DIM; ++dim) {
             summandsVec[dim].reserve(points.size());
             for (const Point &point : points) {
-                EncryptedNum copyVec;
                 summandsVec[dim].push_back(point.cCoordinates[dim]);
                 //                sum.pCoordinatesDBG[dim] += point.pCoordinatesDBG[dim];
             }
@@ -298,9 +298,10 @@ public:
             // Calculates the sum of many numbers using the 3-for-2 method
             addManyNumbers(
                     result_wrapper,
-                    summands_wrapper,
-                    BIT_SIZE * points.size(), // sizeLimit=0 means use as many bits as needed.
-                    &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
+                    summands_wrapper
+//                    ,
+//                        0,//BIT_SIZE * points.size() * BIT_SIZE, // sizeLimit=0 means use as many bits as needed.
+//                    &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
             );
             //            sum.cCoordinates[dim] = encrypted_result;
             //            vecCopy(sum.cCoordinates[dim], encrypted_results[dim]);

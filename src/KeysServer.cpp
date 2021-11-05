@@ -98,7 +98,7 @@ std::vector<helib::zzX> KeysServer::unpackSlotEncoding; //todo move? already def
 
 long KeysServer::decryptCtxt(const helib::Ctxt &ctxt) const {
     if (ctxt.isEmpty()) {
-        std::cerr << "ctxt.isEmpty()" << endl;
+        std::cerr << "ctxt.isEmpty()";// << endl;
         return -1; //todo should return 0?
     }
 
@@ -139,13 +139,24 @@ long KeysServer::decryptNum(const EncryptedNum &cNum) const {
 */
     NTL::ZZX pp;
     for (int bit = 0; bit < cNum.size(); ++bit) {
+//        if (cNum[bit].isEmpty()) continue;
         //        secKey.Decrypt(pp, cNum[bit]);
         long pp = decryptCtxt(cNum[bit]);
         //        printNameVal(pp);
         if (NTL::IsOne(NTL::ZZX(pp))) pNum += std::pow(2, bit);
         //        printNameVal(pNum);
     }
-
+    /*
+    std::vector<long> pNums;
+    EncryptedNum vector = cNum;
+    helib::decryptBinaryNums(pNums,
+                             helib::CtPtrs_vectorCt(vector),
+                             secKey,
+                             getEA(),
+                             true,
+                             true);
+    printNameVal(pNums.back());
+    */
     return pNum;
 }
 
@@ -170,9 +181,6 @@ const Point KeysServer::scratchPoint() const {
 
 const Point
 KeysServer::tinyRandomPoint() const {
-    std::random_device rd;
-    std::mt19937 mt(rd());
-    //    std::uniform_int_distribution<long> dist(0, EPSILON);
     std::uniform_real_distribution<double> dist(0, EPSILON);
     long arr[DIM];
     for (short dim = 0; dim < DIM; ++dim) arr[dim] = dist(mt);
@@ -197,8 +205,8 @@ KeysServer::getQuotientPoint(
     for (short dim = 0; dim < DIM; ++dim) {
         pCoor = decryptNum(point[dim]);
         arr[dim] = decryptNum(point[dim]) / (repsNum + size);
-        printNameVal(pCoor);
-        printNameVal(arr[dim]);
+//        printNameVal(pCoor);
+//        printNameVal(arr[dim]);
     }
 
     return Point(point.public_key, arr);
@@ -210,10 +218,12 @@ KeysServer::getQuotient(
         const long num) const {
 
     long quotient = decryptNum(encryptedNum) / (num);
-    EncryptedNum result;
+    const helib::PubKey &public_key = encryptedNum[0].getPubKey();//getPublicKey();
+    EncryptedNum result(BIT_SIZE, Ctxt(public_key));
     std::vector<long> quotient_vector = helib::longToBitVector(quotient, BIT_SIZE);
-    for (int bit = 0; bit < BIT_SIZE; ++bit)
-        getPublicKey().Encrypt(result[bit], NTL::ZZX(quotient_vector[bit]));
+    for (int bit = 0; bit < BIT_SIZE; ++bit) {
+        public_key.Encrypt(result[bit], NTL::ZZX(quotient_vector[bit]));
+    }
 
     return result;
 }

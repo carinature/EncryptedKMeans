@@ -307,5 +307,48 @@ void TestDataServer::testGetMinimalDistances() {
 }
 
 void TestDataServer::testCalculateThreshold() {
+    cout << " ------ testCalculateThreshold ------ " << endl;
+    const KeysServer keysServer;
+    const DataServer dataServer(keysServer);
 
+    //  Creating Data
+    int n = NUMBER_OF_POINTS, m = 1 / EPSILON;
+    std::vector<Point> points, points2;
+    points.reserve(n);
+    points2.reserve(DIM);
+    long tempArrs[n][DIM], tempArrs2[m][DIM];
+    for (int i = 0; i < n; ++i) {
+        for (int dim = 0; dim < DIM; ++dim) tempArrs[i][dim] = dist(mt);
+        points.emplace_back(Point(keysServer.getPublicKey(), tempArrs[i]));
+    }
+    for (int i = 0; i < m; ++i) {
+        for (int dim = 0; dim < DIM; ++dim) tempArrs2[i][dim] = dist(mt);
+        points2.emplace_back(Point(keysServer.getPublicKey(), tempArrs2[i]));
+    }
+    std::vector<Point> dummyMeans(points2.begin(), points2.begin() + DIM);
+
+    //  Calculating Algorithm
+    const std::vector<std::tuple<Point, Point, EncryptedNum> >
+            minDistanceTuples =
+            DataServer::collectMinimalDistancesAndClosestPoints(
+                    points,
+                    dummyMeans,
+                    keysServer);
+
+    const EncryptedNum
+    threshold =
+            DataServer::calculateThreashold(
+                    minDistanceTuples,
+                    keysServer,
+                    0);
+
+    cout << endl << "Points: ";
+    printPoints(points, keysServer);
+    cout << endl << "Dummies: ";
+    printPoints(dummyMeans, keysServer);
+    cout << endl;
+
+    printNameVal(keysServer.decryptNum(threshold));
+
+    cout << " ------ testCalculateThreshold finished ------ " << endl << endl;
 }

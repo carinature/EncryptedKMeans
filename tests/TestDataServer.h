@@ -25,6 +25,8 @@ public:
     static void testCalculateThreshold();
 
     static void testGetMinimalDistances();
+
+    static void testChoosePointsByDistance();
 };
 
 

@@ -31,7 +31,7 @@ using EncryptedNum = std::vector<helib::Ctxt>;
 static std::random_device rd;
 static std::mt19937 mt(rd());
 //static std::mt19937 mt;
-static std::uniform_int_distribution<long> dist(0, NUMBERS_RANGE);
+static std::uniform_int_distribution<long> randomLongInRange(0, NUMBERS_RANGE);
 
 class KeysServer;
 

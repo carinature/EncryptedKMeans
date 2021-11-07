@@ -74,15 +74,12 @@ void printNonEmptyPoints(const std::vector<Point> &points, const KeysServer &key
        client [n] has n points -  {point0, point1, ... , pointN}
 */
 std::vector<Client> generateDataClients(const KeysServer &keysServer) {
-    std::random_device rd;
-    //    std::mt19937 mt(rd());
-    std::mt19937 mt;
     //    std::uniform_real_distribution<double> dist(0, NUMBERS_RANGE);
     std::uniform_int_distribution<long> dist(1, NUMBERS_RANGE);
     long tempArr[DIM];
     std::vector<Client> clients(NUMBER_OF_CLIENTS, Client(keysServer));
     for (Client &client:clients) {
-        for (int dim = 0; dim < DIM; ++dim) tempArr[dim] = dist(mt);
+        for (int dim = 0; dim < DIM; ++dim) tempArr[dim] = randomLongInRange(mt);
         client.encryptPoint(tempArr);
     }
     /*

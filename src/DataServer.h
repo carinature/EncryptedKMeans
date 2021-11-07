@@ -4,7 +4,6 @@
 
 #include "Client.h"
 
-static Logger loggerDataServer(log_debug, "loggerDataServer");
 
 using CmpDict =
 const std::vector<
@@ -78,7 +77,6 @@ public:
      *   for each #dim the dictionary contains a pair of keys [point1,point2] and the encrypted value [point1[dim]>point[dim].
      * @return std::vector<Point>
      * */
-    //    static
     CmpDict
     createCmpDict(
             const std::vector<Point> &allPoints,
@@ -95,7 +93,6 @@ public:
      * @param dim - the index of coor by which the comparison is made. in other words - in what dimension the split is made.
      * @returns a list of pairs/tuples of a representative point and a list of the points in its Group (slice/slice).
      * */
-    //    static
     std::map<int, //DIM
             std::vector< //current slices for approp dimension
                     Slice
@@ -134,7 +131,7 @@ public:
 
 
 
-    //  collect all minimal distances into one place
+    //  collect all minimal distances into one place:
     //      for each point
     //          calculate minimal distance from point to all means:
     //              tuple<point, mean, distance> point.mininmal-distance-from(means)
@@ -150,6 +147,7 @@ public:
      * @return tuples of [point, closest mean, minimal distance]
      * @returns
      * */
+    // TODO candidate for multithreading
     static
     std::vector<std::tuple<Point, Point, EncryptedNum> >
     collectMinimalDistancesAndClosestPoints(
@@ -169,8 +167,8 @@ public:
      * */
     static
     EncryptedNum
-    calculateThreashold(
-            const std::vector<std::tuple<Point, Point, EncryptedNum> > minDistanceTuples,
+    calculateThreshold(
+            const std::vector<std::tuple<Point, Point, EncryptedNum> >& minDistanceTuples,
             const KeysServer &keysSserver,
             int iterationNumber = 0
     ) {
@@ -185,89 +183,82 @@ public:
         addManyNumbers(
                 sum_wrapper,
                 summands_wrapper
-                // ,
-                //0,    // BIT_SIZE * minDistanceTuples.size(), // sizeLimit=0 means use as many bits as needed.
-                // &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
         );
 
         //  find average distance
+        long num = long(NUMBER_OF_POINTS / pow(2, iterationNumber));
+        printNameVal(pow(2, iterationNumber));
+        printNameVal(num);
         EncryptedNum
                 threshold =
                 keysSserver.getQuotient(
                         sum,
-                        NUMBER_OF_POINTS / pow(2, iterationNumber));
+                        num);
         return threshold;
     }
 
 
     //  collect for each mean the points closest to it
     //  for each Point also includes a bit signifying if the point is included returns
+    // TODO candidate for multithreading
     static
-    std::pair<
+    std::tuple<
+            std::unordered_map< long, std::vector<std::pair<Point, CBit> > >,
             std::vector<std::pair<Point, CBit> >,
             std::vector<std::pair<Point, CBit> >
     >
     choosePointsByDistance(
-            const std::vector<Point> means,
-            const std::vector<std::tuple<Point, Point, EncryptedNum> > minDistanceTuples,
-            const EncryptedNum threshold
+            const std::vector<std::tuple<Point, Point, EncryptedNum> > &minDistanceTuples,
+            std::vector<Point> means,
+            EncryptedNum &threshold
     ) {
-        for (const Point & mean:means) {
 
+        std::unordered_map<
+                long, //mean index
+                std::vector<std::pair<Point, CBit> > > groups;
+        std::vector<std::pair<Point, CBit> > closest;
+        std::vector<std::pair<Point, CBit> > farthest;
+
+        for (auto const &tuple:minDistanceTuples) {
+            Point point = std::get<0>(tuple);
+            Point meanClosest = std::get<1>(tuple);
+            EncryptedNum distance = std::get<2>(tuple);
+          const  helib::PubKey & public_key = point.public_key;
+
+            //  check if distance within threshold margin
+            helib::Ctxt mu(public_key), ni(public_key);
+            helib::CtPtrs_vectorCt threshold_wrpr(threshold), distance_wrpr(distance);
+            helib::compareTwoNumbers(mu, ni, threshold_wrpr, distance_wrpr); // fixme
+            farthest.emplace_back(point * mu, mu);
+            closest.emplace_back(point * ni, ni);
+
+            for (int i = 0; i < means.size(); ++i) {
+                //  check if the closest mean to the point is the current one
+                helib::Ctxt muCid(public_key), niCid(public_key);
+                helib::CtPtrs_vectorCt closestCid(meanClosest.cid), meanCid(means[i].cid);
+                helib::compareTwoNumbers(muCid, niCid, closestCid, meanCid);
+
+                //  check if point is within margin and her closest mean equals to the current one
+                helib::Ctxt notMuCid(muCid);
+                notMuCid.negate();
+                notMuCid.addConstant(1l);
+                //  result in isCloseToCurrentMean = !(muCid)
+                helib::Ctxt isCloseToCurrentMean(niCid);
+                isCloseToCurrentMean.negate();
+                isCloseToCurrentMean.addConstant(1l);
+                isCloseToCurrentMean*=notMuCid;
+                //  result in isCloseToCurrentMean = !(muCid) && !(niCid)
+                isCloseToCurrentMean*=ni;
+                //  result in isCloseToCurrentMean = !(muCid) && !(niCid) && ni
+
+                groups[i].emplace_back(point * isCloseToCurrentMean, isCloseToCurrentMean);
+            }
         }
-//        std::pair<
-//                std::vector<std::pair<Point, CBit> >,
-//                std::vector<std::pair<Point, CBit> >
-//        > chosenPoints;
-//        return chosenPoints;
+        return {groups,closest,farthest};
     }
 
     //  pick all points with distance bigger than avg
-    //
 
-
-    static
-    //    void
-    std::vector<std::tuple<Point, Point, EncryptedNum> >
-    collectDistancesFromMean(
-            const std::vector<std::tuple<Point, Slice> > &slices,
-            const std::vector<Point> &points,
-            const KeysServer &keysServer
-    ) {
-        //  Collect Means
-        const std::vector<Point> &means = collectMeans(slices, keysServer);
-
-        for (const Point &point: points) {
-            for (const Point &mean: means) {
-                // calculate distance from mean
-            }
-            // caclculate minimal distances from all distances from means
-        }
-
-        return std::vector<std::tuple<Point, Point, EncryptedNum> >();
-    }
-
-
-    static
-    //    void
-    std::vector<std::tuple<Point, Point, EncryptedNum> >
-    collectDistancesFromMeans(
-            const std::vector<std::tuple<Point, Slice> > &slices,
-            const std::vector<Point> &points,
-            const KeysServer &keysServer
-    ) {
-        //  Collect Means
-        const std::vector<Point> &means = collectMeans(slices, keysServer);
-
-        for (const Point &point: points) {
-            for (const Point &mean: means) {
-                // calculate distance from mean
-            }
-            // caclculate minimal distances from all distances from means
-        }
-
-        return std::vector<std::tuple<Point, Point, EncryptedNum> >();
-    }
 
 };
 

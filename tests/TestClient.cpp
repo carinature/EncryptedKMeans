@@ -16,7 +16,7 @@ void TestClient::testEncryptCoordinates() {
     KeysServer keysServer;
 
     long arr[DIM];
-    for (long &a :arr) a = dist(mt);
+    for (long &a :arr) a = randomLongInRange(mt);
 
     Client client(keysServer);
     client.encryptPoint(arr);
@@ -29,7 +29,7 @@ void TestClient::testDecryptCoordinates() {
     KeysServer keysServer;
     
     long arr[DIM];
-    for (long &a :arr) a = dist(mt);
+    for (long &a :arr) a = randomLongInRange(mt);
     
     Client client(keysServer);
     client.encryptPoint(arr);
@@ -59,8 +59,8 @@ void TestClient::testCompare() {
     KeysServer keysServer;
     long arr1[DIM], arr2[DIM];
     for (short dim = 0; dim < DIM; ++dim) {
-        arr1[dim] = dist(mt);
-        arr2[dim] = dist(mt);
+        arr1[dim] = randomLongInRange(mt);
+        arr2[dim] = randomLongInRange(mt);
     }
 
     Client client1(keysServer);

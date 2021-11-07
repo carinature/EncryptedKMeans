@@ -17,7 +17,7 @@ void TestPoint::testEncryptCoordinates() {
     KeysServer keysServer;
 
     long arr[DIM];
-    for (long &a :arr) a = dist(mt);
+    for (long &a :arr) a = randomLongInRange(mt);
 
     Point point(keysServer.getPublicKey(), arr);
     cout << " ------ testEncryptCoordinates finished ------ " << endl << endl;
@@ -28,7 +28,7 @@ void TestPoint::testOperatorSubscript() {
     KeysServer keysServer;
 
     long arr[DIM];
-    for (long &a :arr) a = dist(mt);
+    for (long &a :arr) a = randomLongInRange(mt);
     Point point(keysServer.getPublicKey(), arr);
 
     for (short dim = 0; dim < DIM; ++dim) {
@@ -49,7 +49,7 @@ void TestPoint::testIsEmpty() {
     assert(true == emptyPoint.isEmpty());
 
     long arr[DIM];
-    for (long &a :arr) a = dist(mt);
+    for (long &a :arr) a = randomLongInRange(mt);
     Point point(keysServer.getPublicKey(), arr);
     assert(false == point.isEmpty());
 
@@ -62,8 +62,8 @@ void TestPoint::testAddition() {
     KeysServer keysServer;
     long arr[DIM], arr2[DIM], arrSum[DIM];
     for (short dim = 0; dim < DIM; ++dim) {
-        arr[dim] = dist(mt);
-        arr2[dim] = dist(mt);
+        arr[dim] = randomLongInRange(mt);
+        arr2[dim] = randomLongInRange(mt);
         arrSum[dim] = arr[dim] + arr2[dim];
     }
 
@@ -87,9 +87,9 @@ void TestPoint::testAddManyPoints() {
     KeysServer keysServer;
     long arr[DIM], arr2[DIM], arr3[DIM], arrSum[DIM];
     for (short dim = 0; dim < DIM; ++dim) {
-        arr[dim] = dist(mt);
-        arr2[dim] = dist(mt);
-        arr3[dim] = dist(mt);
+        arr[dim] = randomLongInRange(mt);
+        arr2[dim] = randomLongInRange(mt);
+        arr3[dim] = randomLongInRange(mt);
         arrSum[dim] = arr[dim] + arr2[dim] + arr3[dim];
     }
     /*
@@ -132,8 +132,8 @@ void TestPoint::testMultiplication() {
 
     long arr[DIM], arr2[DIM], arrProd[DIM];
     for (short dim = 0; dim < DIM; ++dim) {
-        arr[dim] = dist(mt);
-        arr2[dim] = dist(mt);
+        arr[dim] = randomLongInRange(mt);
+        arr2[dim] = randomLongInRange(mt);
         arrProd[dim] = arr[dim] * arr2[dim];
     }
 
@@ -152,7 +152,7 @@ void TestPoint::testMultiplicationByBit() {
     helib::PubKey &publicKey = keysServer.getPublicKey();
 
     long arr[DIM], arr0[] = {0, 0};
-    for (long &a :arr) a = dist(mt);
+    for (long &a :arr) a = randomLongInRange(mt);
 
     Point point(keysServer.getPublicKey(), arr);
     helib::Ctxt bit0(publicKey);
@@ -176,8 +176,8 @@ void TestPoint::testCompare() {
 
     long arr[DIM], arr2[DIM];
     for (short dim = 0; dim < DIM; ++dim) {
-        arr[dim] = dist(mt);
-        arr2[dim] = dist(mt);
+        arr[dim] = randomLongInRange(mt);
+        arr2[dim] = randomLongInRange(mt);
     }
 
     Point point(keysServer.getPublicKey(), arr);
@@ -203,7 +203,7 @@ void TestPoint::testCalculateDistanceFromPoint() {
 
     long arrs[n][DIM];
     for (int i = 0; i < n; ++i) {
-        for (int dim = 0; dim < DIM; ++dim) arrs[i][dim] = dist(mt);
+        for (int dim = 0; dim < DIM; ++dim) arrs[i][dim] = randomLongInRange(mt);
         points.emplace_back(Point(keysServer.getPublicKey(), arrs[i]));
     }
 
@@ -236,11 +236,11 @@ void TestPoint::testFindMinimalDistancesFromMeans() {
     std::vector<std::pair<Point, long> > distPairs; //    distPairs.reserve(n);
 
     long arrs[n][DIM], arr[DIM];
-    for (int dim = 0; dim < DIM; ++dim) arr[dim] = dist(mt);
+    for (int dim = 0; dim < DIM; ++dim) arr[dim] = randomLongInRange(mt);
     Point point(keysServer.getPublicKey(), arr);
 
     for (int i = 0; i < n; ++i) {
-        for (int dim = 0; dim < DIM; ++dim) arrs[i][dim] = dist(mt);
+        for (int dim = 0; dim < DIM; ++dim) arrs[i][dim] = randomLongInRange(mt);
         points.push_back(Point(keysServer.getPublicKey(), arrs[i]));
     }
 

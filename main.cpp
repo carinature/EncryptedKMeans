@@ -125,16 +125,25 @@ int main() {
     }
     cout << " --- --- --- --- ---" << endl;
 
-//    ////    Calculate Threshold
-//    const EncryptedNum
-//            threshold =
-//            DataServer::calculateThreashold(
-//                    minDistanceTuples,
-//                    keysServer,
-//                    0);
-//
-//    printNameVal(keysServer.decryptNum(threshold));
+    ////    Calculate Threshold
+    EncryptedNum
+            threshold =
+            DataServer::calculateThreshold(
+                    minDistanceTuples,
+                    keysServer,
+                    0);
 
+    printNameVal(keysServer.decryptNum(threshold));
+
+    std::tuple<
+            std::unordered_map<long, std::vector<std::pair<Point, CBit> > >,
+            std::vector<std::pair<Point, CBit> >,
+            std::vector<std::pair<Point, CBit> >
+    > groups = DataServer::choosePointsByDistance(
+            minDistanceTuples,
+            means,
+            threshold
+    );
 
 
     cout << " === === === === === ===" << endl;
@@ -178,6 +187,33 @@ int main() {
     cout << " === === === === ===" << endl;
     cout << endl;
     cout << " --- --- --- --- ---" << endl;
+
+    printNameVal(keysServer.decryptNum(threshold));
+
+    cout << " === Groups by Means === " << endl;
+    for (auto const &[meanI, points] : std::get<0>(groups)) {
+        printNameVal(meanI) << "\tClose Points: ";
+        for (auto const &pair: points) {
+            cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
+            printPoint(pair.first, keysServer);
+        }
+        cout<<endl;
+    }
+    cout<< " === === === === === " << endl <<endl;
+
+    cout << " === Closest Points === " << endl;
+    for (auto const &pair : std::get<1>(groups)) {
+        cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
+        printPoint(pair.first, keysServer);
+    }
+    cout << endl << " === === === === === " << endl <<endl;
+
+    cout << " === Farthest Points === " << endl;
+    for (auto const &pair : std::get<2>(groups)) {
+        cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
+        printPoint(pair.first, keysServer);
+    }
+    cout << endl << " === === === === === " << endl << endl;
 
 #ifdef alt
     // Choose two random n-bit integers
@@ -286,7 +322,6 @@ int main() {
 
     logger.log(printDuration(t0_main, "Main"));
     logger.print_log(log_trace);//, false);
-    //    clientLogger.print_log(log_error, false);
 
     return 0;
 }

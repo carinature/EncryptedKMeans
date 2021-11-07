@@ -57,7 +57,7 @@ public:
             multCounter(0), //todo maybe better to init to 0, depending future impl & use
             public_key(public_key),
             id(counter++),
-            cid(NUMBER_OF_POINTS, Ctxt(public_key)),
+            cid(CID_BIT_SIZE, Ctxt(public_key)),
             pubKeyPtrDBG(&public_key),
             cCoordinates(DIM, std::vector(BIT_SIZE, helib::Ctxt(public_key))) {
         originalPointAddress = this;
@@ -96,7 +96,7 @@ public:
             multCounter(0), //todo maybe better to init to 0, depending future impl & use
             public_key(cCoordinates[0][0].getPubKey()),
             id(counter++),
-            cid(NUMBER_OF_POINTS, Ctxt(cCoordinates[0][0].getPubKey())),
+            cid(CID_BIT_SIZE, Ctxt(cCoordinates[0][0].getPubKey())),
             pubKeyPtrDBG(&public_key),
             pCoordinatesDBG(DIM)
     //            ,
@@ -193,7 +193,7 @@ public:
                 cid_wrapper,
                 helib::CtPtrs_vectorCt(point.cid),
                 helib::CtPtrs_vectorCt(this->cid),
-                0,   // sizeLimit=0 means use as many bits as needed.
+                CID_BIT_SIZE,   // sizeLimit=0 means use as many bits as needed.
                 &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
         );
         for (short dim = 0; dim < DIM; ++dim) {
@@ -232,7 +232,7 @@ public:
                 cid_wrapper,
                 helib::CtPtrs_vectorCt(point.cid),
                 helib::CtPtrs_vectorCt(this->cid),
-                0,   // sizeLimit=0 means use as many bits as needed.
+                CID_BIT_SIZE,   // sizeLimit=0 means use as many bits as needed.
                 &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
         );
         for (short dim = 0; dim < DIM; ++dim) {
@@ -619,8 +619,9 @@ public:
         std::vector<std::pair<const Point &, EncryptedNum> > distances;
         distances.reserve(points.size());
         for (const Point &mean:points)
-            distances.push_back(
-                    std::pair<const Point &, EncryptedNum>(mean, distanceFrom(mean, keysServer)));
+            distances.emplace_back(mean, distanceFrom(mean, keysServer));
+//   distances.push_back(
+//                    std::pair<const Point &, EncryptedNum>(mean, distanceFrom(mean, keysServer)));
 
         // init minimal distance
         Point closestPoint(distances[0].first);
@@ -665,6 +666,8 @@ public:
             //        printPoint(closestPoint, keysServer);
             //        printNameVal(keysServer.decryptNum(minimalDistance));
             //            cout << "------------------------" << endl;
+            loggerPoint.log(printDuration(t0_minDist,
+                                          "tuplePointDistance loop in findMinDistFromMeans"));
         }
 
         //        cout << "     Final: " << endl;

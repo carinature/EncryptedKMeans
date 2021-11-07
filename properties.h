@@ -30,8 +30,10 @@ static const short NUMBER_OF_CLIENTS = NUMBER_OF_POINTS;
 static const short DIM = jsonConfig["data_properties"]["DIM"];
 static const short BIT_SIZE = jsonConfig["data_properties"]["bitSize"];
 static const short OUT_SIZE = 2 * BIT_SIZE;
-static const short NUMBERS_RANGE = pow(2, BIT_SIZE)-1; // pow(2, BIT_SIZE)-0
-static const short DISTANCE_BIT_SIZE = std::log2(NUMBER_OF_POINTS * NUMBERS_RANGE); //fixme make sure
+static const short NUMBERS_RANGE = pow(2, BIT_SIZE) - 1; // pow(2, BIT_SIZE)-0
+static const short DISTANCE_BIT_SIZE =
+        std::log2(NUMBER_OF_POINTS * (NUMBERS_RANGE * NUMBERS_RANGE)); //fixme make sure
+static const short CID_BIT_SIZE = NUMBER_OF_POINTS; //fixme make sure
 static const short range_lim = jsonConfig["data_properties"]["range_lim"];
 static const short low_limit = jsonConfig["data_properties"]["low_limit"];
 static const short N_Threads = jsonConfig["data_properties"]["N_Threads"];

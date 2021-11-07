@@ -181,9 +181,9 @@ const Point KeysServer::scratchPoint() const {
 
 const Point
 KeysServer::tinyRandomPoint() const {
-    std::uniform_real_distribution<double> dist(0, EPSILON);
+    std::uniform_real_distribution<double> doubleRandomNum(0, EPSILON);
     long arr[DIM];
-    for (short dim = 0; dim < DIM; ++dim) arr[dim] = dist(mt);
+    for (short dim = 0; dim < DIM; ++dim) arr[dim] = doubleRandomNum(mt);
     //    for (short dim = 0; dim < DIM; ++dim) printNameVal(arr[dim]);
 
     // note that despite the rand illusion, currently this always returns 0
@@ -218,14 +218,19 @@ KeysServer::getQuotient(
         const long num) const {
 
     long quotient = decryptNum(encryptedNum) / (num);
-    const helib::PubKey &public_key = encryptedNum[0].getPubKey();//getPublicKey();
-    EncryptedNum result(BIT_SIZE, Ctxt(public_key));
-    std::vector<long> quotient_vector = helib::longToBitVector(quotient, BIT_SIZE);
-    for (int bit = 0; bit < BIT_SIZE; ++bit) {
-        public_key.Encrypt(result[bit], NTL::ZZX(quotient_vector[bit]));
-    }
 
-    return result;
+    printNameVal(quotient);
+
+    const helib::PubKey &public_key = encryptedNum[0].getPubKey();//getPublicKey();
+    EncryptedNum cQuotient(DISTANCE_BIT_SIZE, Ctxt(public_key));
+    for (int bit = 0; bit < cQuotient.size(); ++bit)
+        public_key.Encrypt(cQuotient[bit],  NTL::to_ZZX((quotient >> bit)&1));
+
+
+    printNameVal(DISTANCE_BIT_SIZE);
+    printNameVal(decryptNum(cQuotient));
+
+    return cQuotient;
 }
 
 

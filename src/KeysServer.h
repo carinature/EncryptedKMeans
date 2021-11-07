@@ -158,9 +158,10 @@ public:
     }
 
     EncryptedNum encryptNum(long l) const {
+        helib::PubKey & public_key = getPublicKey();
         EncryptedNum cl(BIT_SIZE, helib::Ctxt(public_key));
         for (long bit = 0; bit < BIT_SIZE; ++bit)
-            this->public_key.Encrypt(cl[bit],
+            public_key.Encrypt(cl[bit],
                                      NTL::to_ZZX((l >> bit) & 1));
         return cl;
     }

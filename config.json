@@ -1,18 +1,18 @@
 {
   "data_properties": {
-    "number_of_points": 27,
-    "number_of_points_comment": "40 points w/ epsilon 0.3 causes weird PubKey bug",
+    "number_of_points": 20,
+    "number_of_points_comment": "FIXED! - 40 points w/ epsilon 0.3 causes weird PubKey bug",
     "number_of_clients": 10,
     "DIM": 2,
     "range_lim": 1,
     "range_lim_comment": "for python, defines the range of the points (from BOTTOM_LIM to RANGE_LIM)",
     "low_limit": 0,
-    "epsilon": 0.3,
+    "epsilon": 0.5,
     "decimal_digits": 2,
     "conversion_factor": "pow(10, DECIMAL_DIGITS)",
     "conversion_factor_comment": "for conversion from double-type to long-type (helib compatibility)",
     "bitSize": 5,
-    "bitSize_comment": "0 - 2^bitSize is the range of the numbers for encryption. if bigger the result will be the original number modudu the range",
+    "bitSize_comment": "0 - 2^bitSize is the range of the numbers for encryption. if bigger the result will be the original number modulo the range",
     "TODO": "change bit size to 10, if floats will be represented as longs (helib might have a new option for floats",
     "N_Threads": 1
   },
@@ -24,7 +24,7 @@
   },
   "helib_flags": {
     "helib_bootstrap": false,
-    "helib_bootstrap_comment": "better make it true if you want public_key to be \"bootstrapable\", which you do (for cmp operation w/ min&max)",
+    "helib_bootstrap_comment": "better make it true if you want public_key to be \"bootstrappeble\", which you do (for cmp operation w/ min&max)",
     "helib_verbose": true
   },
   "files": {

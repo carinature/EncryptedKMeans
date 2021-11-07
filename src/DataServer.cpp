@@ -6,7 +6,8 @@
 
 using std::cout;
 using std::endl;
-static Logger dataServerLogger(log_debug, "dataServerLogger");
+
+static Logger loggerDataServer(log_debug, "loggerDataServer");
 
 //DataServer::DataServer(KeysServer &keysServer) ;
 
@@ -415,7 +416,10 @@ DataServer::collectMinimalDistancesAndClosestPoints(const std::vector<Point> &po
     for (const Point &point: points) {
         const std::pair<Point, EncryptedNum> &
                 minDistFromMeans = point.findMinDistFromMeans(means, keysServer);
-        minDistanceTuples.emplace_back(point, minDistFromMeans.first, minDistFromMeans.second);
+        minDistanceTuples.emplace_back(
+                point,
+                minDistFromMeans.first,
+                minDistFromMeans.second);
     }
 
     loggerDataServer.log(

@@ -12,16 +12,16 @@
 
 int main() {
 
-//    cout << " ============ Test KeysServer ============ " << endl;
+/*    cout << " ============ Test KeysServer ============ " << endl;
 //    TestKeysServer::testConstructor();
 //    TestKeysServer::testEncryptCtxt();
-//    TestKeysServer::testDecryptCtxt();
+    TestKeysServer::testDecryptCtxt();
 //    TestKeysServer::testEncryptNum();
-//    TestKeysServer::testDecryptNum();
+    TestKeysServer::testDecryptNum();
 //    TestKeysServer::testScratchPoint();
 //    TestKeysServer::testTinyRandomPoint();
-//    cout << " ============ Test KeysServer Finished ============ " << endl << endl;
-//
+    cout << " ============ Test KeysServer Finished ============ " << endl << endl;
+
 //    cout << " ============ Test Point ============ " << endl;
 //    TestPoint::testConstructor();
 //    TestPoint::testEncryptCoordinates();
@@ -49,19 +49,22 @@ int main() {
 //    TestAux::minitest();
 //    TestAux::minitest2();
 //    TestAux::testBGVPackedArithmetics_Original();
-//    cout << " ============ Test Client Finished ============ " << endl << endl;
-//
-//    cout << " ============ Test DataServer ============ " << endl;
+    TestAux::testBGVPackedArithmetics__Comparison();
+    TestAux::testMultithreading();
+//    cout << " ============ Test Client Finished ============ " << endl << endl;*/
+
+    cout << " ============ Test DataServer ============ " << endl;
 //    TestDataServer::testConstructor();
 //    TestDataServer::testComparePoints();
 //    TestDataServer::testRetrievePoints();
+    TestDataServer::testRetrievePoints_Threads();
 //    TestDataServer::testPickRandomPoints();
 //    TestDataServer::testCreateCmpDict();
 //    TestDataServer::testSplitIntoEpsNet();
 //    TestDataServer::testCalculateCellMeans();
 //    TestDataServer::testGetMinimalDistances();
 //    TestDataServer::testCalculateThreshold();
-    TestDataServer::testChoosePointsByDistance();
+//    TestDataServer::testChoosePointsByDistance();
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
 
 }

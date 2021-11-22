@@ -41,6 +41,7 @@ protected:
             {2,   27000, 32767, 15, 31,  7,    151, 11628, 28087, 25824, 30,  6,   -10, 28, 4},
             // clang-format on
             {7,   36,    57,    3,  3,   19,   0,   20,    40,    0,     2,   -6,  0,   100}, // m=3*(19) :-( m/phim(m)=1.58 C=14 D=3 E=0
+            {127, 576,   1365,  12, 7,   3,    65,  976,   911,   463,   6,   2,   4,   100}, // m=3*(5)*7*{13} m/phim(m)=2.36   C=22  D=3
 
             {17,  48,    105,   12, 3,   35,   0,   71,    76,    0,     2,   2,   0,   100}, // m=3*(5)*{7} m/phim(m)=2.18 C=14 D=2 E=2
             {17,  576,   1365,  12, 7,   3,    65,  976,   911,   463,   6,   2,   4,   100}, // m=3*(5)*7*{13} m/phim(m)=2.36  C=22  D=3
@@ -114,7 +115,6 @@ public:
                             .buildModChain(false)
                             .build()),
             secKey(prepareContext(context)),
-            //            fla(prepareSecKey(secKey)),
             secKeyRef(secKey),
             // In HElib, the SecKey class is actually a subclass if the PubKey class.  So
             // one way to initialize a public key object is like this:

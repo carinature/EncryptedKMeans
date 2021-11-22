@@ -11,6 +11,10 @@ public:
     static void minitest2();
 
     static void testBGVPackedArithmetics_Original();
+
+    static void testBGVPackedArithmetics__Comparison();
+
+    static void testMultithreading();
 };
 
 

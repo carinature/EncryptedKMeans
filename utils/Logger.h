@@ -27,8 +27,8 @@ enum LogLevel {
  * @brief Logger class handles logging (instead of stdout).
  * @param minLogLevel log all message from this level and up, discard all others.
  * @note The data will be logged to all levels below and up to msgLevel,
- * and discarded from the those above
- * (e.g msgLevel=info will log the data to dbg as well as info but not to error).
+ *  and discarded from the those above
+ *  (e.g msgLevel=info will log the data to dbg as well as info but not to error).
  * */
 class Logger {
 private:
@@ -44,7 +44,7 @@ public:
             LogLevel minLogLevel = log_trace,
             std::string name = "General Logger");
 
-    virtual ~Logger(); //todo why virtual??
+    virtual ~Logger(); //note virtual? why
 
     /**
      * @brief Log messages to the wanted level and all those below.
@@ -61,8 +61,8 @@ public:
      * @param msg The data to be loged .
      * @param msgLevel The maximum level to which the data is logged.
      * @note The data will be logged to all levels below and up to msgLevel, and
-     * discarded from the those above (e.g msgLevel=info will print the data from error,
-     * as well as info if all=true, but not from dbg).
+     *  discarded from the those above (e.g msgLevel=info will print the data from error,
+     *  as well as info if all=true, but not from dbg).
      * */
     void print_log(LogLevel msgLevel = log_trace, bool all = false);
 

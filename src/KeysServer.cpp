@@ -14,7 +14,7 @@ Logger keysServerLogger(log_debug, "keysServerLogger");//todo change to log_trac
 long KeysServer::validatePrm(long prm) {
     //    if (prm < 0 || prm >= 5) throw std::invalid_argument("prm must be in the interval [0, 4]");
     //todo this says which row is chosen from mValues so prm only needs to be in the range of [0, mValue.size()]
-    if (prm < 0 || prm >= 6) throw std::invalid_argument("prm must be in the interval [0, 4]");
+    if (prm < 0 || prm >= 7) throw std::invalid_argument("prm must be in the interval [0, 4]");
     return prm;
 };
 
@@ -98,7 +98,9 @@ std::vector<helib::zzX> KeysServer::unpackSlotEncoding; //todo move? already def
 
 long KeysServer::decryptCtxt(const helib::Ctxt &ctxt) const {
     if (ctxt.isEmpty()) {
-        std::cerr << "ctxt.isEmpty()";// << endl;
+#if VERBOSE
+        std::cerr << " ctxt.isEmpty() ";
+#endif
         return -1; //todo should return 0?
     }
 
@@ -126,6 +128,7 @@ long KeysServer::decryptCtxt(const helib::Ctxt &ctxt) const {
 //long KeysServer::decryptNum(EncryptedNum cNum, bool isProduct) {
 long KeysServer::decryptNum(const EncryptedNum &cNum) const {
     if (!cNum.size()) return -1; //todo should return 0?
+#if ENC_NUM_IS_VEC
     long pNum = 0;
     /*
         //    int out_size = (1 + isProduct) * BIT_SIZE;
@@ -144,9 +147,55 @@ long KeysServer::decryptNum(const EncryptedNum &cNum) const {
         long pp = decryptCtxt(cNum[bit]);
         //        printNameVal(pp);
         if (NTL::IsOne(NTL::ZZX(pp))) pNum += std::pow(2, bit);
-        //        printNameVal(pNum);
+//        return pNum;
     }
-    /*
+
+    /*    printNameVal(pNum);
+
+        std::vector<long> pNums;
+      EncryptedNum vector = cNum;
+      helib::decryptBinaryNums(pNums,
+                               helib::CtPtrs_vectorCt(vector),
+                               secKey,
+                               getEA(),
+                               false,
+                               false);
+      cout << "false - false: ";
+      for(const auto & pn: pNums) cout<<" pn "<<pn;
+      cout<<endl;
+
+      helib::decryptBinaryNums(pNums,
+                               helib::CtPtrs_vectorCt(vector),
+                               secKey,
+                               getEA(),
+                               false,
+                               true);
+      cout << "false - true: ";
+      for(const auto & pn: pNums) cout<<" pn "<<pn;
+      cout<<endl;
+
+      helib::decryptBinaryNums(pNums,
+                               helib::CtPtrs_vectorCt(vector),
+                               secKey,
+                               getEA(),
+                               true,
+                               false);
+      cout << "true - false: ";
+      for(const auto & pn: pNums) cout<<" pn "<<pn;
+      cout<<endl;
+
+      helib::decryptBinaryNums(pNums,
+                               helib::CtPtrs_vectorCt(vector),
+                               secKey,
+                               getEA(),
+                               true,
+                               true);
+      cout << "true - true: ";
+      for(const auto & pn: pNums) cout<<" pn "<<pn;
+      cout<<endl;
+  */
+    return pNum;
+#else
     std::vector<long> pNums;
     EncryptedNum vector = cNum;
     helib::decryptBinaryNums(pNums,
@@ -155,9 +204,9 @@ long KeysServer::decryptNum(const EncryptedNum &cNum) const {
                              getEA(),
                              true,
                              true);
-    printNameVal(pNums.back());
-    */
-    return pNum;
+        for(const auto & pn: pNums) printNameVal(pn);
+     return pNums;
+#endif
 }
 
 long KeysServer::decryptSize(const std::vector<CBit> &cSize) const {

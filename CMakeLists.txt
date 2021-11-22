@@ -34,7 +34,8 @@ add_executable(EncryptedKMeans
         src/DataServer.cpp
         src/KeysServer.cpp
         src/Client.cpp
-#        src/Point.cpp src/Point.h
+#        src/Point.cpp
+#        src/Point.h
         )
 
 target_link_libraries(EncryptedKMeans PUBLIC helib)
@@ -55,7 +56,6 @@ add_executable(Tests
         tests/TestClient.cpp
         tests/TestAux.cpp
         tests/TestDataServer.cpp
-#         tests/TestPoint.h tests/TestKeysServer.h
         )
 target_link_libraries(Tests PUBLIC helib)
 

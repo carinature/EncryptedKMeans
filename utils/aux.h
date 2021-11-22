@@ -39,8 +39,9 @@ class Point;
 
 class Client;
 
-//  print both the value and it's name. comfy for dgb  // best. macro. EVA! //TODO save this somewhere (list of useful tricks)
+//  print both the value and it's name. comfy for dgb  // best. macro. EVA!
 #define printNameVal(val)   cout << # val << ": " << (val) << endl
+// TODO save this somewhere (list of useful tricks)
 
 /* * for DBG * */
 void printPoint(const Point &p, const KeysServer &keysServer);

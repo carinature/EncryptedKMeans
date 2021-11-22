@@ -19,11 +19,11 @@ std::chrono::time_point<std::chrono::system_clock> NowTime() {
 std::string printDuration(const std::chrono::time_point<std::chrono::system_clock> &t1,
                           const std::string &funcName) {
     auto t2 = CLOCK::now();
-    auto duration = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
     std::string str =
-            "\'" + funcName + "\' Finished in " + std::to_string(duration) + " seconds.\n";
+            "\'" + funcName + "\' Finished in " + std::to_string(duration) + " milliseconds.\n";
     cout << str << endl;
-    fcout << str << endl; //todo remove?
+    fcout << str << endl;
     return str;
 }
 
@@ -34,7 +34,6 @@ std::vector<long> decryptPoint(const Point &p, const KeysServer &keysServer) {
     return pPoint;
 }
 
-//    void printPoints(std::vector<Point> & points){ todo not static or move to aux
 void printPoint(const Point &p, const KeysServer &keysServer) {
     cout << "( ";
     for (short dim = 0; dim < DIM ; ++dim)
@@ -79,8 +78,10 @@ std::vector<Client> generateDataClients(const KeysServer &keysServer) {
     long tempArr[DIM];
     std::vector<Client> clients(NUMBER_OF_CLIENTS, Client(keysServer));
     for (Client &client:clients) {
-        for (int dim = 0; dim < DIM; ++dim) tempArr[dim] = randomLongInRange(mt);
-        client.encryptPoint(tempArr);
+        for (int n = 0; n < NUMBER_OF_POINTS / NUMBER_OF_CLIENTS; ++n) {
+            for (int dim = 0; dim < DIM; ++dim) tempArr[dim] = randomLongInRange(mt);
+            client.encryptPoint(tempArr);
+        }
     }
     /*
     //  another option

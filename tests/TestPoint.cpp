@@ -115,9 +115,9 @@ void TestPoint::testAddManyPoints() {
 
     for (short dim = 0; dim < DIM; ++dim) {
         cout << "----" << endl;
-        //        printNameVal(arrSum[dim]);
-        //        printNameVal(NUMBER_OF_POINTS * arrSum[dim]);
-        //        printNameVal(keysServer.decryptNum(sum[dim]));
+                printNameVal(arrSum[dim]);
+                printNameVal(NUMBER_OF_POINTS * arrSum[dim]);
+                printNameVal(keysServer.decryptNum(sum[dim]));
         assert(NUMBER_OF_POINTS * arrSum[dim] == keysServer.decryptNum(sum[dim]));
         //fixme this part of the test acts weird when running after _all_ the other tests.
         // incidentally, looks like the 2nd coordinate of sum is just a copy of the 1st.
@@ -227,7 +227,6 @@ void TestPoint::testCalculateDistanceFromPoint() {
     cout << " ------ testCalculateDistanceFromPoint finished ------ " << endl << endl;
 }
 
-// todo if not workin return to before 18:19 in 04.11.21
 void TestPoint::testFindMinimalDistancesFromMeans() {
     cout << " ------ testFindMinimalDistancesFromMeans ------ " << endl;
     KeysServer keysServer;

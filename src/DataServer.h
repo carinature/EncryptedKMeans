@@ -49,6 +49,16 @@ public:
     retrievePoints(
             const std::vector<Client> &clients);
 
+    std::vector<Point> retrievedPoints;
+    std::mutex retrievedPointsLock;
+
+    void
+    retrievePoints_Thread(const std::vector<Client> &clients);
+
+    void
+    retrievePoints_WithThreads(const std::vector<Client> &clients);
+
+
     /**
      * @brief request data from clients and conentrate into one list
      * @param points - all the points from all the clients in the data set
@@ -130,7 +140,6 @@ public:
     );
 
 
-
     //  collect all minimal distances into one place:
     //      for each point
     //          calculate minimal distance from point to all means:
@@ -168,34 +177,10 @@ public:
     static
     EncryptedNum
     calculateThreshold(
-            const std::vector<std::tuple<Point, Point, EncryptedNum> >& minDistanceTuples,
+            const std::vector<std::tuple<Point, Point, EncryptedNum> > &minDistanceTuples,
             const KeysServer &keysSserver,
             int iterationNumber = 0
-    ) {
-        //  collect minimal distances
-        EncryptedNum sum;
-        helib::CtPtrs_vectorCt sum_wrapper(sum);
-        std::vector<EncryptedNum> summandsVec(minDistanceTuples.size());
-        for (auto const &tuple:minDistanceTuples) summandsVec.push_back(std::get<2>(tuple));
-        helib::CtPtrMat_vectorCt summands_wrapper(summandsVec);
-
-        //  sum all distance
-        addManyNumbers(
-                sum_wrapper,
-                summands_wrapper
-        );
-
-        //  find average distance
-        long num = long(NUMBER_OF_POINTS / pow(2, iterationNumber));
-        printNameVal(pow(2, iterationNumber));
-        printNameVal(num);
-        EncryptedNum
-                threshold =
-                keysSserver.getQuotient(
-                        sum,
-                        num);
-        return threshold;
-    }
+    );
 
 
     //  collect for each mean the points closest to it
@@ -203,7 +188,7 @@ public:
     // TODO candidate for multithreading
     static
     std::tuple<
-            std::unordered_map< long, std::vector<std::pair<Point, CBit> > >,
+            std::unordered_map<long, std::vector<std::pair<Point, CBit> > >,
             std::vector<std::pair<Point, CBit> >,
             std::vector<std::pair<Point, CBit> >
     >
@@ -211,54 +196,7 @@ public:
             const std::vector<std::tuple<Point, Point, EncryptedNum> > &minDistanceTuples,
             std::vector<Point> means,
             EncryptedNum &threshold
-    ) {
-
-        std::unordered_map<
-                long, //mean index
-                std::vector<std::pair<Point, CBit> > > groups;
-        std::vector<std::pair<Point, CBit> > closest;
-        std::vector<std::pair<Point, CBit> > farthest;
-
-        for (auto const &tuple:minDistanceTuples) {
-            Point point = std::get<0>(tuple);
-            Point meanClosest = std::get<1>(tuple);
-            EncryptedNum distance = std::get<2>(tuple);
-          const  helib::PubKey & public_key = point.public_key;
-
-            //  check if distance within threshold margin
-            helib::Ctxt mu(public_key), ni(public_key);
-            helib::CtPtrs_vectorCt threshold_wrpr(threshold), distance_wrpr(distance);
-            helib::compareTwoNumbers(mu, ni, threshold_wrpr, distance_wrpr); // fixme
-            farthest.emplace_back(point * mu, mu);
-            closest.emplace_back(point * ni, ni);
-
-            for (int i = 0; i < means.size(); ++i) {
-                //  check if the closest mean to the point is the current one
-                helib::Ctxt muCid(public_key), niCid(public_key);
-                helib::CtPtrs_vectorCt closestCid(meanClosest.cid), meanCid(means[i].cid);
-                helib::compareTwoNumbers(muCid, niCid, closestCid, meanCid);
-
-                //  check if point is within margin and her closest mean equals to the current one
-                helib::Ctxt notMuCid(muCid);
-                notMuCid.negate();
-                notMuCid.addConstant(1l);
-                //  result in isCloseToCurrentMean = !(muCid)
-                helib::Ctxt isCloseToCurrentMean(niCid);
-                isCloseToCurrentMean.negate();
-                isCloseToCurrentMean.addConstant(1l);
-                isCloseToCurrentMean*=notMuCid;
-                //  result in isCloseToCurrentMean = !(muCid) && !(niCid)
-                isCloseToCurrentMean*=ni;
-                //  result in isCloseToCurrentMean = !(muCid) && !(niCid) && ni
-
-                groups[i].emplace_back(point * isCloseToCurrentMean, isCloseToCurrentMean);
-            }
-        }
-        return {groups,closest,farthest};
-    }
-
-    //  pick all points with distance bigger than avg
-
+    );
 
 };
 

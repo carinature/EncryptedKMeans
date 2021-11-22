@@ -38,6 +38,49 @@ DataServer::retrievePoints(
 }
 
 
+void
+DataServer::retrievePoints_Thread(
+        const std::vector<Client> &clients) {
+    auto t0_retrievePoints = CLOCK::now();     //  for logging, profiling, DBG// logging
+    if (clients.empty()) return;
+
+    for (const Client &c:clients)
+        for (const Point &p:c.getPoints()) {
+            retrievedPointsLock.lock();
+            retrievedPoints.emplace_back(Point(p));
+            retrievedPointsLock.unlock();
+        }
+    //            points.insert(points.end(),c.getPoints().begin(), c.getPoints().end());
+
+    loggerDataServer.log(printDuration(t0_retrievePoints, "retrievePoints_Thread"));
+
+}
+void
+DataServer::retrievePoints_WithThreads(
+        const std::vector<Client> &clients
+//        ,        short numOfThreads
+        ) {
+    auto t0_retrievePoints = CLOCK::now();     //  for logging, profiling, DBG// logging
+    if (clients.empty()) return;
+
+    unsigned long splitSize = clients.size() / NUMBER_OF_THREADS;
+    std::vector<Client> splits[NUMBER_OF_THREADS];
+    std::vector<std::thread> threadVec;
+    for (int i = 0; i < NUMBER_OF_THREADS; ++i) {
+        splits[i] = (i == NUMBER_OF_THREADS - 1) ?
+                    std::vector<Client>(clients.begin() + i * splitSize, clients.end()):
+                    std::vector<Client>(clients.begin() + i * splitSize,
+                                        clients.begin() + (i + 1) * splitSize);
+
+        threadVec.emplace_back(&DataServer::retrievePoints_Thread, this, splits[i]);
+    }
+    for (auto &t:threadVec) t.join();
+
+    loggerDataServer.log(printDuration(t0_retrievePoints, "retrievePoints_Thread"));
+
+}
+
+
 std::vector<std::vector<Point> >
 DataServer::pickRandomPoints(const std::vector<Point> &points, int m) const {
     auto t0_rndPoints = CLOCK::now();     //  for logging, profiling, DBG
@@ -426,4 +469,87 @@ DataServer::collectMinimalDistancesAndClosestPoints(const std::vector<Point> &po
             printDuration(t0_collectMinDist, "collectMinimalDistancesAndClosestPoints"));
 
     return minDistanceTuples;
+}
+
+EncryptedNum DataServer::calculateThreshold(
+        const std::vector<std::tuple<Point, Point, EncryptedNum>> &minDistanceTuples,
+        const KeysServer &keysSserver, int iterationNumber) {
+    //  collect minimal distances
+    EncryptedNum sum;
+    helib::CtPtrs_vectorCt sum_wrapper(sum);
+    std::vector<EncryptedNum> summandsVec(minDistanceTuples.size());
+    for (auto const &tuple:minDistanceTuples) summandsVec.push_back(std::get<2>(tuple));
+    helib::CtPtrMat_vectorCt summands_wrapper(summandsVec);
+
+    //  sum all distance
+    addManyNumbers(
+            sum_wrapper,
+            summands_wrapper
+    );
+
+    //  find average distance
+    long num = long(NUMBER_OF_POINTS / pow(2, iterationNumber));
+    printNameVal(pow(2, iterationNumber));
+    printNameVal(num);
+    EncryptedNum
+            threshold =
+            keysSserver.getQuotient(
+                    sum,
+                    num);
+    return threshold;
+}
+
+std::tuple<
+        std::unordered_map<long, std::vector<std::pair<Point, CBit> > >,
+        std::vector<std::pair<Point, CBit> >,
+        std::vector<std::pair<Point, CBit> >
+> DataServer::choosePointsByDistance(
+        const std::vector<std::tuple<Point, Point, EncryptedNum>> &minDistanceTuples,
+        std::vector<Point> means, EncryptedNum &threshold)  {
+
+    std::unordered_map<
+            long, //mean index
+            std::vector<std::pair<Point, CBit> > > groups;
+    std::vector<std::pair<Point, CBit> > closest;
+    std::vector<std::pair<Point, CBit> > farthest;
+
+    for (auto const &tuple:minDistanceTuples) {
+        Point point = std::get<0>(tuple);
+        Point meanClosest = std::get<1>(tuple);
+        EncryptedNum distance = std::get<2>(tuple);
+        const  helib::PubKey & public_key = point.public_key;
+
+        //  check if distance within threshold margin
+        helib::Ctxt mu(public_key), ni(public_key);
+        helib::CtPtrs_vectorCt threshold_wrpr(threshold), distance_wrpr(distance);
+        helib::compareTwoNumbers(mu, ni, threshold_wrpr, distance_wrpr); // fixme
+        //  pick all points with distance bigger than avg
+        farthest.emplace_back(point * mu, mu);
+        //  pick all points with distance smaller than avg
+        closest.emplace_back(point * ni, ni);
+
+        for (int i = 0; i < means.size(); ++i) {
+            //  check if the closest mean to the point is the current one
+            helib::Ctxt muCid(public_key), niCid(public_key);
+            helib::CtPtrs_vectorCt closestCid(meanClosest.cid), meanCid(means[i].cid);
+            helib::compareTwoNumbers(muCid, niCid, closestCid, meanCid);
+
+            //  check if point is within margin and her closest mean equals to the current one
+            helib::Ctxt notMuCid(muCid);
+            notMuCid.negate();
+            notMuCid.addConstant(1l);
+            //  result in isCloseToCurrentMean = !(muCid)
+            helib::Ctxt isCloseToCurrentMean(niCid);
+            isCloseToCurrentMean.negate();
+            isCloseToCurrentMean.addConstant(1l);
+            isCloseToCurrentMean*=notMuCid;
+            //  result in isCloseToCurrentMean = !(muCid) && !(niCid)
+            isCloseToCurrentMean*=ni;
+            //  result in isCloseToCurrentMean = !(muCid) && !(niCid) && ni
+
+            //  pick all points with distance smaller than avg, arrange by closest mean point
+            groups[i].emplace_back(point * isCloseToCurrentMean, isCloseToCurrentMean);
+        }
+    }
+    return {groups,closest,farthest};
 }

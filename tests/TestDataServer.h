@@ -27,6 +27,8 @@ public:
     static void testGetMinimalDistances();
 
     static void testChoosePointsByDistance();
+
+    static void testRetrievePoints_Threads();
 };
 
 

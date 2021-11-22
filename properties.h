@@ -24,9 +24,10 @@ static json jsonConfig = json::parse(config_json_file);
 /*
  * Global Constatns & Data Properties
  * */
+static const short NUMBER_OF_THREADS = jsonConfig["data_properties"]["number_of_threads"];
 static const short NUMBER_OF_POINTS = jsonConfig["data_properties"]["number_of_points"];
-static const short NUMBER_OF_CLIENTS = NUMBER_OF_POINTS;
-//static const short NUMBER_OF_CLIENTS = jsonConfig["data_properties"]["number_of_clients"];
+//static const short NUMBER_OF_CLIENTS = NUMBER_OF_POINTS / NUMBER_OF_THREADS;
+static const short NUMBER_OF_CLIENTS = jsonConfig["data_properties"]["number_of_clients"];
 static const short DIM = jsonConfig["data_properties"]["DIM"];
 static const short BIT_SIZE = jsonConfig["data_properties"]["bitSize"];
 static const short OUT_SIZE = 2 * BIT_SIZE;
@@ -66,10 +67,14 @@ static const std::string rands_file = jsonConfig["files"]["rands_file"];
 static const std::string rands_bad_file = jsonConfig["files"]["rands_bad_file"];
 static const std::string point_csv_file = jsonConfig["files"]["point_csv_file"];
 
+static const unsigned long PLAINTEXT_PRIME_MODULUS = 4999;
+
+
 //#define HELIB_DEBUG
 
 
 #define CLIENT_CLASS_EXISTS true
+#define ENC_NUM_IS_VEC true
 
 //namespace helib {
 //

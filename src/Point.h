@@ -27,8 +27,7 @@ public:
     const long id;
     Point *originalPointAddress;
     EncryptedNum cid; //    Ctxt cid;
-    //    Ctxt &cidref;
-    //    Ctxt *cidptr;
+    //    Ctxt &cidref;    //    Ctxt *cidptr;
 
     //     helib::PubKey &public_key;// = encryptionKey;
     const helib::PubKey &public_key;// = encryptionKey;
@@ -42,7 +41,6 @@ public:
           b1 = [1] [1] [1] ... [1] [1] [1]        ciphertext for bit 1
           b2 = [1] [1] [1] ... [1] [1] [1]        ciphertext for bit 2
      These 3 ciphertexts represent the 3-bit binary number 110b = 6
-     todo why all slots the same? redundant? (KT)
      Note: several numbers can be encoded across the slots of each ciphertext
      which would result in several parallel slot-wise operations.
      For simplicity we place the same data into each slot of each ciphertext,
@@ -52,9 +50,8 @@ public:
             long OUT_SIZE = 2 * BIT_SIZE;
      */
     explicit Point(const helib::PubKey &public_key, const long coordinates[] = nullptr) :
-            cmpCounter(0),  //todo maybe better to init to 0, depending future impl & use
-            addCounter(0),  //todo maybe better to init to 0, depending future impl & use
-            multCounter(0), //todo maybe better to init to 0, depending future impl & use
+    //todo maybe better to init to 0, depending future impl & use
+            cmpCounter(0), addCounter(0), multCounter(0),
             public_key(public_key),
             id(counter++),
             cid(CID_BIT_SIZE, Ctxt(public_key)),
@@ -91,9 +88,8 @@ public:
     }
 
     explicit Point(const std::vector<EncryptedNum> &cCoordinates) :
-            cmpCounter(0),  //todo maybe better to init to 0, depending future impl & use
-            addCounter(0),  //todo maybe better to init to 0, depending future impl & use
-            multCounter(0), //todo maybe better to init to 0, depending future impl & use
+            //todo maybe better to init to 0, depending future impl & use
+            cmpCounter(0), addCounter(0), multCounter(0),
             public_key(cCoordinates[0][0].getPubKey()),
             id(counter++),
             cid(CID_BIT_SIZE, Ctxt(cCoordinates[0][0].getPubKey())),
@@ -153,9 +149,8 @@ public:
     Point &operator=(const Point &point) {
         //            cout << " Point assign" << endl;
         if (&point == this || point.isEmpty()) return *this;
-        //        id=point.id;
+        //                id=point.id;
         cid = point.cid;
-        //        cidref = point.cidref;
         originalPointAddress = point.originalPointAddress;
         for (short dim = 0; dim < DIM; ++dim) {
             //   cCoordinates[dim] = point.cCoordinates[dim];
@@ -299,9 +294,9 @@ public:
             addManyNumbers(
                     result_wrapper,
                     summands_wrapper
-//                    ,
-//                        0,//BIT_SIZE * points.size() * BIT_SIZE, // sizeLimit=0 means use as many bits as needed.
-//                    &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
+                    //                    ,
+                    //                        0,//BIT_SIZE * points.size() * BIT_SIZE, // sizeLimit=0 means use as many bits as needed.
+                    //                    &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
             );
             //            sum.cCoordinates[dim] = encrypted_result;
             //            vecCopy(sum.cCoordinates[dim], encrypted_results[dim]);
@@ -387,8 +382,8 @@ public:
         Ctxt mu(public_key), ni(public_key);
         if (!(isEmpty() || point.isEmpty())) {
             if (point.id == id) {
-                // good solution but results in representatienves being picked twice
-                //  - once for their own group and once for the group above fixme
+                // note good solution but results in representatives being picked twice
+                //  - once for their own group and once for the group above
                 public_key.Encrypt(mu, NTL::to_ZZX((true)));
                 public_key.Encrypt(ni, NTL::to_ZZX((true))); // make sure
             } else {
@@ -406,24 +401,15 @@ public:
         return std::vector<CBit>{mu, ni};
         /* todo notice there is also // comparison with max and min
          *  maybe useful later
-         *      compareTwoNumbers(wMax,
-                      wMin,
-                      mu,
-                      ni,
-                      helib::CtPtrs_VecCt(enca),
-                      helib::CtPtrs_VecCt(encb),
-                      false,
-                      &unpackSlotEncoding);
-
-                todo and this one too:
-                    //                    /**
-                    // * @brief Compute a bitwise NOT of `input`.
-                    // * @param output Result of bit-flipping `input`.
-                    // * @param input Binary number to be bit-flipped.
-                    // * @note The size of `output` and `input` must be the same.
-                    //
-                    //        void bitwiseNot(CtPtrs& output, const CtPtrs& input);
-                    */
+            and this one too:
+                //                    /**
+                // * @brief Compute a bitwise NOT of `input`.
+                // * @param output Result of bit-flipping `input`.
+                // * @param input Binary number to be bit-flipped.
+                // * @note The size of `output` and `input` must be the same.
+                //
+                //        void bitwiseNot(CtPtrs& output, const CtPtrs& input);
+                */
     }
 
     bool operator==(const Point &point) const {
@@ -461,9 +447,9 @@ public:
         std::vector<EncryptedNum> sqaredDiffs(DIM);
         for (int dim = 0; dim < DIM; ++dim) {
 
-            std::vector<Ctxt> thisCoor = this->cCoordinates[dim];
+            EncryptedNum thisCoor = this->cCoordinates[dim];
             helib::CtPtrs_vectorCt p1c(thisCoor);
-            std::vector<Ctxt> pointCoor = point.cCoordinates[dim];
+            EncryptedNum pointCoor = point.cCoordinates[dim];
             helib::CtPtrs_vectorCt p2c(pointCoor);
             EncryptedNum eMax, eMin;//(BIT_SIZE, helib::Ctxt(public_key));
             helib::CtPtrs_vectorCt max(eMax), min(eMin);
@@ -620,8 +606,8 @@ public:
         distances.reserve(points.size());
         for (const Point &mean:points)
             distances.emplace_back(mean, distanceFrom(mean, keysServer));
-//   distances.push_back(
-//                    std::pair<const Point &, EncryptedNum>(mean, distanceFrom(mean, keysServer)));
+        //   distances.push_back(
+        //                    std::pair<const Point &, EncryptedNum>(mean, distanceFrom(mean, keysServer)));
 
         // init minimal distance
         Point closestPoint(distances[0].first);

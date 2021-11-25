@@ -312,6 +312,78 @@ void TestDataServer::testSplitIntoEpsNet() {
 
 }
 
+void TestDataServer::testSplitIntoEpsNet_WithThreads() {
+    cout << " ------ testSplitIntoEpsNet_WithThreads ------ " << endl;// << endl;
+    KeysServer keysServer;
+    DataServer dataServer(keysServer);
+
+    std::vector<Client> clients = generateDataClients(keysServer);
+
+    std::vector<Point> points = DataServer::retrievePoints(clients);
+    dataServer.retrievePoints_WithThreads(clients);
+
+    std::vector<std::vector<Point>> randomPoints = dataServer.pickRandomPoints(points);
+
+    std::vector<
+            std::unordered_map<
+                    const Point,
+                    std::unordered_map<
+                            const Point,
+                            helib::Ctxt> > >
+            cmpDict = dataServer.createCmpDict(points, randomPoints);
+    dataServer.createCmpDict_WithThreads(0);
+
+    cout << " --- All Points  ---" << endl;
+    printPoints(points, keysServer);
+    printNameVal(points.size());
+    cout << " --- --- --- --- ---" << endl;
+
+    cout << " --- Random Points  ---" << endl;
+    for (auto vec :randomPoints) printPoints(vec, keysServer);
+    cout << " --- --- --- --- ---" << endl;
+
+    cout << "The Dictionary: " << endl;
+    for (int dim = 0; dim < DIM; ++dim) {
+        cout << "    ======   ";
+        printNameVal(dim);// << " ======" << endl;
+        for (auto const&[point, map] : cmpDict[dim]) {
+            printPoint(point, keysServer);
+            cout << endl;
+            for (auto const&[point2, val]: map) {
+                printPoint(point2, keysServer);
+                printNameVal(keysServer.decryptCtxt(val));
+            }
+            printNameVal(map.size());
+            cout << " --- --- ---" << endl;
+        }
+        printNameVal(cmpDict[dim].size());
+        cout << " === === ===" << endl;
+    }
+
+    std::map<int, std::vector<Slice> >
+            slices = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
+    dataServer.splitIntoEpsNet_WithThreads();
+
+    for (int dim = 0; dim < DIM; ++dim) {
+        cout << "   ---   For dim " << dim << "  --- " << endl;
+        for (Slice &cell: slices[dim]) cell.printSlice(keysServer);
+        cout << "   ---     --- " << endl;
+        cout << endl;
+    }
+    cout << "==================\n";
+    cout << "Slices With Treads\n";
+    cout << "==================\n";
+    for (int dim = 0; dim < DIM; ++dim) {
+        cout << "   ---   For dim " << dim << "  --- " << endl;
+        for (Slice &cell: dataServer.slices[dim]) cell.printSlice(keysServer);
+        cout << "   ---     --- " << endl;
+        cout << endl;
+    }
+
+    cout << " ------ testSplitIntoEpsNet_WithThreads finished ------ " << endl << endl;
+
+}
+
 void TestDataServer::testCalculateCellMeans() {
     cout << " ------ testCalculateCellMeans ------ " << endl;
     KeysServer keysServer;

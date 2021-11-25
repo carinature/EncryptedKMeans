@@ -60,8 +60,9 @@ int main() {
 //    TestDataServer::testRetrievePoints_Threads();
 //    TestDataServer::testPickRandomPoints();
 //    TestDataServer::testCreateCmpDict();
-    TestDataServer::testCreateCmpDict_Threads();
+//    TestDataServer::testCreateCmpDict_Threads();
 //    TestDataServer::testSplitIntoEpsNet();
+    TestDataServer::testSplitIntoEpsNet_WithThreads();
 //    TestDataServer::testCalculateCellMeans();
 //    TestDataServer::testGetMinimalDistances();
 //    TestDataServer::testCalculateThreshold();

@@ -121,7 +121,6 @@ std::mutex cmpDictLock;
     void
     createCmpDict_WithThreads(short numOfThreads);
 
-    // TODO candidate for multithreading
     /**
      * @brief Split into (1/eps) groups - each group is between 2 representative points.
      * @param points - a list of unordered points
@@ -141,6 +140,14 @@ std::mutex cmpDictLock;
             const KeysServer &keysServer // for dbg todo remove
     );
 
+    std::map<int, std::vector<Slice> > slices;
+
+    std::map<int, //DIM
+            std::vector< Slice > // slices for approp dimension
+    > splitIntoEpsNet_WithThreads();
+
+    void splitIntoEpsNet_R_Thread(const Slice &baseSlice, const Point &R, int dim);
+
     // TODO candidate for multithreading
     /**
      * @brief calculate cell-means
@@ -154,6 +161,12 @@ std::mutex cmpDictLock;
     calculateSlicesMeans(
             const std::vector<Slice> &slices,
             const KeysServer &keysServer
+    );
+
+    static
+    std::vector<std::tuple<Point, Slice> >
+    calculateSlicesMeans_WithThreads(
+            const std::vector<Slice> &slices
     );
 
     /**
@@ -225,8 +238,6 @@ std::mutex cmpDictLock;
     );
 
     void createCmpDict_Dim_Thread(short dim);
-
-    std::map<int, std::vector<Slice>> splitIntoEpsNet_WithThreads(const KeysServer &keysServer);
 };
 
 

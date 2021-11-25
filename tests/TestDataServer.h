@@ -32,6 +32,7 @@ public:
 
     static void testChoosePointsByDistance();
 
+    static void testSplitIntoEpsNet_WithThreads();
 };
 
 

@@ -32,12 +32,22 @@ public:
      * */
     explicit DataServer(const KeysServer &keysServer) :
             keysServer(keysServer),
-            tinyRandomPoint(keysServer.tinyRandomPoint()) {
+            tinyRandomPoint(keysServer.tinyRandomPoint())
+//            ,
+//            retrievedPoints(NUMBER_OF_POINTS)
+//            ,
+//            randomPointsList(DIM) //todo change name to randomPoints
+//            ,
+//            cmpDict(DIM, {{}})
+    {
         //        dataServerLogger.log("DataServer()");
         cout << "DataServer()" << endl;
+        cmpDict.resize(DIM);
+        randomPointsList.resize(DIM);
+        retrievedPoints.reserve(NUMBER_OF_POINTS);
+
     }
 
-    // TODO candidate for multithreading
     /**
      * @brief A simulated retrievel of data from clients.
      * @param clients - a list of clients (chosen by the CA, to share a similar public key).
@@ -62,6 +72,8 @@ public:
             );
 
 
+    std::vector<std::vector<Point> > randomPointsList;
+
     /**
      * @brief request data from clients and conentrate into one list
      * @param points - all the points from all the clients in the data set
@@ -69,14 +81,14 @@ public:
      * @returns a list of #DIM lists - each containing m^d randomly chosen points
      * @return std::vector<Point>
      * */
-    std::vector<std::vector<Point> >
+//    std::vector<std::vector<Point> >
+    const std::vector<std::vector<Point> > &
     pickRandomPoints(
             const std::vector<Point> &points,
             int m = 1 / EPSILON   //  -1
             //            const Point & tinyRandomPoint
-    ) const;
+    ) ;
 
-    // TODO candidate for multithreading
     /**
      * @brief create a comparison dict:
      *   for each 2 points a,b returns the answer to a[dim]>b[dim]
@@ -107,12 +119,7 @@ std::vector<
 std::mutex cmpDictLock;
 
     void
-    createCmpDict_WithThreads(
-            const std::vector<Point> &allPoints,
-            const std::vector<std::vector<Point> > &randomPoints
-            //            const Point & tinyRandomPoint
-            , short numOfThreads = NUMBER_OF_THREADS
-    );
+    createCmpDict_WithThreads(short numOfThreads);
 
     // TODO candidate for multithreading
     /**
@@ -197,7 +204,7 @@ std::mutex cmpDictLock;
     EncryptedNum
     calculateThreshold(
             const std::vector<std::tuple<Point, Point, EncryptedNum> > &minDistanceTuples,
-            const KeysServer &keysSserver,
+            const KeysServer &keysServer,
             int iterationNumber = 0
     );
 
@@ -217,9 +224,9 @@ std::mutex cmpDictLock;
             EncryptedNum &threshold
     );
 
-    void createCmpDict_Dim_Thread(const std::vector<Point> &allPoints,
-                                  const std::vector<Point> &randomPoints,
-                                  short dim);
+    void createCmpDict_Dim_Thread(short dim);
+
+    std::map<int, std::vector<Slice>> splitIntoEpsNet_WithThreads(const KeysServer &keysServer);
 };
 
 

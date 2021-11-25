@@ -157,7 +157,7 @@ void TestDataServer::testCreateCmpDict() {
 }
 
 void TestDataServer::testCreateCmpDict_Threads() {
-    cout << " ------ testCreateCmpDict ------ " << endl << endl;
+    cout << " ------ testCreateCmpDict_Threads ------ " << endl << endl;
     KeysServer keysServer;
     DataServer dataServer(keysServer);
 
@@ -182,7 +182,7 @@ void TestDataServer::testCreateCmpDict_Threads() {
             randomPoints = dataServer.pickRandomPoints(points);//, 1 / EPSILON);
 
     cout << " --- Random Points  ---" << endl;
-    for (const auto& vec :randomPoints) printPoints(vec, keysServer);
+    for (const auto &vec :randomPoints) printPoints(vec, keysServer);
     cout << " --- --- --- --- ---" << endl;
 
     std::vector<
@@ -192,8 +192,7 @@ void TestDataServer::testCreateCmpDict_Threads() {
                             const Point,
                             helib::Ctxt> > >
             cmp = dataServer.createCmpDict(points, randomPoints);
-
-    dataServer.createCmpDict_WithThreads(points, randomPoints);
+    dataServer.createCmpDict_WithThreads(0);
 
     cout << "The Dictionary: " << endl;
     for (short dim = 0; dim < DIM; ++dim) {
@@ -251,7 +250,7 @@ void TestDataServer::testCreateCmpDict_Threads() {
         cout << " === === ===" << endl;
     }
 
-    cout << " ------ testCreateCmpDict finished ------ " << endl << endl;
+    cout << " ------ testCreateCmpDict_Threads finished ------ " << endl << endl;
 }
 
 void TestDataServer::testSplitIntoEpsNet() {

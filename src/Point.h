@@ -54,6 +54,7 @@ public:
             cmpCounter(0), addCounter(0), multCounter(0),
             public_key(public_key),
             id(counter++),
+//            cid(std::log2(id)+1, Ctxt(public_key)),
             cid(CID_BIT_SIZE, Ctxt(public_key)),
             pubKeyPtrDBG(&public_key),
             cCoordinates(DIM, std::vector(BIT_SIZE, helib::Ctxt(public_key))) {

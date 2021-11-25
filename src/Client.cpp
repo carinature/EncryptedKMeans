@@ -8,7 +8,7 @@
 
 using std::cout;
 using std::endl;
-static Logger clientLogger(log_debug, "clientLogger");
+static Logger loggerClient(log_debug, "loggerClient");
 
 Client::Client(const KeysServer &keysServer) :
         encryptionKey(keysServer.getSecKey()),
@@ -19,7 +19,7 @@ Client::Client(const KeysServer &keysServer) :
         scratch(encryptionKey)
 //        cCoordinatesStd(DIM)
 {
-    clientLogger.log("Initializing Client Protocol Finished");
+    loggerClient.log("Initializing Client Protocol Finished");
     cout << "Initializing Client Protocol Finished" << endl;
 }
 
@@ -43,7 +43,7 @@ Client &Client::addEncryptedPoint(Point &point) {
 
 std::vector<long> Client::decryptCoordinate(int i) {
     cout << "Client::decryptCoordinate" << endl;
-    clientLogger.log("decryptCoordiantes", log_debug);
+    loggerClient.log("decryptCoordiantes", log_debug);
     std::vector<long> dCoordinates(DIM);
     if (points[i][0][0].isEmpty()) return dCoordinates;
     for (short dim = 0; dim < DIM; ++dim) {

@@ -7,7 +7,7 @@
 #include "KeysServer.h"
 #include "Point.h"
 
-Logger keysServerLogger(log_debug, "keysServerLogger");//todo change to log_trace
+Logger loggerKeysServer(log_debug, "loggerKeysServer");//todo change to log_trace
 
 // Validates the prm value, throwing if invalid
 // [prm] Corresponds to the number of entry in mValues table

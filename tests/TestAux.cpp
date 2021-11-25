@@ -321,16 +321,28 @@ void TestAux::testBGVPackedArithmetics__Comparison() {
     /*  Example of BGV scheme  */
 
     // Plaintext prime modulus
-    unsigned long p = PLAINTEXT_PRIME_MODULUS;
+    unsigned long p = 17;
     //    unsigned long p = 4999;
     // Cyclotomic polynomial - defines phi(m)
-    unsigned long m = 32109;
+    unsigned long m = 105;
     // Hensel lifting (default = 1)
     unsigned long r = 1;
     // Number of bits of the modulus chain
     unsigned long bits = 500;
     // Number of columns of Key-Switching matrix (default = 2 or 3)
     unsigned long c = 2;
+    //
+    //    // Plaintext prime modulus
+    //    unsigned long p = PLAINTEXT_PRIME_MODULUS;
+    //    //    unsigned long p = 4999;
+    //    // Cyclotomic polynomial - defines phi(m)
+    //    unsigned long m = 32109;
+    //    // Hensel lifting (default = 1)
+    //    unsigned long r = 1;
+    //    // Number of bits of the modulus chain
+    //    unsigned long bits = 500;
+    //    // Number of columns of Key-Switching matrix (default = 2 or 3)
+    //    unsigned long c = 2;
 
     std::cout << "\n*********************************************************";
     std::cout << "\n*         Basic Mathematical Operations Example         *";
@@ -403,11 +415,19 @@ void TestAux::testBGVPackedArithmetics__Comparison() {
     // Set it with numbers 0..nslots - 1
     // ptxt = [0] [1] [2] ... [nslots-2] [nslots-1]
     for (int i = 0; i < ptxt.size(); ++i) {
-        ptxt[i] = i;
-        ptxt0[i] = 0;
-        ptxt1[i] = 1;
-        ptxt2[i] = 2 * i;
+//                ptxt[i] = 2;
+//                ptxt0[i] = 3;
+//                ptxt1[i] = 5;
+//                ptxt2[i] = 9;
+                ptxt[i] = i;
+                ptxt0[i] = 0;
+                ptxt1[i] = 1;
+                ptxt2[i] = 2 * i;
     }
+//    ptxt[0] = 2;
+//    ptxt0[0] = 3;
+//    ptxt1[0] = 5;
+//    ptxt2[0] = 9;
 
     // Print the plaintext
     std::cout << "Initial Plaintext: " << ptxt << std::endl;
@@ -564,21 +584,134 @@ void TestAux::testBGVPackedArithmetics__Comparison() {
     cout << "------------------------------------" << endl;
 
     cout << "------------------------------------" << endl;
-    cout << " ctxt2 > ctxt   ---   With Extract Bits\n";
+    cout << " ctxt1 > ctxt " << endl;
+    helib::compareTwoNumbers(mu, ni, helib::CtPtrs_vectorCt(ctxtVec1),
+                             helib::CtPtrs_vectorCt(ctxtVec));
+    secret_key.Decrypt(dMu, mu);
+    std::cout << "Decrypted dMu: " << dMu << std::endl;
+    secret_key.Decrypt(dNi, ni);
+    std::cout << "Decrypted dNi: " << dNi << std::endl;
+    cout << "------------------------------------" << endl;
 
+    cout << "------------------------------------" << endl;
+    cout << " ctxt > ctxt1 " << endl;
+    helib::compareTwoNumbers(mu, ni, helib::CtPtrs_vectorCt(ctxtVec),
+                             helib::CtPtrs_vectorCt(ctxtVec1));
+    secret_key.Decrypt(dMu, mu);
+    std::cout << "Decrypted dMu: " << dMu << std::endl;
+    secret_key.Decrypt(dNi, ni);
+    std::cout << "Decrypted dNi: " << dNi << std::endl;
+    cout << "------------------------------------" << endl;
+
+
+    cout << "------------------------------------" << endl;
+    cout << " ctxt2 > ctxt   ---   With Extract Bits\n";
     std::vector<Ctxt> bitsVec;
     ctxt.extractBits(bitsVec);
-
     std::vector<Ctxt> bitsVec2;
     ctxt2.extractBits(bitsVec2);
 
     helib::compareTwoNumbers(mu, ni,
                              helib::CtPtrs_vectorCt(bitsVec2),
                              helib::CtPtrs_vectorCt(bitsVec));
+
     secret_key.Decrypt(dMu, mu);
     std::cout << "Decrypted dMu: " << dMu << std::endl;
     secret_key.Decrypt(dNi, ni);
     std::cout << "Decrypted dNi: " << dNi << std::endl;
+    cout << "------------------------------------" << endl;
+
+
+    cout << "------------------------------------" << endl;
+    cout << " ctxt2 > ctxt   ---   With Extract Bits\n";
+    helib::compareTwoNumbers(mu, ni,
+                             helib::CtPtrs_vectorCt(bitsVec2),
+                             helib::CtPtrs_vectorCt(bitsVec),
+                             true
+    );
+
+    secret_key.Decrypt(dMu, mu);
+    std::cout << "Decrypted dMu: " << dMu << std::endl;
+    secret_key.Decrypt(dNi, ni);
+    std::cout << "Decrypted dNi: " << dNi << std::endl;
+    cout << "------------------------------------" << endl;
+
+    cout << "------------------------------------" << endl;
+    cout << " ctxt2 > ctxt2   ---   With Extract Bits\n";
+    helib::compareTwoNumbers(mu, ni,
+                             helib::CtPtrs_vectorCt(bitsVec2),
+                             helib::CtPtrs_vectorCt(bitsVec2)
+    );
+
+    secret_key.Decrypt(dMu, mu);
+    std::cout << "Decrypted dMu: " << dMu << std::endl;
+    secret_key.Decrypt(dNi, ni);
+    std::cout << "Decrypted dNi: " << dNi << std::endl;
+    cout << "------------------------------------" << endl;
+
+    cout << "------------------------------------" << endl;
+    cout << " ctxt2 > ctxt2   ---   With Extract Bits\n";
+    helib::compareTwoNumbers(mu, ni,
+                             helib::CtPtrs_vectorCt(bitsVec2),
+                             helib::CtPtrs_vectorCt(bitsVec2),
+                             true
+    );
+
+    secret_key.Decrypt(dMu, mu);
+    std::cout << "Decrypted dMu: " << dMu << std::endl;
+    secret_key.Decrypt(dNi, ni);
+    std::cout << "Decrypted dNi: " << dNi << std::endl;
+    cout << "------------------------------------" << endl;
+
+    cout << "------------------------------------" << endl;
+    std::vector<Ctxt> digits;
+    helib::extractDigits(digits, ctxt);
+
+    std::vector<long> pNums;
+    helib::decryptBinaryNums(pNums, helib::CtPtrs_vectorCt(digits), secret_key, ea, false, true);
+
+    cout << "==========" << endl;
+    for (auto const &n: pNums) cout << n << ",";
+    cout << endl;
+    cout << "==========" << endl;
+    printNameVal(pNums.size());
+    printNameVal(digits.size());
+    cout << "==========" << endl;
+    helib::Ptxt<helib::BGV> plaintxt(public_key);
+    for (auto const &d: digits) {
+        secret_key.Decrypt(plaintxt, d);
+        cout << "[" << plaintxt << "]";
+    }
+    cout << endl;
+    cout << "==========" << endl;
+    cout << "------------------------------------" << endl;
+
+    cout << "------------------------------------" << endl;
+    cout << "------------------------------------" << endl;
+    cout << "------------------------------------" << endl;
+    helib::Ctxt copyCtxt(ctxt);
+    helib::Ctxt copyCtxt0(ctxt0);
+    helib::Ctxt copyCtxt1(ctxt1);
+    helib::Ctxt copyCtxt2(ctxt2);
+    rotate(copyCtxt, 2);
+    rotate(copyCtxt0, 2);
+    rotate(copyCtxt1, 2);
+    rotate(copyCtxt2, 2);
+    helib::Ptxt<helib::BGV> temp(public_key);
+    helib::Ptxt<helib::BGV> temp0(public_key);
+    helib::Ptxt<helib::BGV> temp1(public_key);
+    helib::Ptxt<helib::BGV> temp2(public_key);
+    secret_key.Decrypt(temp, copyCtxt);
+    secret_key.Decrypt(temp0, copyCtxt0);
+    secret_key.Decrypt(temp1, copyCtxt1);
+    secret_key.Decrypt(temp2, copyCtxt2);
+    printNameVal(temp);
+    printNameVal(temp0);
+    printNameVal(temp1);
+    printNameVal(temp2);
+//    std::vector<helib::CtxtPart> parts = ctxt.parts
+    cout << "------------------------------------" << endl;
+    cout << "------------------------------------" << endl;
     cout << "------------------------------------" << endl;
 
 

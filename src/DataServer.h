@@ -56,7 +56,10 @@ public:
     retrievePoints_Thread(const std::vector<Client> &clients);
 
     void
-    retrievePoints_WithThreads(const std::vector<Client> &clients);
+    retrievePoints_WithThreads(
+            const std::vector<Client> &clients
+            , short numOfThreads = NUMBER_OF_THREADS
+            );
 
 
     /**
@@ -94,6 +97,22 @@ public:
             //            const Point & tinyRandomPoint
     );
 
+//    CmpDict cmpDict;
+std::vector<
+        std::unordered_map<
+                const Point,
+                std::unordered_map<
+                        const Point,
+                        helib::Ctxt> > > cmpDict;
+std::mutex cmpDictLock;
+
+    void
+    createCmpDict_WithThreads(
+            const std::vector<Point> &allPoints,
+            const std::vector<std::vector<Point> > &randomPoints
+            //            const Point & tinyRandomPoint
+            , short numOfThreads = NUMBER_OF_THREADS
+    );
 
     // TODO candidate for multithreading
     /**
@@ -198,6 +217,9 @@ public:
             EncryptedNum &threshold
     );
 
+    void createCmpDict_Dim_Thread(const std::vector<Point> &allPoints,
+                                  const std::vector<Point> &randomPoints,
+                                  short dim);
 };
 
 

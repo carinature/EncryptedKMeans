@@ -12,15 +12,15 @@
 
 int main() {
 
-/*    cout << " ============ Test KeysServer ============ " << endl;
-//    TestKeysServer::testConstructor();
-//    TestKeysServer::testEncryptCtxt();
-    TestKeysServer::testDecryptCtxt();
-//    TestKeysServer::testEncryptNum();
-    TestKeysServer::testDecryptNum();
-//    TestKeysServer::testScratchPoint();
-//    TestKeysServer::testTinyRandomPoint();
-    cout << " ============ Test KeysServer Finished ============ " << endl << endl;
+//    cout << " ============ Test KeysServer ============ " << endl;
+////    TestKeysServer::testConstructor();
+////    TestKeysServer::testEncryptCtxt();
+//    TestKeysServer::testDecryptCtxt();
+////    TestKeysServer::testEncryptNum();
+//    TestKeysServer::testDecryptNum();
+////    TestKeysServer::testScratchPoint();
+////    TestKeysServer::testTinyRandomPoint();
+//    cout << " ============ Test KeysServer Finished ============ " << endl << endl;
 
 //    cout << " ============ Test Point ============ " << endl;
 //    TestPoint::testConstructor();
@@ -49,17 +49,18 @@ int main() {
 //    TestAux::minitest();
 //    TestAux::minitest2();
 //    TestAux::testBGVPackedArithmetics_Original();
-    TestAux::testBGVPackedArithmetics__Comparison();
-    TestAux::testMultithreading();
-//    cout << " ============ Test Client Finished ============ " << endl << endl;*/
+//    TestAux::testBGVPackedArithmetics__Comparison();
+//    TestAux::testMultithreading();
+//    cout << " ============ Test Client Finished ============ " << endl << endl;
 
     cout << " ============ Test DataServer ============ " << endl;
 //    TestDataServer::testConstructor();
 //    TestDataServer::testComparePoints();
 //    TestDataServer::testRetrievePoints();
-    TestDataServer::testRetrievePoints_Threads();
+//    TestDataServer::testRetrievePoints_Threads();
 //    TestDataServer::testPickRandomPoints();
 //    TestDataServer::testCreateCmpDict();
+    TestDataServer::testCreateCmpDict_Threads();
 //    TestDataServer::testSplitIntoEpsNet();
 //    TestDataServer::testCalculateCellMeans();
 //    TestDataServer::testGetMinimalDistances();

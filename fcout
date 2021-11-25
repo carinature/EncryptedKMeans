@@ -1,14 +1,22 @@
-'retrievePoints' Finished in 298 milliseconds.
+'retrievePoints' Finished in 1290 milliseconds.
 
-'retrievePoints_Thread' Finished in 695 milliseconds.
+'retrievePoints_Thread' Finished in 407 milliseconds.
 
-'retrievePoints_Thread' Finished in 617 milliseconds.
+'retrievePoints_Thread' Finished in 491 milliseconds.
 
-'retrievePoints_Thread' Finished in 617 milliseconds.
+'retrievePoints_Thread' Finished in 404 milliseconds.
 
-'retrievePoints_Thread' Finished in 447 milliseconds.
+'retrievePoints_WithThreads' Finished in 926 milliseconds.
 
-'retrievePoints_Thread' Finished in 565 milliseconds.
+'pickRandomPoints' Finished in 52 milliseconds.
 
-'retrievePoints_Thread' Finished in 1536 milliseconds.
+'createCmpDict' Finished in 36473 milliseconds.
+
+'createCmpDict_Dim_Thread' Finished in 15409 milliseconds.
+
+'createCmpDict_Dim_Thread' Finished in 21870 milliseconds.
+
+'createCmpDict_WithThreads' Finished in 22358 milliseconds.
+
+'createCmpDict_WithThreads OUTER' Finished in 22358 milliseconds.
 

@@ -14,9 +14,13 @@ public:
 
     static void testRetrievePoints();
 
+    static void testRetrievePoints_Threads();
+
     static void testPickRandomPoints();
 
     static void testCreateCmpDict();
+
+    static void testCreateCmpDict_Threads();
 
     static void testSplitIntoEpsNet();
 
@@ -28,7 +32,6 @@ public:
 
     static void testChoosePointsByDistance();
 
-    static void testRetrievePoints_Threads();
 };
 
 

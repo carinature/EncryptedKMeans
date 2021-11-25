@@ -55,34 +55,38 @@ DataServer::retrievePoints_Thread(
     loggerDataServer.log(printDuration(t0_retrievePoints, "retrievePoints_Thread"));
 
 }
+
 void
 DataServer::retrievePoints_WithThreads(
-        const std::vector<Client> &clients
-//        ,        short numOfThreads
-        ) {
-    auto t0_retrievePoints = CLOCK::now();     //  for logging, profiling, DBG// logging
+        const std::vector<Client> &clients,
+        short numOfThreads
+) {
+    auto t0_retrievePoints = CLOCK::now();  //  for logging, profiling, DBG// logging
     if (clients.empty()) return;
 
-    unsigned long splitSize = clients.size() / NUMBER_OF_THREADS;
-    std::vector<Client> splits[NUMBER_OF_THREADS];
+    unsigned long splitSize = clients.size() / numOfThreads;
+    std::vector<Client> splits[numOfThreads];
     std::vector<std::thread> threadVec;
-    for (int i = 0; i < NUMBER_OF_THREADS; ++i) {
-        splits[i] = (i == NUMBER_OF_THREADS - 1) ?
-                    std::vector<Client>(clients.begin() + i * splitSize, clients.end()):
+    for (int i = 0; i < numOfThreads; ++i) {
+        splits[i] = (i == numOfThreads - 1) ?
+                    std::vector<Client>(clients.begin() + i * splitSize, clients.end()) :
                     std::vector<Client>(clients.begin() + i * splitSize,
                                         clients.begin() + (i + 1) * splitSize);
-
         threadVec.emplace_back(&DataServer::retrievePoints_Thread, this, splits[i]);
     }
     for (auto &t:threadVec) t.join();
 
-    loggerDataServer.log(printDuration(t0_retrievePoints, "retrievePoints_Thread"));
+    loggerDataServer.log(
+            printDuration(t0_retrievePoints, "retrievePoints_WithThreads"));
 
 }
 
 
 std::vector<std::vector<Point> >
-DataServer::pickRandomPoints(const std::vector<Point> &points, int m) const {
+DataServer::pickRandomPoints(
+        const std::vector<Point> &points,
+        int m
+) const {
     auto t0_rndPoints = CLOCK::now();     //  for logging, profiling, DBG
 
     if (points.empty() || m > points.size()) return std::vector<std::vector<Point> >();
@@ -119,8 +123,10 @@ DataServer::pickRandomPoints(const std::vector<Point> &points, int m) const {
 }
 
 CmpDict
-DataServer::createCmpDict(const std::vector<Point> &allPoints,
-                          const std::vector<std::vector<Point> > &randomPoints) {
+DataServer::createCmpDict(
+        const std::vector<Point> &allPoints,
+        const std::vector<std::vector<Point> > &randomPoints
+) {
     auto t0_cmpDict = CLOCK::now();     //  for logging, profiling, DBG
 
     std::vector<
@@ -129,21 +135,17 @@ DataServer::createCmpDict(const std::vector<Point> &allPoints,
                     std::unordered_map<
                             const Point,
                             helib::Ctxt> > >
-            cmpsDict(DIM);
+            cmpDict(DIM);
 
     std::vector<CBit> res;
 
     for (short dim = 0; dim < DIM; ++dim) {
-        cmpsDict[dim].reserve(randomPoints[dim].size());
+        cmpDict[dim].reserve(randomPoints[dim].size());
         for (const Point &rep : randomPoints[dim]) {
             for (const Point &point : allPoints) {
-                //                if (!cmpsDict[rep].empty() && !cmpsDict[rep][point].isEmpty()))
+                //                if (!cmpDict[rep].empty() && !cmpDict[rep][point].isEmpty()))
                 //                if (rep == point) continue; //this is checked inside isBigger function
-                // todo in the future, for efficiency
-                //  - need to check if exist
-                //  - find a way to utilize the 2nd result of the `isBiggerThan()`
-                //      since you get it for free in helibs cmp
-                //  - maybe useful to use helibs `min/max` somehow?
+                // todo in the future, for efficiency - check if exist
                 res = rep.isBiggerThan(point, dim);
                 /*
                 //  nand = !(mu*nu) = 1-(mu*nu)     meaning both numbers were equal
@@ -156,19 +158,92 @@ DataServer::createCmpDict(const std::vector<Point> &allPoints,
                 (beq *= nand).negate();           // beq = - (mu * nand)
                 (beq += res[0]) += nand;            // beq = mu + nand - (mu * nand) = mu OR nand
 
-                cmpsDict[dim][rep].emplace(point, nand);   //  rep > point or rep=point
+                cmpDict[dim][rep].emplace(point, nand);   //  rep > point or rep=point
                 */
-                cmpsDict[dim][rep].emplace(point, res[0]);   //  rep > point
-                cmpsDict[dim][point].emplace(rep, res[1]);   //  rep < point
+                cmpDict[dim][rep].emplace(point, res[0]);   //  rep > point
+                cmpDict[dim][point].emplace(rep, res[1]);   //  rep < point
             }
             res = rep.isBiggerThan(tinyRandomPoint, dim);
-            cmpsDict[dim][rep].emplace(tinyRandomPoint, res[0]);   //  rep > point2
-            cmpsDict[dim][tinyRandomPoint].emplace(rep, res[1]);   //  rep < point2
+            cmpDict[dim][rep].emplace(tinyRandomPoint, res[0]);   //  rep > point2
+            cmpDict[dim][tinyRandomPoint].emplace(rep, res[1]);   //  rep < point2
         }
     }
 
     loggerDataServer.log(printDuration(t0_cmpDict, "createCmpDict"));
-    return cmpsDict;
+    return cmpDict;
+}
+
+
+void
+DataServer::createCmpDict_WithThreads(
+        const std::vector<Point> &allPoints,
+        const std::vector<std::vector<Point> > &randomPoints,
+        short numOfThreads
+) {
+    auto t0_cmpDict_withThreads = CLOCK::now();     //  for logging, profiling, DBG
+
+    numOfThreads = DIM; //fixme
+    std::vector<std::thread> threadVec;
+
+    cmpDict.resize(DIM);
+
+    for (short dim = 0; dim < DIM; ++dim) {
+
+        cmpDict[dim].reserve(randomPoints[dim].size());
+
+        threadVec.emplace_back(&DataServer::createCmpDict_Dim_Thread,
+                               this,
+                               allPoints,
+                               randomPoints[dim],
+                               dim);
+
+    }
+    for (auto &t:threadVec) t.join();
+
+    loggerDataServer.log(printDuration(t0_cmpDict_withThreads, "createCmpDict_WithThreads"));
+}
+
+void
+DataServer::createCmpDict_Dim_Thread(
+        const std::vector<Point> &allPoints,
+        const std::vector<Point> &randomPoints,
+        short dim
+) {
+
+    auto t0_cmpDict_thread = CLOCK::now();     //  for logging, profiling, DBG
+    std::vector<CBit> res;
+
+    for (const Point &rep : randomPoints) {
+        for (const Point &point : allPoints) {
+            //                if (!cmpDict[rep].empty() && !cmpDict[rep][point].isEmpty()))
+            //                if (rep == point) continue; //this is checked inside isBigger function
+            // todo in the future, for efficiency - check if exist
+            res = rep.isBiggerThan(point, dim);
+            /*
+            //  nand = !(mu*nu) = 1-(mu*nu)     meaning both numbers were equal
+            Ctxt nand(res[0]);              // nand = mu
+            (nand *= res[1]).negate();      // nand = - (mu * nu)
+            nand.addConstant(1l);      // nand = 1 - (mu * nu) = !(mu*nu)
+
+            //  beq = mu OR nand = mu + nand - mu * nand
+            Ctxt beq(res[0]);               // beq = mu
+            (beq *= nand).negate();           // beq = - (mu * nand)
+            (beq += res[0]) += nand;            // beq = mu + nand - (mu * nand) = mu OR nand
+
+            cmpDict[dim][rep].emplace(point, nand);   //  rep > point or rep=point
+            */
+            cmpDictLock.lock();
+            cmpDict[dim][rep].emplace(point, res[0]);   //  rep > point
+            cmpDict[dim][point].emplace(rep, res[1]);   //  rep < point
+            cmpDictLock.unlock();
+        }
+        res = rep.isBiggerThan(tinyRandomPoint, dim);
+        cmpDictLock.lock();
+        cmpDict[dim][rep].emplace(tinyRandomPoint, res[0]);   //  rep > point2
+        cmpDict[dim][tinyRandomPoint].emplace(rep, res[1]);   //  rep < point2
+        cmpDictLock.unlock();
+    }
+    loggerDataServer.log(printDuration(t0_cmpDict_thread, "createCmpDict_Dim_Thread"));
 }
 
 std::map<int, //DIM
@@ -177,9 +252,9 @@ std::map<int, //DIM
         >
 >
 DataServer::splitIntoEpsNet(const std::vector<Point> &points,
-                              const std::vector<std::vector<Point> > &randomPoints,
-                              const CmpDict &cmpDict,
-                              const KeysServer &keysServer) {
+                            const std::vector<std::vector<Point> > &randomPoints,
+                            const CmpDict &cmpDict,
+                            const KeysServer &keysServer) {
     auto t0_split = CLOCK::now();     //  for logging, profiling, DBG
 
     std::map<int, std::vector<Slice> > slices;
@@ -451,7 +526,7 @@ std::vector<Point> DataServer::collectMeans(const std::vector<std::tuple<Point, 
 std::vector<std::tuple<Point, Point, EncryptedNum> >
 DataServer::collectMinimalDistancesAndClosestPoints(const std::vector<Point> &points,
                                                     const std::vector<Point> &means,
-                                                    const KeysServer &keysServer)  {
+                                                    const KeysServer &keysServer) {
     auto t0_collectMinDist = CLOCK::now();
 
     std::vector<std::tuple<Point, Point, EncryptedNum> > minDistanceTuples;
@@ -505,7 +580,7 @@ std::tuple<
         std::vector<std::pair<Point, CBit> >
 > DataServer::choosePointsByDistance(
         const std::vector<std::tuple<Point, Point, EncryptedNum>> &minDistanceTuples,
-        std::vector<Point> means, EncryptedNum &threshold)  {
+        std::vector<Point> means, EncryptedNum &threshold) {
 
     std::unordered_map<
             long, //mean index
@@ -517,7 +592,7 @@ std::tuple<
         Point point = std::get<0>(tuple);
         Point meanClosest = std::get<1>(tuple);
         EncryptedNum distance = std::get<2>(tuple);
-        const  helib::PubKey & public_key = point.public_key;
+        const helib::PubKey &public_key = point.public_key;
 
         //  check if distance within threshold margin
         helib::Ctxt mu(public_key), ni(public_key);
@@ -542,14 +617,14 @@ std::tuple<
             helib::Ctxt isCloseToCurrentMean(niCid);
             isCloseToCurrentMean.negate();
             isCloseToCurrentMean.addConstant(1l);
-            isCloseToCurrentMean*=notMuCid;
+            isCloseToCurrentMean *= notMuCid;
             //  result in isCloseToCurrentMean = !(muCid) && !(niCid)
-            isCloseToCurrentMean*=ni;
+            isCloseToCurrentMean *= ni;
             //  result in isCloseToCurrentMean = !(muCid) && !(niCid) && ni
 
             //  pick all points with distance smaller than avg, arrange by closest mean point
             groups[i].emplace_back(point * isCloseToCurrentMean, isCloseToCurrentMean);
         }
     }
-    return {groups,closest,farthest};
+    return {groups, closest, farthest};
 }

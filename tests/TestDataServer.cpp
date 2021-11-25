@@ -156,6 +156,104 @@ void TestDataServer::testCreateCmpDict() {
     cout << " ------ testCreateCmpDict finished ------ " << endl << endl;
 }
 
+void TestDataServer::testCreateCmpDict_Threads() {
+    cout << " ------ testCreateCmpDict ------ " << endl << endl;
+    KeysServer keysServer;
+    DataServer dataServer(keysServer);
+
+    std::vector<Client>
+            clients = generateDataClients(keysServer);
+    std::vector<Point>
+            points = DataServer::retrievePoints(clients);
+
+    cout << " --- All Points  ---" << endl;
+    printPoints(points, keysServer);
+    printNameVal(points.size());
+    cout << " --- --- --- --- ---" << endl;
+
+    dataServer.retrievePoints_WithThreads(clients);
+
+    cout << " --- Points  ---" << endl;
+    printPoints(dataServer.retrievedPoints, keysServer);
+    printNameVal(dataServer.retrievedPoints.size());
+    cout << " --- --- --- --- ---" << endl;
+
+    std::vector<std::vector<Point>>
+            randomPoints = dataServer.pickRandomPoints(points);//, 1 / EPSILON);
+
+    cout << " --- Random Points  ---" << endl;
+    for (const auto& vec :randomPoints) printPoints(vec, keysServer);
+    cout << " --- --- --- --- ---" << endl;
+
+    std::vector<
+            std::unordered_map<
+                    const Point,
+                    std::unordered_map<
+                            const Point,
+                            helib::Ctxt> > >
+            cmp = dataServer.createCmpDict(points, randomPoints);
+
+    dataServer.createCmpDict_WithThreads(points, randomPoints);
+
+    cout << "The Dictionary: " << endl;
+    for (short dim = 0; dim < DIM; ++dim) {
+        cout << "    ======   ";
+        printNameVal(dim);// << " ======" << endl;
+        for (auto const&[point, map] : cmp[dim]) {
+            printPoint(point, keysServer);
+            cout << endl;
+
+            long p1c = keysServer.decryptNum(point[dim]);
+
+            for (auto const&[point2, val]: map) {
+
+                long p2c = keysServer.decryptNum(point2[dim]);
+
+                long pVal = keysServer.decryptCtxt(val);
+                assert(pVal == (p1c > p2c) || pVal == (p1c == p2c));
+
+                printPoint(point2, keysServer);
+                printNameVal(pVal);
+
+            }
+            printNameVal(map.size());
+            cout << " --- --- ---" << endl;
+        }
+        printNameVal(cmp[dim].size());
+        cout << " === === ===" << endl;
+    }
+
+    cout << "The Dictionary - With Threads: " << endl;
+    for (short dim = 0; dim < DIM; ++dim) {
+        cout << "    ======   ";
+        printNameVal(dim);// << " ======" << endl;
+        for (auto const&[point, map] : dataServer.cmpDict[dim]) {
+            printPoint(point, keysServer);
+            cout << endl;
+
+            long p1c = keysServer.decryptNum(point[dim]);
+
+            for (auto const&[point2, val]: map) {
+
+                long p2c = keysServer.decryptNum(point2[dim]);
+
+                long pVal = keysServer.decryptCtxt(val);
+                assert(pVal == (p1c > p2c) || pVal == (p1c == p2c));
+
+                printPoint(point2, keysServer);
+                printNameVal(pVal);
+
+            }
+            printNameVal(map.size());
+            cout << " --- --- ---" << endl;
+        }
+        printNameVal(dataServer.cmpDict[dim].size());
+        cout << " === === ===" << endl;
+    }
+
+    cout << " ------ testCreateCmpDict finished ------ " << endl << endl;
+}
+
 void TestDataServer::testSplitIntoEpsNet() {
     cout << " ------ testSplitIntoEpsNet ------ " << endl;// << endl;
     KeysServer keysServer;

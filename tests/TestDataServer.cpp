@@ -192,7 +192,7 @@ void TestDataServer::testCreateCmpDict_Threads() {
                             const Point,
                             helib::Ctxt> > >
             cmp = dataServer.createCmpDict(points, randomPoints);
-    dataServer.createCmpDict_WithThreads(0);
+    dataServer.createCmpDict_WithThreads();
 
     cout << "The Dictionary: " << endl;
     for (short dim = 0; dim < DIM; ++dim) {
@@ -331,7 +331,7 @@ void TestDataServer::testSplitIntoEpsNet_WithThreads() {
                             const Point,
                             helib::Ctxt> > >
             cmpDict = dataServer.createCmpDict(points, randomPoints);
-    dataServer.createCmpDict_WithThreads(0);
+    dataServer.createCmpDict_WithThreads();
 
     cout << " --- All Points  ---" << endl;
     printPoints(points, keysServer);
@@ -362,7 +362,8 @@ void TestDataServer::testSplitIntoEpsNet_WithThreads() {
 
     std::map<int, std::vector<Slice> >
             slices = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
-    dataServer.splitIntoEpsNet_WithThreads();
+    std::map<int, std::vector<Slice> >
+            slices_Threads = dataServer.splitIntoEpsNet_WithThreads();
 
     for (int dim = 0; dim < DIM; ++dim) {
         cout << "   ---   For dim " << dim << "  --- " << endl;
@@ -375,7 +376,7 @@ void TestDataServer::testSplitIntoEpsNet_WithThreads() {
     cout << "==================\n";
     for (int dim = 0; dim < DIM; ++dim) {
         cout << "   ---   For dim " << dim << "  --- " << endl;
-        for (Slice &cell: dataServer.slices[dim]) cell.printSlice(keysServer);
+        for (Slice &cell: slices_Threads[dim]) cell.printSlice(keysServer);
         cout << "   ---     --- " << endl;
         cout << endl;
     }
@@ -417,6 +418,81 @@ void TestDataServer::testCalculateCellMeans() {
     cout << " === === === === ===" << endl;
     cout << " === === === === ===" << endl;
     for (auto const &tup:meanCellTuples) {
+        cout << "The Mean is: ";
+        printPoint(std::get<0>(tup), keysServer);
+        cout << endl;
+        std::get<1>(tup).printSlice(keysServer);
+    }
+    cout << endl;
+
+    cout << " ------ testCalculateCellMeans finished ------ " << endl << endl;
+}
+
+void TestDataServer::testCalculateCellMeans_WithThreads() {
+    cout << " ------ testCalculateCellMeans ------ " << endl;
+    KeysServer keysServer;
+    DataServer dataServer(keysServer);
+
+    std::vector<Client> clients = generateDataClients(keysServer);
+    //  collect points
+    std::vector<Point> points = DataServer::retrievePoints(clients);
+    dataServer.retrievePoints_WithThreads(clients);
+    std::vector<Point> points_withThreads = dataServer.retrievedPoints;
+    //  random points
+    std::vector<std::vector<Point> > randomPoints = dataServer.pickRandomPoints(points);
+    std::vector<std::vector<Point> > randomPoints_forThreads = dataServer.randomPointsList;
+    //  compare dict
+    std::vector<std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt> > >
+            cmpDict = dataServer.createCmpDict(points, randomPoints);
+    CmpDict & cmpDict_withThreads = dataServer.createCmpDict_WithThreads();
+    //  EPS net
+    std::map<int, std::vector<Slice> >
+            epsNet = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
+    std::map<int, std::vector<Slice> >
+            epsNet_Threads = dataServer.splitIntoEpsNet_WithThreads();//points, randomPoints, cmpDict, keysServer);
+    //  eps-net means
+    std::vector<std::tuple<Point, Slice> >
+            meanCellTuples = DataServer::calculateSlicesMeans(epsNet[DIM - 1], keysServer);
+    std::vector<std::tuple<Point, Slice> >
+            meanCellTuples_Threads = dataServer.calculateSlicesMeans_WithThreads(epsNet_Threads[DIM - 1]);
+
+    cout << " === === === === ===" << endl;
+    cout << " === All Points  ===" << endl;
+    cout << " === === === === ===" << endl;
+    printPoints(points, keysServer);
+    cout << " === === === === ===" << endl;
+    cout << " === Random Points  ===" << endl;
+    cout << " === === === === ===" << endl;
+    for (auto const &vec :randomPoints) printPoints(vec, keysServer);
+    cout << " === === === === ===" << endl;
+    cout << " === Slices  ===" << endl;
+    cout << " === === === === ===" << endl;
+    for (int dim = 0; dim < DIM; ++dim) {
+        cout << "   ---   For dim " << dim << "  --- " << endl;
+        for (const Slice &slice: epsNet[dim]) slice.printSlice(keysServer);
+        cout << endl;
+    }
+    cout << " === === === === ===" << endl;
+    cout << " === Slices With Threads ===" << endl;
+    cout << " === === === === ===" << endl;
+    for (int dim = 0; dim < DIM; ++dim) {
+        cout << "   ---   For dim " << dim << "  --- " << endl;
+        for (const Slice &slice: epsNet_Threads[dim]) slice.printSlice(keysServer);
+        cout << endl;
+    }
+    cout << " === === === === ===" << endl;
+    cout << " === === Means === ===" << endl;
+    cout << " === === === === ===" << endl;    for (auto const &tup:meanCellTuples) {
+        cout << "The Mean is: ";
+        printPoint(std::get<0>(tup), keysServer);
+        cout << endl;
+        std::get<1>(tup).printSlice(keysServer);
+    }
+    cout << endl;
+    cout << " === === === === === ===" << endl;
+    cout << " === Means w/ Threads ===" << endl;
+    cout << " === === === === === ===" << endl;
+    for (auto const &tup:meanCellTuples_Threads) {
         cout << "The Mean is: ";
         printPoint(std::get<0>(tup), keysServer);
         cout << endl;

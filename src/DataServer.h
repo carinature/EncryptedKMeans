@@ -48,6 +48,12 @@ public:
 
     }
 
+    void clearForNextIteration(){
+        randomPointsList.clear();
+        cmpDict.clear();
+//        cmpDict.clear();
+    }
+
     /**
      * @brief A simulated retrievel of data from clients.
      * @param clients - a list of clients (chosen by the CA, to share a similar public key).
@@ -118,8 +124,10 @@ std::vector<
                         helib::Ctxt> > > cmpDict;
 std::mutex cmpDictLock;
 
-    void
-    createCmpDict_WithThreads(short numOfThreads);
+    void createCmpDict_Dim_Thread(short dim);
+
+    const CmpDict &
+    createCmpDict_WithThreads();
 
     /**
      * @brief Split into (1/eps) groups - each group is between 2 representative points.
@@ -140,7 +148,6 @@ std::mutex cmpDictLock;
             const KeysServer &keysServer // for dbg todo remove
     );
 
-    std::map<int, std::vector<Slice> > slices;
 
     std::map<int, //DIM
             std::vector< Slice > // slices for approp dimension
@@ -148,7 +155,6 @@ std::mutex cmpDictLock;
 
     void splitIntoEpsNet_R_Thread(const Slice &baseSlice, const Point &R, int dim);
 
-    // TODO candidate for multithreading
     /**
      * @brief calculate cell-means
      * @param slices a list of Cells (each cell is a list of encrypted points and encrypted size)
@@ -163,7 +169,8 @@ std::mutex cmpDictLock;
             const KeysServer &keysServer
     );
 
-    static
+    void calculateSliceMean_Slice_Thread(const Slice &slice) const;
+
     std::vector<std::tuple<Point, Slice> >
     calculateSlicesMeans_WithThreads(
             const std::vector<Slice> &slices
@@ -200,7 +207,6 @@ std::mutex cmpDictLock;
     std::vector<std::tuple<Point, Point, EncryptedNum> >
     collectMinimalDistancesAndClosestPoints(
             const std::vector<Point> &points,
-            //            const std::reference_wrapper<std::vector<Point>> &means,
             const std::vector<Point> &means,
             const KeysServer &keysServer
     );
@@ -237,7 +243,10 @@ std::mutex cmpDictLock;
             EncryptedNum &threshold
     );
 
-    void createCmpDict_Dim_Thread(short dim);
+    std::vector<std::tuple<Point, Point, EncryptedNum>>
+    collectMinimalDistancesAndClosestPoints_WithThreads(const std::vector<Point> &points,
+                                                        const std::vector<Point> &means,
+                                                        const KeysServer &keysServer);
 };
 
 

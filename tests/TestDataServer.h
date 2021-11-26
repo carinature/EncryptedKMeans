@@ -33,6 +33,8 @@ public:
     static void testChoosePointsByDistance();
 
     static void testSplitIntoEpsNet_WithThreads();
+
+    static void testCalculateCellMeans_WithThreads();
 };
 
 

@@ -84,26 +84,20 @@ DataServer::retrievePoints_WithThreads(
 
 const std::vector<std::vector<Point> > &
 DataServer::pickRandomPoints(
-        const std::vector<Point> &points,
+        const std::vector<Point> &points, //fixme remove or creaate pickRandomPoint_forThreadsRun
         int m
 ) {
     auto t0_rndPoints = CLOCK::now();     //  for logging, profiling, DBG
 
     if (points.empty() || m > points.size()) return randomPointsList;
 
-    //    const Point &tinyRandomPoint = keysServer.tinyRandomPoint();
-    //    std::vector<std::vector<Point> > randomPoints(DIM);
-    //    randomPointsList.reserve(DIM);
-    //    randomPointsList = std::vector<std::vector<Point>>(DIM);
 
     for (int dim = 0; dim < DIM; ++dim) {
 
         // for every dimension random m^dim points (m points for every 'slice') and one tiny-point
-        //        randomPoints[dim].reserve(1 + std::pow(m, dim));
         randomPointsList[dim].reserve(1 + std::pow(m, dim));
         //        to avoid cases of null (zero) points being assigned to group and blowing up in size,
         //          we add a rep for null points to whom those points will be assigned
-        //        randomPoints.push_back(keysServer.tinyRandomPoint());
         // todo consider not saving it in the randomPoints since it's already saved in the dataServ
         //        randomPoints[dim].emplace_back(tinyRandomPoint);
         randomPointsList[dim].emplace_back(tinyRandomPoint);
@@ -118,13 +112,11 @@ DataServer::pickRandomPoints(
         //todo shuffle only m instead of all ? check which is more efficient
 
         for (int i = 0; i < pow(m, dim + 1); ++i) {
-            //            randomPoints[dim].emplace_back(points[indices[i]]);
             randomPointsList[dim].emplace_back(retrievedPoints[indices[i]]);
         }
     }
 
     loggerDataServer.log(printDuration(t0_rndPoints, "pickRandomPoints"));
-    //    return randomPoints;
     return randomPointsList;
 
 }
@@ -221,27 +213,22 @@ DataServer::createCmpDict_Dim_Thread(short dim) {
     loggerDataServer.log(printDuration(t0_cmpDict_thread, "createCmpDict_Dim_Thread"));
 }
 
-void
-DataServer::createCmpDict_WithThreads(
-        short numOfThreads
-) {
+const CmpDict &
+DataServer::createCmpDict_WithThreads() {
     auto t0_cmpDict_withThreads = CLOCK::now();     //  for logging, profiling, DBG
 
-    numOfThreads = DIM; //fixme consider threading by a different param
+    //    numOfThreads = DIM; //fixme consider threading by a different param
     std::vector<std::thread> threadVec;
 
-    //    cmpDict.reserve(DIM);
-
-    for (short dim = 0; dim < DIM; ++dim) {
-
+    for (short dim = 0; dim < DIM; ++dim)
         threadVec.emplace_back(&DataServer::createCmpDict_Dim_Thread,
                                this,
                                dim);
-    }
     for (auto &t:threadVec) t.join();
 
     loggerDataServer.log(
             printDuration(t0_cmpDict_withThreads, "createCmpDict_WithThreads"));
+    return cmpDict;
 }
 
 std::map<int, //DIM
@@ -347,7 +334,7 @@ DataServer::splitIntoEpsNet(
                     */
 
                     CBit isInGroup = isRepInPrevSlice;
-                    isInGroup *= isPointInPrevSlice; //fixme new   <--------------
+                    isInGroup *= isPointInPrevSlice; 
 
                     // p < R
                     CBit pIsBelowCurrentRep(cmpDict[dim].at(R).at(p));
@@ -448,7 +435,7 @@ DataServer::splitIntoEpsNet(
 
                 slices[dim].emplace_back(newSlice);
 
-                loggerDataServer.log(printDuration(t0_itr_rep, "Split Random Rep iteration"));
+                loggerDataServer.log(printDuration(t0_itr_rep, "Split Random-Rep iteration"));
             }
             /*
             // todo handle tail points - points bigger than all the random points at current slice
@@ -482,6 +469,7 @@ DataServer::splitIntoEpsNet(
     return slices;
 }
 
+std::map<int, std::vector<Slice> > slices;
 std::mutex slicesLock;
 
 void
@@ -550,7 +538,7 @@ DataServer::splitIntoEpsNet_R_Thread(
         */
 
         CBit isInGroup = isRepInPrevSlice;
-        isInGroup *= isPointInPrevSlice; //fixme new   <--------------
+        isInGroup *= isPointInPrevSlice; 
 
         // p < R
         CBit pIsBelowCurrentRep(cmpDict[dim].at(R).at(p));
@@ -652,8 +640,9 @@ DataServer::splitIntoEpsNet_R_Thread(
     slices[dim].emplace_back(newSlice);
     slicesLock.unlock();
 
-    loggerDataServer.log(printDuration(t0_itr_rep, "Split Random Rep Thread"));
+    loggerDataServer.log(printDuration(t0_itr_rep, "Split Random-Rep Thread"));
 }
+
 
 std::map<int, //DIM
         std::vector< //current slices for approp dimension
@@ -693,15 +682,13 @@ DataServer::splitIntoEpsNet_WithThreads() {
 
             std::vector<std::thread> threadVec;
 
-            for (const Point &R : randomPointsList[dim]) {
+            for (const Point &R : randomPointsList[dim])
                 threadVec.emplace_back(&DataServer::splitIntoEpsNet_R_Thread,
                                        this,
                                        baseSlice,
                                        R,
                                        dim
-                                       );
-
-            }
+                );
 
             for (auto &t:threadVec) t.join();
 
@@ -719,16 +706,16 @@ DataServer::splitIntoEpsNet_WithThreads() {
             slices[dim].emplace_back(tailSlice);
              */
             cout << endl;
-            loggerDataServer.log(printDuration(t0_itr_slice, "Split Slice iteration"));
+            loggerDataServer.log(printDuration(t0_itr_slice, "Split Slice iteration - With Treads"));
         }
 
 
         cout << endl;
         loggerDataServer.log(printDuration(
                 t0_itr_dim,
-                "Split iteration for #" + std::to_string(dim) + " dimension"));
+                "Split iteration for #" + std::to_string(dim) + " dimension - With Threads"));
     }
-    loggerDataServer.log(printDuration(t0_split, "splitIntoEpsNet"));
+    loggerDataServer.log(printDuration(t0_split, "splitIntoEpsNet_WithThreads"));
 
     /*       todo  checkout this function, from @file Ctxt.h, could be used for all iterarion of 2nd rep at once?
             // set out=prod_{i=0}^{n-1} v[j], takes depth log n and n-1 products
@@ -764,6 +751,7 @@ DataServer::calculateSlicesMeans(const std::vector<Slice> &slices,
         cout << endl;
         cout << "the currnt mean: ";
         printPoint(mean, keysServer);
+        cout<<endl;
         slicesMeans.emplace_back(mean, slice);
     }
 
@@ -771,6 +759,56 @@ DataServer::calculateSlicesMeans(const std::vector<Slice> &slices,
 
     return slicesMeans;
 }
+
+std::vector<std::tuple<Point, Slice> > slicesMeans;//(slices.size());
+std::mutex slicesMeansLock;
+
+//  fixme i think it's better to move this inside SplitIntoEps_Thread
+void DataServer::calculateSliceMean_Slice_Thread(const Slice &slice) const {
+    auto t0_means = CLOCK::now();     //  for logging, profiling, DBG
+    std::vector<Point> points;
+    points.reserve(slice.reps.size() + slice.points.size()); // preallocate memory
+    points.insert(points.end(), slice.reps.begin(), slice.reps.end());
+    points.insert(points.end(), slice.points.begin(), slice.points.end());
+    Point sum(Point::addManyPoints(points, keysServer));
+
+    const Point mean(keysServer.getQuotientPoint(sum, slice.counter, DIM));
+
+    cout << "slice reps: ";
+    printPoints(slice.reps, keysServer);
+    cout << endl;
+    cout << "slice points: ";
+    printNonEmptyPoints(slice.points, keysServer);
+    cout << endl;
+    cout << "the current mean: ";
+    printPoint(mean, keysServer);
+    cout<<endl;
+    slicesMeansLock.lock();
+    slicesMeans.emplace_back(mean, slice);
+    slicesMeansLock.unlock();
+    loggerDataServer.log(printDuration(t0_means, "calculateSliceMean_Slice_Thread"));
+}
+
+std::vector<std::tuple<Point, Slice> >
+DataServer::calculateSlicesMeans_WithThreads(
+        const std::vector<Slice> &slices
+) {
+    auto t0_means = CLOCK::now();     //  for logging, profiling, DBG
+
+    slicesMeans.reserve(slices.size());
+    std::vector<std::thread> threadVec;
+
+    for (const Slice &slice: slices)
+        threadVec.emplace_back(&DataServer::calculateSliceMean_Slice_Thread,
+                               this,
+                               slice);
+    for (auto &t:threadVec) t.join();
+
+    loggerDataServer.log(printDuration(t0_means, "calculateSlicesMeans_WithThreads"));
+
+    return slicesMeans;
+}
+
 
 std::vector<Point> DataServer::collectMeans(const std::vector<std::tuple<Point, Slice>> &slices,
                                             const KeysServer &keysServer) {
@@ -788,6 +826,45 @@ DataServer::collectMinimalDistancesAndClosestPoints(const std::vector<Point> &po
 
     std::vector<std::tuple<Point, Point, EncryptedNum> > minDistanceTuples;
     minDistanceTuples.reserve(points.size());
+//    std::vector<std::thread> threadVec;
+//
+//    for (const Slice &slice: slices)
+//        threadVec.emplace_back(&DataServer::calculateSliceMean_Slice_Thread,
+//                               this,
+//                               slice);
+//    for (auto &t:threadVec) t.join();
+
+    for (const Point &point: points) {
+        const std::pair<Point, EncryptedNum> &
+                minDistFromMeans = point.findMinDistFromMeans(means, keysServer);
+        minDistanceTuples.emplace_back(
+                point,
+                minDistFromMeans.first,
+                minDistFromMeans.second);
+    }
+
+    loggerDataServer.log(
+            printDuration(t0_collectMinDist, "collectMinimalDistancesAndClosestPoints"));
+
+    return minDistanceTuples;
+}
+
+std::vector<std::tuple<Point, Point, EncryptedNum> >
+DataServer::collectMinimalDistancesAndClosestPoints_WithThreads(const std::vector<Point> &points,
+                                                    const std::vector<Point> &means,
+                                                    const KeysServer &keysServer) {
+    auto t0_collectMinDist = CLOCK::now();
+
+    std::vector<std::tuple<Point, Point, EncryptedNum> > minDistanceTuples;
+    minDistanceTuples.reserve(points.size());
+//    std::vector<std::thread> threadVec;
+//
+//    for (const Slice &slice: slices)
+//        threadVec.emplace_back(&DataServer::calculateSliceMean_Slice_Thread,
+//                               this,
+//                               slice);
+//    for (auto &t:threadVec) t.join();
+
     for (const Point &point: points) {
         const std::pair<Point, EncryptedNum> &
                 minDistFromMeans = point.findMinDistFromMeans(means, keysServer);

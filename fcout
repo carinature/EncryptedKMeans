@@ -1,120 +1,154 @@
-'retrievePoints' Finished in 185 milliseconds.
+'retrievePoints' Finished in 545 milliseconds.
 
-'retrievePoints_Thread' Finished in 30 milliseconds.
+'retrievePoints_Thread' Finished in 106 milliseconds.
 
-'retrievePoints_Thread' Finished in 54 milliseconds.
+'retrievePoints_Thread' Finished in 104 milliseconds.
 
-'retrievePoints_Thread' Finished in 87 milliseconds.
+'retrievePoints_Thread' Finished in 98 milliseconds.
 
-'retrievePoints_WithThreads' Finished in 298 milliseconds.
+'retrievePoints_WithThreads' Finished in 492 milliseconds.
 
-'pickRandomPoints' Finished in 50 milliseconds.
+'pickRandomPoints' Finished in 23 milliseconds.
 
-'createCmpDict' Finished in 16452 milliseconds.
+'createCmpDict' Finished in 20573 milliseconds.
 
-'createCmpDict_Dim_Thread' Finished in 4962 milliseconds.
+'createCmpDict_Dim_Thread' Finished in 6983 milliseconds.
 
-'createCmpDict_Dim_Thread' Finished in 7643 milliseconds.
+'createCmpDict_Dim_Thread' Finished in 11559 milliseconds.
 
-'createCmpDict_WithThreads' Finished in 7644 milliseconds.
+'createCmpDict_WithThreads' Finished in 11561 milliseconds.
 
-'Split Random Rep iteration' Finished in 4194 milliseconds.
+'Split Random-Rep iteration' Finished in 7084 milliseconds.
 
-'Split Random Rep iteration' Finished in 4609 milliseconds.
+'Split Random-Rep iteration' Finished in 7075 milliseconds.
 
-'Split Random Rep iteration' Finished in 3913 milliseconds.
+'Split Random-Rep iteration' Finished in 7376 milliseconds.
 
-'Split Slice iteration' Finished in 12779 milliseconds.
+'Split Slice iteration' Finished in 21656 milliseconds.
 
-'Split iteration for #0 dimension' Finished in 12779 milliseconds.
+'Split iteration for #0 dimension' Finished in 21656 milliseconds.
 
-'Split Random Rep iteration' Finished in 4446 milliseconds.
+'Split Random-Rep iteration' Finished in 8846 milliseconds.
 
-'Split Random Rep iteration' Finished in 4708 milliseconds.
+'Split Random-Rep iteration' Finished in 8603 milliseconds.
 
-'Split Random Rep iteration' Finished in 4589 milliseconds.
+'Split Random-Rep iteration' Finished in 8582 milliseconds.
 
-'Split Random Rep iteration' Finished in 4555 milliseconds.
+'Split Random-Rep iteration' Finished in 8308 milliseconds.
 
-'Split Random Rep iteration' Finished in 4762 milliseconds.
+'Split Random-Rep iteration' Finished in 8864 milliseconds.
 
-'Split Slice iteration' Finished in 23156 milliseconds.
+'Split Slice iteration' Finished in 43399 milliseconds.
 
-'Split Random Rep iteration' Finished in 4375 milliseconds.
+'Split Random-Rep iteration' Finished in 8209 milliseconds.
 
-'Split Random Rep iteration' Finished in 4117 milliseconds.
+'Split Random-Rep iteration' Finished in 8338 milliseconds.
 
-'Split Random Rep iteration' Finished in 4127 milliseconds.
+'Split Random-Rep iteration' Finished in 8285 milliseconds.
 
-'Split Random Rep iteration' Finished in 4652 milliseconds.
+'Split Random-Rep iteration' Finished in 9629 milliseconds.
 
-'Split Random Rep iteration' Finished in 4121 milliseconds.
+'Split Random-Rep iteration' Finished in 8329 milliseconds.
 
-'Split Slice iteration' Finished in 21491 milliseconds.
+'Split Slice iteration' Finished in 42974 milliseconds.
 
-'Split Random Rep iteration' Finished in 4110 milliseconds.
+'Split Random-Rep iteration' Finished in 8240 milliseconds.
 
-'Split Random Rep iteration' Finished in 4129 milliseconds.
+'Split Random-Rep iteration' Finished in 8391 milliseconds.
 
-'Split Random Rep iteration' Finished in 4138 milliseconds.
+'Split Random-Rep iteration' Finished in 8263 milliseconds.
 
-'Split Random Rep iteration' Finished in 4151 milliseconds.
+'Split Random-Rep iteration' Finished in 8423 milliseconds.
 
-'Split Random Rep iteration' Finished in 4155 milliseconds.
+'Split Random-Rep iteration' Finished in 8330 milliseconds.
 
-'Split Slice iteration' Finished in 20773 milliseconds.
+'Split Slice iteration' Finished in 41829 milliseconds.
 
-'Split iteration for #1 dimension' Finished in 65421 milliseconds.
+'Split iteration for #1 dimension' Finished in 128203 milliseconds.
 
-'splitIntoEpsNet' Finished in 78291 milliseconds.
+'splitIntoEpsNet' Finished in 150262 milliseconds.
 
-'Split Random Rep Thread' Finished in 3356 milliseconds.
+'Split Random-Rep Thread' Finished in 6509 milliseconds.
 
-'Split Random Rep Thread' Finished in 4704 milliseconds.
+'Split Random-Rep Thread' Finished in 8765 milliseconds.
 
-'Split Random Rep Thread' Finished in 4776 milliseconds.
+'Split Random-Rep Thread' Finished in 9034 milliseconds.
 
-'Split Slice iteration' Finished in 5057 milliseconds.
+'Split Slice iteration - With Treads' Finished in 9396 milliseconds.
 
-'Split iteration for #0 dimension' Finished in 5057 milliseconds.
+'Split iteration for #0 dimension - With Threads' Finished in 9396 milliseconds.
 
-'Split Random Rep Thread' Finished in 7956 milliseconds.
+'Split Random-Rep Thread' Finished in 15152 milliseconds.
 
-'Split Random Rep Thread' Finished in 8309 milliseconds.
+'Split Random-Rep Thread' Finished in 16124 milliseconds.
 
-'Split Random Rep Thread' Finished in 8444 milliseconds.
+'Split Random-Rep Thread' Finished in 16328 milliseconds.
 
-'Split Random Rep Thread' Finished in 8338 milliseconds.
+'Split Random-Rep Thread' Finished in 16138 milliseconds.
 
-'Split Random Rep Thread' Finished in 8599 milliseconds.
+'Split Random-Rep Thread' Finished in 16388 milliseconds.
 
-'Split Slice iteration' Finished in 9343 milliseconds.
+'Split Slice iteration - With Treads' Finished in 18063 milliseconds.
 
-'Split Random Rep Thread' Finished in 7957 milliseconds.
+'Split Random-Rep Thread' Finished in 16258 milliseconds.
 
-'Split Random Rep Thread' Finished in 8104 milliseconds.
+'Split Random-Rep Thread' Finished in 16701 milliseconds.
 
-'Split Random Rep Thread' Finished in 8217 milliseconds.
+'Split Random-Rep Thread' Finished in 16672 milliseconds.
 
-'Split Random Rep Thread' Finished in 9182 milliseconds.
+'Split Random-Rep Thread' Finished in 17940 milliseconds.
 
-'Split Random Rep Thread' Finished in 8658 milliseconds.
+'Split Random-Rep Thread' Finished in 17717 milliseconds.
 
-'Split Slice iteration' Finished in 9501 milliseconds.
+'Split Slice iteration - With Treads' Finished in 19139 milliseconds.
 
-'Split Random Rep Thread' Finished in 7919 milliseconds.
+'Split Random-Rep Thread' Finished in 16978 milliseconds.
 
-'Split Random Rep Thread' Finished in 8405 milliseconds.
+'Split Random-Rep Thread' Finished in 17282 milliseconds.
 
-'Split Random Rep Thread' Finished in 8516 milliseconds.
+'Split Random-Rep Thread' Finished in 17731 milliseconds.
 
-'Split Random Rep Thread' Finished in 8482 milliseconds.
+'Split Random-Rep Thread' Finished in 17152 milliseconds.
 
-'Split Random Rep Thread' Finished in 8363 milliseconds.
+'Split Random-Rep Thread' Finished in 17640 milliseconds.
 
-'Split Slice iteration' Finished in 9136 milliseconds.
+'Split Slice iteration - With Treads' Finished in 18663 milliseconds.
 
-'Split iteration for #1 dimension' Finished in 27981 milliseconds.
+'Split iteration for #1 dimension - With Threads' Finished in 55866 milliseconds.
 
-'splitIntoEpsNet' Finished in 33103 milliseconds.
+'splitIntoEpsNet_WithThreads' Finished in 65388 milliseconds.
+
+'calculateSlicesMeans' Finished in 59873 milliseconds.
+
+'calculateSliceMean_Slice_Thread' Finished in 12257 milliseconds.
+
+'calculateSliceMean_Slice_Thread' Finished in 15996 milliseconds.
+
+'calculateSliceMean_Slice_Thread' Finished in 17208 milliseconds.
+
+'calculateSliceMean_Slice_Thread' Finished in 16575 milliseconds.
+
+'calculateSliceMean_Slice_Thread' Finished in 17796 milliseconds.
+
+'calculateSliceMean_Slice_Thread' Finished in 18790 milliseconds.
+
+'calculateSliceMean_Slice_Thread' Finished in 19172 milliseconds.
+
+'calculateSliceMean_Slice_Thread' Finished in 18810 milliseconds.
+
+'calculateSliceMean_Slice_Thread' Finished in 19568 milliseconds.
+
+'calculateSliceMean_Slice_Thread' Finished in 19074 milliseconds.
+
+'calculateSliceMean_Slice_Thread' Finished in 18496 milliseconds.
+
+'calculateSliceMean_Slice_Thread' Finished in 17964 milliseconds.
+
+'calculateSliceMean_Slice_Thread' Finished in 16044 milliseconds.
+
+'calculateSliceMean_Slice_Thread' Finished in 17396 milliseconds.
+
+'calculateSliceMean_Slice_Thread' Finished in 15302 milliseconds.
+
+'calculateSlicesMeans_WithThreads' Finished in 26972 milliseconds.
 

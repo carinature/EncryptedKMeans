@@ -64,8 +64,9 @@ int main() {
 //    TestDataServer::testSplitIntoEpsNet();
 //    TestDataServer::testSplitIntoEpsNet_WithThreads();
 //    TestDataServer::testCalculateCellMeans();
-    TestDataServer::testCalculateCellMeans_WithThreads();
+//    TestDataServer::testCalculateCellMeans_WithThreads();
 //    TestDataServer::testGetMinimalDistances();
+    TestDataServer::testGetMinimalDistances_WithThreads();
 //    TestDataServer::testCalculateThreshold();
 //    TestDataServer::testChoosePointsByDistance();
     cout << " ============ Test DataServer Finished ============ " << endl << endl;

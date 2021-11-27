@@ -334,7 +334,7 @@ DataServer::splitIntoEpsNet(
                     */
 
                     CBit isInGroup = isRepInPrevSlice;
-                    isInGroup *= isPointInPrevSlice; 
+                    isInGroup *= isPointInPrevSlice;
 
                     // p < R
                     CBit pIsBelowCurrentRep(cmpDict[dim].at(R).at(p));
@@ -538,7 +538,7 @@ DataServer::splitIntoEpsNet_R_Thread(
         */
 
         CBit isInGroup = isRepInPrevSlice;
-        isInGroup *= isPointInPrevSlice; 
+        isInGroup *= isPointInPrevSlice;
 
         // p < R
         CBit pIsBelowCurrentRep(cmpDict[dim].at(R).at(p));
@@ -706,7 +706,8 @@ DataServer::splitIntoEpsNet_WithThreads() {
             slices[dim].emplace_back(tailSlice);
              */
             cout << endl;
-            loggerDataServer.log(printDuration(t0_itr_slice, "Split Slice iteration - With Treads"));
+            loggerDataServer.log(
+                    printDuration(t0_itr_slice, "Split Slice iteration - With Treads"));
         }
 
 
@@ -751,7 +752,7 @@ DataServer::calculateSlicesMeans(const std::vector<Slice> &slices,
         cout << endl;
         cout << "the currnt mean: ";
         printPoint(mean, keysServer);
-        cout<<endl;
+        cout << endl;
         slicesMeans.emplace_back(mean, slice);
     }
 
@@ -782,7 +783,7 @@ void DataServer::calculateSliceMean_Slice_Thread(const Slice &slice) const {
     cout << endl;
     cout << "the current mean: ";
     printPoint(mean, keysServer);
-    cout<<endl;
+    cout << endl;
     slicesMeansLock.lock();
     slicesMeans.emplace_back(mean, slice);
     slicesMeansLock.unlock();
@@ -826,13 +827,6 @@ DataServer::collectMinimalDistancesAndClosestPoints(const std::vector<Point> &po
 
     std::vector<std::tuple<Point, Point, EncryptedNum> > minDistanceTuples;
     minDistanceTuples.reserve(points.size());
-//    std::vector<std::thread> threadVec;
-//
-//    for (const Slice &slice: slices)
-//        threadVec.emplace_back(&DataServer::calculateSliceMean_Slice_Thread,
-//                               this,
-//                               slice);
-//    for (auto &t:threadVec) t.join();
 
     for (const Point &point: points) {
         const std::pair<Point, EncryptedNum> &
@@ -849,33 +843,59 @@ DataServer::collectMinimalDistancesAndClosestPoints(const std::vector<Point> &po
     return minDistanceTuples;
 }
 
-std::vector<std::tuple<Point, Point, EncryptedNum> >
-DataServer::collectMinimalDistancesAndClosestPoints_WithThreads(const std::vector<Point> &points,
-                                                    const std::vector<Point> &means,
-                                                    const KeysServer &keysServer) {
+std::vector<std::tuple<Point, Point, EncryptedNum> > minDistanceTuples;
+std::mutex minDistanceTuplesLock;
+
+void
+findMinDist(
+        const Point &point,
+        const std::vector<Point> &means,
+        const KeysServer &keysServer
+) {
     auto t0_collectMinDist = CLOCK::now();
 
-    std::vector<std::tuple<Point, Point, EncryptedNum> > minDistanceTuples;
-    minDistanceTuples.reserve(points.size());
-//    std::vector<std::thread> threadVec;
-//
-//    for (const Slice &slice: slices)
-//        threadVec.emplace_back(&DataServer::calculateSliceMean_Slice_Thread,
-//                               this,
-//                               slice);
-//    for (auto &t:threadVec) t.join();
+    const std::pair<Point, EncryptedNum> &
+            minDistFromMeans = point.findMinDistFromMeans(means, keysServer);
 
-    for (const Point &point: points) {
-        const std::pair<Point, EncryptedNum> &
-                minDistFromMeans = point.findMinDistFromMeans(means, keysServer);
-        minDistanceTuples.emplace_back(
-                point,
-                minDistFromMeans.first,
-                minDistFromMeans.second);
-    }
+    minDistanceTuplesLock.lock();
+    minDistanceTuples.emplace_back(
+            point,
+            minDistFromMeans.first,
+            minDistFromMeans.second);
+    minDistanceTuplesLock.unlock();
 
     loggerDataServer.log(
-            printDuration(t0_collectMinDist, "collectMinimalDistancesAndClosestPoints"));
+            printDuration(t0_collectMinDist,
+                          "findMinDistFromMeans thread"));
+
+}
+
+std::vector<std::tuple<Point, Point, EncryptedNum> >
+DataServer::collectMinimalDistancesAndClosestPoints_WithThreads(
+        const std::vector<Point> &points,
+        const std::vector<Point> &means
+//        ,
+//        const KeysServer &keysServer
+) {
+    auto t0_collectMinDist = CLOCK::now();
+
+    minDistanceTuples.reserve(points.size());
+    std::vector<std::thread> threadVec;
+
+    for (const Point &point: points) {
+//        std::thread thrd(&findMinDist, keysServer);
+//        std::thread thread(&findMinDist, point, means, keysServer);
+        threadVec.emplace_back(&findMinDist,
+                               point,
+                               means,
+                               std::ref(keysServer));
+    }
+
+    for (auto &t:threadVec) t.join();
+
+    loggerDataServer.log(
+            printDuration(t0_collectMinDist,
+                          "collectMinimalDistancesAndClosestPoints_WithThreads"));
 
     return minDistanceTuples;
 }
@@ -914,7 +934,9 @@ std::tuple<
         std::vector<std::pair<Point, CBit> >
 > DataServer::choosePointsByDistance(
         const std::vector<std::tuple<Point, Point, EncryptedNum>> &minDistanceTuples,
-        std::vector<Point> means, EncryptedNum &threshold) {
+        std::vector<Point> means,
+        EncryptedNum &threshold
+        ) {
 
     std::unordered_map<
             long, //mean index

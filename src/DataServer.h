@@ -245,8 +245,11 @@ std::mutex cmpDictLock;
 
     std::vector<std::tuple<Point, Point, EncryptedNum>>
     collectMinimalDistancesAndClosestPoints_WithThreads(const std::vector<Point> &points,
-                                                        const std::vector<Point> &means,
-                                                        const KeysServer &keysServer);
+                                                        const std::vector<Point> &means
+            //                                                        ,
+            //                                                        const KeysServer &keysServer
+    );
+
 };
 
 

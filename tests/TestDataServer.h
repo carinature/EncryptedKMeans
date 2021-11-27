@@ -24,17 +24,18 @@ public:
 
     static void testSplitIntoEpsNet();
 
+    static void testSplitIntoEpsNet_WithThreads();
+
     static void testCalculateCellMeans();
+
+    static void testCalculateCellMeans_WithThreads();
 
     static void testCalculateThreshold();
 
     static void testGetMinimalDistances();
+    static void testGetMinimalDistances_WithThreads();
 
     static void testChoosePointsByDistance();
-
-    static void testSplitIntoEpsNet_WithThreads();
-
-    static void testCalculateCellMeans_WithThreads();
 };
 
 

@@ -985,3 +985,178 @@ std::tuple<
 
     return {groups, closest, farthest};
 }
+
+
+std::unordered_map<
+        long, //mean index
+        std::vector<std::pair<Point, CBit> > > groupsOfClosestPoints;
+std::vector<std::pair<Point, CBit> > farthest;
+std::mutex groupsLock, farthestLock;
+
+void choosePoint_Mean_Thread(Point point,
+                             Point meanClosest,
+                              std::vector<Point> &means,
+                             int i,
+                             Ctxt ni
+) {
+    auto t0_choosePoint_Thread = CLOCK::now();
+
+    //  check if the closest mean to the point is the current one
+    const helib::PubKey &public_key = point.public_key;
+    helib::Ctxt muCid(public_key), niCid(public_key);
+    helib::CtPtrs_vectorCt closestCid(meanClosest.cid), meanCid(means[i].cid);
+    helib::compareTwoNumbers(muCid, niCid, closestCid, meanCid);
+
+    //  check if point is within margin and her closest mean equals to the current one
+    helib::Ctxt notMuCid(muCid);
+    notMuCid.negate();
+    notMuCid.addConstant(1l);
+    //  result in isCloseToCurrentMean = !(muCid)
+    helib::Ctxt isCloseToCurrentMean(niCid);
+    isCloseToCurrentMean.negate();
+    isCloseToCurrentMean.addConstant(1l);
+    isCloseToCurrentMean *= notMuCid;
+    //  result in isCloseToCurrentMean = !(muCid) && !(niCid)
+    isCloseToCurrentMean *= ni;
+    //  result in isCloseToCurrentMean = !(muCid) && !(niCid) && ni
+
+    //  pick all points with distance smaller than avg, arrange by closest mean point
+    groupsLock.lock();
+    groupsOfClosestPoints[i].emplace_back(point * isCloseToCurrentMean, isCloseToCurrentMean);
+    groupsLock.unlock();
+
+    loggerDataServer.log(
+            printDuration(t0_choosePoint_Thread, "choosePoint_Mean_Thread"));
+}
+
+std::tuple<
+        std::unordered_map<long, std::vector<std::pair<Point, CBit> > >,
+        std::vector<std::pair<Point, CBit> >
+> DataServer::choosePointsByDistance_WithThreads_slower(
+        const std::vector<std::tuple<Point, Point, EncryptedNum>> &minDistanceTuples,
+        std::vector<Point> &means,
+        EncryptedNum &threshold
+) {
+    auto t0_choosePoint = CLOCK::now();
+
+    std::vector<std::thread> threadVec;
+
+    for (auto const &tuple:minDistanceTuples) {
+        Point point = std::get<0>(tuple);
+        Point meanClosest = std::get<1>(tuple);
+        EncryptedNum distance = std::get<2>(tuple);
+        const helib::PubKey &public_key = point.public_key;
+
+        //  check if distance within threshold margin
+        helib::Ctxt mu(public_key), ni(public_key);
+        helib::CtPtrs_vectorCt threshold_wrpr(threshold), distance_wrpr(distance);
+        helib::compareTwoNumbers(mu, ni, threshold_wrpr, distance_wrpr); // fixme
+        //  pick all points with distance bigger than avg
+        farthest.emplace_back(point * mu, mu);
+        //  pick all points with distance smaller than avg
+        //        closest.emplace_back(point * ni, ni);
+
+        for (int i = 0; i < means.size(); ++i)
+            threadVec.emplace_back(
+                    &choosePoint_Mean_Thread,
+//                    std::ref(point),
+                    point,
+//                    std::ref(meanClosest),
+                    meanClosest,
+                    std::ref(means),
+//                    means,
+                    i,
+//                    std::ref(ni)
+                    ni
+                    );
+//        for (std::thread &t:threadVec) t.join();  //  fixme
+
+    }
+            for (std::thread &t:threadVec) t.join();  //  fixme
+
+    loggerDataServer.log(
+            printDuration(t0_choosePoint, "choosePointsByDistance_WithThreads_slower"));
+
+    return {groupsOfClosestPoints, farthest};
+}
+
+void
+choosePoint_Point_Thread(
+        const std::tuple<Point, Point, EncryptedNum> &tuple,
+        std::vector<Point> &means,
+        EncryptedNum &threshold
+) {
+    auto t0_choosePoint_Thread = CLOCK::now();
+    Point point = std::get<0>(tuple);
+    Point meanClosest = std::get<1>(tuple);
+    EncryptedNum distance = std::get<2>(tuple);
+    const helib::PubKey &public_key = point.public_key;
+
+    //  check if distance within threshold margin
+    helib::Ctxt mu(public_key), ni(public_key);
+    helib::CtPtrs_vectorCt threshold_wrpr(threshold), distance_wrpr(distance);
+    helib::compareTwoNumbers(mu, ni, threshold_wrpr, distance_wrpr); // fixme
+    //  pick all points with distance bigger than avg
+    farthestLock.lock();
+    farthest.emplace_back(point * mu, mu);
+    farthestLock.unlock();
+    //  pick all points with distance smaller than avg
+    //        closest.emplace_back(point * ni, ni);
+
+    for (int i = 0; i < means.size(); ++i) {
+        //  check if the closest mean to the point is the current one
+        helib::Ctxt muCid(public_key), niCid(public_key);
+        helib::CtPtrs_vectorCt closestCid(meanClosest.cid), meanCid(means[i].cid);
+        helib::compareTwoNumbers(muCid, niCid, closestCid, meanCid);
+
+        //  check if point is within margin and her closest mean equals to the current one
+        helib::Ctxt notMuCid(muCid);
+        notMuCid.negate();
+        notMuCid.addConstant(1l);
+        //  result in isCloseToCurrentMean = !(muCid)
+        helib::Ctxt isCloseToCurrentMean(niCid);
+        isCloseToCurrentMean.negate();
+        isCloseToCurrentMean.addConstant(1l);
+        isCloseToCurrentMean *= notMuCid;
+        //  result in isCloseToCurrentMean = !(muCid) && !(niCid)
+        isCloseToCurrentMean *= ni;
+        //  result in isCloseToCurrentMean = !(muCid) && !(niCid) && ni
+
+        //  pick all points with distance smaller than avg, arrange by closest mean point
+        groupsLock.lock();
+        groupsOfClosestPoints[i].emplace_back(point * isCloseToCurrentMean, isCloseToCurrentMean);
+        groupsLock.unlock();
+    }
+
+    loggerDataServer.log(
+            printDuration(t0_choosePoint_Thread, "choosePoint_Point_Thread"));
+
+}
+
+std::tuple<
+        std::unordered_map<long, std::vector<std::pair<Point, CBit> > >,
+        std::vector<std::pair<Point, CBit> >
+> DataServer::choosePointsByDistance_WithThreads(
+        const std::vector<std::tuple<Point, Point, EncryptedNum>> &minDistanceTuples,
+        std::vector<Point> &means,
+        EncryptedNum &threshold
+) {
+    auto t0_choosePoint = CLOCK::now();
+
+    std::vector<std::thread> threadVec;
+
+    for (auto const &tuple:minDistanceTuples)
+        threadVec.emplace_back(&choosePoint_Point_Thread,
+                               tuple,
+                               std::ref(means),
+                               std::ref(threshold)
+        );
+
+    for (auto &t:threadVec) t.join();
+
+    loggerDataServer.log(
+            printDuration(t0_choosePoint, "choosePointsByDistance_WithThreads"));
+
+    return {groupsOfClosestPoints, farthest};
+}
+

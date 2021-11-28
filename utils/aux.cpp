@@ -38,8 +38,8 @@ void printPoint(const Point &p, const KeysServer &keysServer) {
     cout << "( ";
     for (short dim = 0; dim < DIM; ++dim)
         cout << keysServer.decryptNum(p[dim]) << " ";
-    cout << ") ";
-//    cout << "id=" << p.id << ",cid=" << keysServer.decryptNum(p.cid) << " ) ";
+//    cout << ") ";
+    cout << "id=" << p.id << " cid=" << keysServer.decryptNum(p.cid) << " ) ";
 }
 
 void printPoints(const std::vector<Point> &points, const KeysServer &keysServer) {

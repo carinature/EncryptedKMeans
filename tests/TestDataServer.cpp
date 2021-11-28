@@ -556,15 +556,18 @@ void TestDataServer::testGetMinimalDistances() {
             }
         }
 
-        //        cout << " Point: ";
-        //        printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
-        Point closestMean = std::get<1>(minDistanceTuples[i]);
-        Point pClosestMean = dummyMeans[closestMinIndex];
-        //        cout << " pClosestMean: ";
-        //        printPoint(pClosestMean, keysServer);
-        //        cout << " closestMean: ";
-        //        printPoint(closestMean, keysServer);
-        //        cout << endl;
+        const Point &closestMean = std::get<1>(minDistanceTuples[i]);
+        const Point &pClosestMean = dummyMeans[closestMinIndex];
+/*
+        cout << " Point: ";
+        printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
+        cout << " pClosestMean: ";
+        printPoint(pClosestMean, keysServer);
+        cout << " closestMean: ";
+        printPoint(closestMean, keysServer);
+        cout << endl;
+*/
+
         assert(keysServer.decryptNum(pClosestMean.cid) == keysServer.decryptNum(closestMean.cid));
 
         long minDistance = keysServer.decryptNum(std::get<2>(minDistanceTuples[i]));
@@ -851,5 +854,168 @@ void TestDataServer::testChoosePointsByDistance() {
 
 
     cout << " ------ testChoosePointsByDistance finished ------ " << endl << endl;
+}
+
+void TestDataServer::testChoosePointsByDistance_WithThreads() {
+    cout << " ------ testChoosePointsByDistance_WithThreads ------ " << endl;
+    const KeysServer keysServer;
+    DataServer dataServer(keysServer);
+
+    //  Creating Data
+    int n = NUMBER_OF_POINTS, m = 1 / EPSILON;
+    std::vector<Point> points, points2;
+    points.reserve(n);
+    points2.reserve(DIM);
+    long tempArrs[n][DIM], tempArrs2[m][DIM];
+    for (int i = 0; i < n; ++i) {
+        for (int dim = 0; dim < DIM; ++dim) tempArrs[i][dim] = randomLongInRange(mt);
+        points.emplace_back(Point(keysServer.getPublicKey(), tempArrs[i]));
+    }
+    for (int i = 0; i < m; ++i) {
+        for (int dim = 0; dim < DIM; ++dim) tempArrs2[i][dim] = randomLongInRange(mt);
+        points2.emplace_back(Point(keysServer.getPublicKey(), tempArrs2[i]));
+    }
+    std::vector<Point> dummyMeans(points2.begin(), points2.begin() + DIM);
+
+    //  Calculating Algorithm
+    const std::vector<std::tuple<Point, Point, EncryptedNum> >
+            minDistanceTuples =
+            dataServer.collectMinimalDistancesAndClosestPoints_WithThreads( //fixme ?
+                    points,
+                    dummyMeans
+            );
+
+    EncryptedNum
+            threshold = DataServer::calculateThreshold(minDistanceTuples, keysServer, 0);
+
+    cout << endl << "Points: ";
+    printPoints(points, keysServer);
+    cout << endl << "Dummies: ";
+    printPoints(dummyMeans, keysServer);
+    cout << endl;
+
+    for (int i = 0; i < points.size(); ++i) {
+        cout << " Point: ";
+        printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
+        Point closestMean = std::get<1>(minDistanceTuples[i]);
+        cout << " closestMean: ";
+        printPoint(closestMean, keysServer);
+        cout << endl;
+        long minDistance = keysServer.decryptNum(std::get<2>(minDistanceTuples[i]));
+        printNameVal(minDistance);
+    }
+    printNameVal(keysServer.decryptNum(threshold));
+
+    std::tuple<
+            std::unordered_map<long, std::vector<std::pair<Point, CBit> > >,
+            std::vector<std::pair<Point, CBit> >,
+            std::vector<std::pair<Point, CBit> >
+    > groups = DataServer::choosePointsByDistance(
+            minDistanceTuples,
+            dummyMeans,
+            threshold
+    );
+
+    std::tuple<
+            std::unordered_map<long, std::vector<std::pair<Point, CBit> > >,
+            std::vector<std::pair<Point, CBit> >
+    > groups_withThreads1 = dataServer.choosePointsByDistance_WithThreads_slower(
+            minDistanceTuples,
+            dummyMeans,
+            threshold
+    );
+
+
+    std::tuple<
+            std::unordered_map<long, std::vector<std::pair<Point, CBit> > >,
+            std::vector<std::pair<Point, CBit> >
+    > groups_withThreads2 = dataServer.choosePointsByDistance_WithThreads(
+            minDistanceTuples,
+            dummyMeans,
+            threshold
+    );
+
+    cout << " === === === === === " << endl;
+    cout << " === Groups by Means === " << endl;
+    cout << " === === === === === " << endl;
+    for (auto const &[meanI, points] : std::get<0>(groups)) {
+        printNameVal(meanI) << "\tClose Points: ";
+        for (auto const &pair: points) {
+            cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
+            printPoint(pair.first, keysServer);
+        }
+        cout << endl;
+    }
+    cout << " === === === === === === === === === " << endl;
+    cout << " === Groups by Means - With Threads  - 111  === " << endl;
+    cout << " === === === === === === === === === " << endl;
+    for (auto const &[meanI, points] : std::get<0>(groups_withThreads1)) {
+        printNameVal(meanI) << "\tClose Points: ";
+        for (auto const &pair: points) {
+            cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
+            printPoint(pair.first, keysServer);
+        }
+        cout << endl;
+    }
+    cout << " === === === === === === === === === " << endl;
+    cout << " === Groups by Means - With Threads  - 222  === " << endl;
+    cout << " === === === === === === === === === " << endl;
+    for (auto const &[meanI, points] : std::get<0>(groups_withThreads2)) {
+        printNameVal(meanI) << "\tClose Points: ";
+        for (auto const &pair: points) {
+            cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
+            printPoint(pair.first, keysServer);
+        }
+        cout << endl;
+    }
+    cout << " === === === === === " << endl << endl;
+    /*
+        cout << " === === === === === " << endl;
+        cout << " === Closest Points === " << endl;
+        cout << " === === === === === " << endl;
+        for (auto const &pair : std::get<1>(groups)) {
+            cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
+            printPoint(pair.first, keysServer);
+        }
+        cout << endl << " === === === === === " << endl << endl;
+
+        cout << " === === === === === === === === === " << endl;
+        cout << " === Closest Points - With Threads === " << endl;
+        cout << " === === === === === === === === === " << endl;
+        for (auto const &pair : std::get<1>(groups_withThreads)) {
+            cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
+            printPoint(pair.first, keysServer);
+        }
+        cout << endl << " === === === === === " << endl << endl;
+    */
+    cout << " === === === === === " << endl;
+    cout << " === Farthest Points === " << endl;
+    cout << " === === === === === " << endl;
+    for (auto const &pair : std::get<2>(groups)) {
+        cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
+        printPoint(pair.first, keysServer);
+    }
+    cout << endl << " === === === === === " << endl << endl;
+
+    cout << " === === === === === === === === === " << endl;
+    cout << " === Farthest Points - With Threads  -  111  === " << endl;
+    cout << " === === === === === === === === === " << endl;
+    for (auto const &pair : std::get<1>(groups_withThreads1)) {
+        cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
+        printPoint(pair.first, keysServer);
+    }
+    cout << endl << " === === === === === " << endl << endl;
+
+    cout << " === === === === === === === === === " << endl;
+    cout << " === Farthest Points - With Threads  -  222  === " << endl;
+    cout << " === === === === === === === === === " << endl;
+    for (auto const &pair : std::get<1>(groups_withThreads2)) {
+        cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
+        printPoint(pair.first, keysServer);
+    }
+    cout << endl << " === === === === === " << endl << endl;
+
+    cout << " ------ testChoosePointsByDistance_WithThreads finished ------ " << endl << endl;
+
 }
 

@@ -248,12 +248,23 @@ public:
             EncryptedNum &threshold
     );
 
-    std::vector<std::tuple<Point, Point, EncryptedNum>>
-    collectMinimalDistancesAndClosestPoints_WithThreads(const std::vector<Point> &points,
-                                                        const std::vector<Point> &means
-            //                                                        ,
-            //                                                        const KeysServer &keysServer
-    );
+    static std::tuple<
+            std::unordered_map<long, std::vector<std::pair<Point, CBit>>>,
+            std::vector<std::pair<Point, CBit>>
+    >
+    choosePointsByDistance_WithThreads_slower(
+            const std::vector<std::tuple<Point, Point, EncryptedNum>> &minDistanceTuples,
+            std::vector<Point> &means,
+            EncryptedNum &threshold);
+
+    static std::tuple<
+    std::unordered_map<long, std::vector<std::pair<Point, CBit>>>,
+    std::vector<std::pair<Point, CBit>>
+    >
+    choosePointsByDistance_WithThreads(
+            const std::vector<std::tuple<Point, Point, EncryptedNum>> &minDistanceTuples,
+            std::vector<Point> &means,
+            EncryptedNum &threshold);
 
 };
 

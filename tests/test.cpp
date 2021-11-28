@@ -66,9 +66,9 @@ int main() {
 //    TestDataServer::testCalculateCellMeans();
 //    TestDataServer::testCalculateCellMeans_WithThreads();
 //    TestDataServer::testGetMinimalDistances();
-    TestDataServer::testGetMinimalDistances_WithThreads();
+//    TestDataServer::testGetMinimalDistances_WithThreads();
 //    TestDataServer::testCalculateThreshold();
-//    TestDataServer::testChoosePointsByDistance_WithThreads();
+    TestDataServer::testChoosePointsByDistance_WithThreads();
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
 
 }

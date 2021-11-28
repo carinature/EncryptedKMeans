@@ -68,7 +68,7 @@ int main() {
 //    TestDataServer::testGetMinimalDistances();
     TestDataServer::testGetMinimalDistances_WithThreads();
 //    TestDataServer::testCalculateThreshold();
-//    TestDataServer::testChoosePointsByDistance();
+//    TestDataServer::testChoosePointsByDistance_WithThreads();
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
 
 }

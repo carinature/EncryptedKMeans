@@ -33,6 +33,7 @@ public:
     static void testCalculateThreshold();
 
     static void testGetMinimalDistances();
+
     static void testGetMinimalDistances_WithThreads();
 
     static void testChoosePointsByDistance();

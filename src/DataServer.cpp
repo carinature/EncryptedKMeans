@@ -874,8 +874,6 @@ std::vector<std::tuple<Point, Point, EncryptedNum> >
 DataServer::collectMinimalDistancesAndClosestPoints_WithThreads(
         const std::vector<Point> &points,
         const std::vector<Point> &means
-//        ,
-//        const KeysServer &keysServer
 ) {
     auto t0_collectMinDist = CLOCK::now();
 
@@ -883,8 +881,6 @@ DataServer::collectMinimalDistancesAndClosestPoints_WithThreads(
     std::vector<std::thread> threadVec;
 
     for (const Point &point: points) {
-//        std::thread thrd(&findMinDist, keysServer);
-//        std::thread thread(&findMinDist, point, means, keysServer);
         threadVec.emplace_back(&findMinDist,
                                point,
                                means,
@@ -936,7 +932,8 @@ std::tuple<
         const std::vector<std::tuple<Point, Point, EncryptedNum>> &minDistanceTuples,
         std::vector<Point> means,
         EncryptedNum &threshold
-        ) {
+) {
+    auto t0_choosePoints = CLOCK::now();
 
     std::unordered_map<
             long, //mean index
@@ -982,5 +979,9 @@ std::tuple<
             groups[i].emplace_back(point * isCloseToCurrentMean, isCloseToCurrentMean);
         }
     }
+
+    loggerDataServer.log(
+            printDuration(t0_choosePoints, "choosePointsByDistance"));
+
     return {groups, closest, farthest};
 }

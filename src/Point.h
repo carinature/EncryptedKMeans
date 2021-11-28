@@ -140,8 +140,8 @@ public:
         //        cout << " Point copy copy" << endl; //this print is important for later. efficiency...
         if (!point.isEmpty())
             for (short dim = 0; dim < DIM; ++dim) {
-                vecCopy(cCoordinates[dim], point.cCoordinates[dim]); //helibs version of vec copy
-                //                cCoordinates[dim] = point.cCoordinates[dim];
+//                vecCopy(cCoordinates[dim], point.cCoordinates[dim]); //helibs version of vec copy //fixme throws an exception sometimes
+                                cCoordinates[dim] = point.cCoordinates[dim];
             }
         else std::cerr << "point is empty!" << endl;
 

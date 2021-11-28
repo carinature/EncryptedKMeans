@@ -444,7 +444,7 @@ void TestDataServer::testCalculateCellMeans_WithThreads() {
     //  compare dict
     std::vector<std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt> > >
             cmpDict = dataServer.createCmpDict(points, randomPoints);
-    CmpDict & cmpDict_withThreads = dataServer.createCmpDict_WithThreads();
+    CmpDict &cmpDict_withThreads = dataServer.createCmpDict_WithThreads();
     //  EPS net
     std::map<int, std::vector<Slice> >
             epsNet = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
@@ -454,7 +454,8 @@ void TestDataServer::testCalculateCellMeans_WithThreads() {
     std::vector<std::tuple<Point, Slice> >
             meanCellTuples = DataServer::calculateSlicesMeans(epsNet[DIM - 1], keysServer);
     std::vector<std::tuple<Point, Slice> >
-            meanCellTuples_Threads = dataServer.calculateSlicesMeans_WithThreads(epsNet_Threads[DIM - 1]);
+            meanCellTuples_Threads = dataServer.calculateSlicesMeans_WithThreads(
+            epsNet_Threads[DIM - 1]);
 
     cout << " === === === === ===" << endl;
     cout << " === All Points  ===" << endl;
@@ -482,7 +483,8 @@ void TestDataServer::testCalculateCellMeans_WithThreads() {
     }
     cout << " === === === === ===" << endl;
     cout << " === === Means === ===" << endl;
-    cout << " === === === === ===" << endl;    for (auto const &tup:meanCellTuples) {
+    cout << " === === === === ===" << endl;
+    for (auto const &tup:meanCellTuples) {
         cout << "The Mean is: ";
         printPoint(std::get<0>(tup), keysServer);
         cout << endl;
@@ -522,7 +524,7 @@ void TestDataServer::testGetMinimalDistances() {
         for (int dim = 0; dim < DIM; ++dim) tempArrs2[i][dim] = randomLongInRange(mt);
         points2.emplace_back(Point(keysServer.getPublicKey(), tempArrs2[i]));
     }
-    std::vector<Point> dummyMeans(points2.begin(), points2.begin() + 1/EPSILON);
+    std::vector<Point> dummyMeans(points2.begin(), points2.begin() + 1 / EPSILON);
 
     cout << endl << "Points: ";
     printPoints(points, keysServer);
@@ -585,21 +587,44 @@ void TestDataServer::testGetMinimalDistances_WithThreads() {
     points.reserve(n);
     points2.reserve(DIM);
     long tempArrs[n][DIM], tempArrs2[m][DIM];
-    for (int i = 0; i < n; ++i) {
-        for (int dim = 0; dim < DIM; ++dim) tempArrs[i][dim] = randomLongInRange(mt);
-        points.emplace_back(Point(keysServer.getPublicKey(), tempArrs[i]));
-    }
     for (int i = 0; i < m; ++i) {
         for (int dim = 0; dim < DIM; ++dim) tempArrs2[i][dim] = randomLongInRange(mt);
         points2.emplace_back(Point(keysServer.getPublicKey(), tempArrs2[i]));
     }
     std::vector<Point> dummyMeans(points2.begin(), points2.begin() + DIM);
 
-    cout << endl << "Points: ";
-    printPoints(points, keysServer);
-    cout << endl << "Dummies: ";
-    printPoints(dummyMeans, keysServer);
-    cout << endl;
+
+    //  Retrieve expected results
+    std::vector<long> pMinDistances(n);
+    std::vector<int> closestMinIndices(n);
+
+
+    for (int i = 0; i < n; ++i) {
+        for (int dim = 0; dim < DIM; ++dim) tempArrs[i][dim] = randomLongInRange(mt);
+        points.emplace_back(Point(keysServer.getPublicKey(), tempArrs[i]));
+        //    }
+        //    for (int i = 0; i < points.size(); ++i) {
+        //        long currCoors[DIM];
+        //        for (int dim = 0; dim < DIM; ++dim) currCoors[dim] = tempArrs[i][dim];
+        long pMinDistance = DIM * std::pow(NUMBERS_RANGE, 2);
+        int closestMinIndex = -1;
+        for (int j = 0; j < dummyMeans.size(); ++j) {
+            long tempsum = 0;
+            for (int dim = 0; dim < DIM; ++dim)
+                tempsum += pow(tempArrs[i][dim] - tempArrs2[j][dim], 2);
+            if (pMinDistance > tempsum) {
+                pMinDistance = tempsum;
+                closestMinIndex = j;
+            }
+        }
+        //        printNameVal(pMinDistance);
+        pMinDistances[i] = pMinDistance;
+        closestMinIndices[i] = closestMinIndex;
+        /*                for (int j = 0; j < pMinDistances.size(); ++j) printNameVal(pMinDistances[j]);
+                        printNameVal(pMinDistances[i]);
+                        cout << "-------" << endl;*/
+
+    }
 
     //  Calculating Algorithm
     const std::vector<std::tuple<Point, Point, EncryptedNum> >
@@ -614,41 +639,68 @@ void TestDataServer::testGetMinimalDistances_WithThreads() {
             dataServer.collectMinimalDistancesAndClosestPoints_WithThreads(
                     points,
                     dummyMeans
-//                    ,
-//                    keysServer
-                    );
+            );
+    /*
+    cout << endl << "Points: ";
+    printPoints(points, keysServer);
+    cout << endl << "Dummies: ";
+    printPoints(dummyMeans, keysServer);
+    cout << endl;
+    */
 
     //  Check results
     for (int i = 0; i < points.size(); ++i) {
-        long currCoors[DIM];
-        for (int dim = 0; dim < DIM; ++dim) currCoors[dim] = tempArrs[i][dim];
-        long pMinDistance = DIM * std::pow(NUMBERS_RANGE, 2);
-        int closestMinIndex = -1;
-        for (int j = 0; j < dummyMeans.size(); ++j) {
-            long tempsum = 0;
-            for (int dim = 0; dim < DIM; ++dim)
-                tempsum += pow(currCoors[dim] - tempArrs2[j][dim], 2);
-            if (pMinDistance > tempsum) {
-                pMinDistance = tempsum;
-                closestMinIndex = j;
+        const Point &closestMean = std::get<1>(minDistanceTuples[i]);
+        const Point &pClosestMean = dummyMeans[closestMinIndices[i]];
+        const Point &pointWithThreads = std::get<0>(minDistanceTuples_WithThreads[i]);
+        const Point &closestMean_WithThreads = std::get<1>(minDistanceTuples_WithThreads[i]);
+        Point &approPoint = points[0];
+        int appropI = -1;
+        for (int p = 0; p < points.size(); ++p)
+            if (points[p].id == pointWithThreads.id) {
+                approPoint = points[p];
+                appropI = p;
+                break;
             }
-        }
-
-        //        cout << " Point: ";
-        //        printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
-        Point closestMean = std::get<1>(minDistanceTuples[i]);
-        Point pClosestMean = dummyMeans[closestMinIndex];
-        //        cout << " pClosestMean: ";
-        //        printPoint(pClosestMean, keysServer);
-        //        cout << " closestMean: ";
-        //        printPoint(closestMean, keysServer);
-        //        cout << endl;
-        assert(keysServer.decryptNum(pClosestMean.cid) == keysServer.decryptNum(closestMean.cid));
+        Point &pClosestMean_WithThreads = dummyMeans[closestMinIndices[appropI]];
+        /*
+           cout << " Point: ";
+           printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
+           cout << " pClosestMean: ";
+           printPoint(pClosestMean, keysServer);
+           cout << " closestMean: ";
+           printPoint(closestMean, keysServer);
+           cout << " Point: with threads:";
+           printPoint(pointWithThreads, keysServer);
+           cout << " closestMean_withThreads: ";
+           printPoint(closestMean_WithThreads, keysServer);
+           cout << " Point by id:";
+           printPoint(approPoint, keysServer);
+           cout << " Point by index:";
+           printPoint(points[appropI], keysServer);
+           printNameVal(appropI);
+           cout << "pClosestMean_WithThreads: ";
+           printPoint(pClosestMean_WithThreads, keysServer);
+           cout << endl;
+           */
+        long pClosestMeanCid = keysServer.decryptNum(pClosestMean.cid);
+        long closestMeanCid = keysServer.decryptNum(closestMean.cid);
+        long pClosestMean_WithThreads_Cid = keysServer.decryptNum(pClosestMean_WithThreads.cid);
+        long closestMean_WithThreadsCid = keysServer.decryptNum(closestMean_WithThreads.cid);
+        assert(pClosestMeanCid == closestMeanCid);
+        assert(pClosestMean_WithThreads_Cid == closestMean_WithThreadsCid);
 
         long minDistance = keysServer.decryptNum(std::get<2>(minDistanceTuples[i]));
-        //        printNameVal(pMinDistance);
-        //        printNameVal(minDistance);
-        assert(pMinDistance == minDistance);
+        long minDistance_WithThreads = keysServer.decryptNum(
+                std::get<2>(minDistanceTuples_WithThreads[i]));
+        /*
+        printNameVal(pMinDistances[i]);
+        printNameVal(pMinDistances[appropI]);
+        printNameVal(minDistance);
+        printNameVal(minDistance_WithThreads);
+        */
+        assert(pMinDistances[i] == minDistance);
+        assert(pMinDistances[appropI] == minDistance_WithThreads);
     }
 
     cout << " ------ testGetMinimalDistances_WithThreads finished ------ " << endl << endl;

@@ -33,12 +33,12 @@ public:
     explicit DataServer(const KeysServer &keysServer) :
             keysServer(keysServer),
             tinyRandomPoint(keysServer.tinyRandomPoint())
-//            ,
-//            retrievedPoints(NUMBER_OF_POINTS)
-//            ,
-//            randomPointsList(DIM) //todo change name to randomPoints
-//            ,
-//            cmpDict(DIM, {{}})
+    //            ,
+    //            retrievedPoints(NUMBER_OF_POINTS)
+    //            ,
+    //            randomPointsList(DIM) //todo change name to randomPoints
+    //            ,
+    //            cmpDict(DIM, {{}})
     {
         //        dataServerLogger.log("DataServer()");
         cout << "DataServer()" << endl;
@@ -48,10 +48,10 @@ public:
 
     }
 
-    void clearForNextIteration(){
+    void clearForNextIteration() {
         randomPointsList.clear();
         cmpDict.clear();
-//        cmpDict.clear();
+        //        cmpDict.clear();
     }
 
     /**
@@ -73,9 +73,9 @@ public:
 
     void
     retrievePoints_WithThreads(
-            const std::vector<Client> &clients
-            , short numOfThreads = NUMBER_OF_THREADS
-            );
+            const std::vector<Client> &clients,
+            short numOfThreads = NUMBER_OF_THREADS
+    );
 
 
     std::vector<std::vector<Point> > randomPointsList;
@@ -87,13 +87,12 @@ public:
      * @returns a list of #DIM lists - each containing m^d randomly chosen points
      * @return std::vector<Point>
      * */
-//    std::vector<std::vector<Point> >
+    //    std::vector<std::vector<Point> >
     const std::vector<std::vector<Point> > &
     pickRandomPoints(
             const std::vector<Point> &points,
-            int m = 1 / EPSILON   //  -1
-            //            const Point & tinyRandomPoint
-    ) ;
+            int m = 1 / EPSILON
+    );
 
     /**
      * @brief create a comparison dict:
@@ -112,17 +111,16 @@ public:
     createCmpDict(
             const std::vector<Point> &allPoints,
             const std::vector<std::vector<Point> > &randomPoints
-            //            const Point & tinyRandomPoint
     );
 
-//    CmpDict cmpDict;
-std::vector<
-        std::unordered_map<
-                const Point,
-                std::unordered_map<
-                        const Point,
-                        helib::Ctxt> > > cmpDict;
-std::mutex cmpDictLock;
+    //    CmpDict cmpDict;
+    std::vector<
+            std::unordered_map<
+                    const Point,
+                    std::unordered_map<
+                            const Point,
+                            helib::Ctxt> > > cmpDict;
+    std::mutex cmpDictLock;
 
     void createCmpDict_Dim_Thread(short dim);
 
@@ -148,12 +146,14 @@ std::mutex cmpDictLock;
             const KeysServer &keysServer // for dbg todo remove
     );
 
+    void splitIntoEpsNet_R_Thread(
+            const Slice &baseSlice,
+            const Point &R,
+            int dim);
 
     std::map<int, //DIM
-            std::vector< Slice > // slices for approp dimension
+            std::vector<Slice> // slices for approp dimension
     > splitIntoEpsNet_WithThreads();
-
-    void splitIntoEpsNet_R_Thread(const Slice &baseSlice, const Point &R, int dim);
 
     /**
      * @brief calculate cell-means
@@ -169,7 +169,9 @@ std::mutex cmpDictLock;
             const KeysServer &keysServer
     );
 
-    void calculateSliceMean_Slice_Thread(const Slice &slice) const;
+    void calculateSliceMean_Slice_Thread(
+            const Slice &slice
+    ) const;
 
     std::vector<std::tuple<Point, Slice> >
     calculateSlicesMeans_WithThreads(
@@ -177,7 +179,8 @@ std::mutex cmpDictLock;
     );
 
     /**
-     * @brief collect mean point from epsNet*/
+     * @brief collect mean point from epsNet
+     * */
     static
     std::vector<Point>
     collectMeans(
@@ -202,7 +205,6 @@ std::mutex cmpDictLock;
      * @return tuples of [point, closest mean, minimal distance]
      * @returns
      * */
-    // TODO candidate for multithreading
     static
     std::vector<std::tuple<Point, Point, EncryptedNum> >
     collectMinimalDistancesAndClosestPoints(
@@ -211,6 +213,11 @@ std::mutex cmpDictLock;
             const KeysServer &keysServer
     );
 
+    std::vector<std::tuple<Point, Point, EncryptedNum>>
+    collectMinimalDistancesAndClosestPoints_WithThreads(
+            const std::vector<Point> &points,
+            const std::vector<Point> &means
+    );
 
     //  calculate avg distance
     /**
@@ -227,10 +234,8 @@ std::mutex cmpDictLock;
             int iterationNumber = 0
     );
 
-
     //  collect for each mean the points closest to it
     //  for each Point also includes a bit signifying if the point is included returns
-    // TODO candidate for multithreading
     static
     std::tuple<
             std::unordered_map<long, std::vector<std::pair<Point, CBit> > >,

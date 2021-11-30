@@ -56,13 +56,13 @@ DataServer::retrievePoints_Thread(
 
 }
 
-void
+std::vector<Point>
 DataServer::retrievePoints_WithThreads(
         const std::vector<Client> &clients,
         short numOfThreads
 ) {
     auto t0_retrievePoints = CLOCK::now();  //  for logging, profiling, DBG// logging
-    if (clients.empty()) return;
+//    if (clients.empty()) return;
 
     unsigned long splitSize = clients.size() / numOfThreads;
     std::vector<Client> splits[numOfThreads];
@@ -79,12 +79,13 @@ DataServer::retrievePoints_WithThreads(
     loggerDataServer.log(
             printDuration(t0_retrievePoints, "retrievePoints_WithThreads"));
 
+    return retrievedPoints;
 }
 
 
 const std::vector<std::vector<Point> > &
 DataServer::pickRandomPoints(
-        const std::vector<Point> &points, //fixme remove or creaate pickRandomPoint_forThreadsRun
+        const std::vector<Point> &points,
         int m
 ) {
     auto t0_rndPoints = CLOCK::now();     //  for logging, profiling, DBG
@@ -177,7 +178,6 @@ DataServer::createCmpDict_Dim_Thread(short dim) {
 
     auto t0_cmpDict_thread = CLOCK::now();     //  for logging, profiling, DBG
     std::vector<CBit> res;
-
     cmpDict[dim].reserve(randomPointsList[dim].size());
 
     for (const Point &rep : randomPointsList[dim]) {
@@ -213,15 +213,17 @@ DataServer::createCmpDict_Dim_Thread(short dim) {
     loggerDataServer.log(printDuration(t0_cmpDict_thread, "createCmpDict_Dim_Thread"));
 }
 
-const CmpDict &
-DataServer::createCmpDict_WithThreads() {
+CmpDict &
+DataServer::createCmpDict_WithThreads(const std::vector<Point> &allPoints,
+                                      const std::vector<std::vector<Point> > &randomPoints,
+                                      int numOfThreads) {
     auto t0_cmpDict_withThreads = CLOCK::now();     //  for logging, profiling, DBG
 
-    //    numOfThreads = DIM; //fixme consider threading by a different param
     std::vector<std::thread> threadVec;
 
     for (short dim = 0; dim < DIM; ++dim)
-        threadVec.emplace_back(&DataServer::createCmpDict_Dim_Thread,
+        threadVec.emplace_back(
+                &DataServer::createCmpDict_Dim_Thread,
                                this,
                                dim);
     for (auto &t:threadVec) t.join();
@@ -238,10 +240,9 @@ std::map<int, //DIM
 >
 DataServer::splitIntoEpsNet(
         const std::vector<Point> &points,
-        const std::vector<std::vector<Point> > &randomPoints,
-        const CmpDict &cmpDict,
-        const KeysServer &keysServer
-) {
+                            const std::vector<std::vector<Point> > &randomPoints,
+                            const CmpDict &cmpDict
+                            ) {
     auto t0_split = CLOCK::now();     //  for logging, profiling, DBG
 
     std::map<int, std::vector<Slice> > slices;
@@ -645,11 +646,11 @@ DataServer::splitIntoEpsNet_R_Thread(
 
 
 std::map<int, //DIM
-        std::vector< //current slices for approp dimension
-                Slice
-        >
+        std::vector<Slice> // slices for approp dimension
 >
-DataServer::splitIntoEpsNet_WithThreads() {
+DataServer::splitIntoEpsNet_WithThreads(const std::vector<Point> &points,
+                                        const std::vector<std::vector<Point> > &randomPoints,
+                                        const CmpDict &cmpDict) {
     auto t0_split = CLOCK::now();     //  for logging, profiling, DBG
 
     //    std::map<int, std::vector<Slice> > slices;
@@ -727,9 +728,8 @@ DataServer::splitIntoEpsNet_WithThreads() {
     return slices;
 }
 
-std::vector<std::tuple<Point, Slice> >
-DataServer::calculateSlicesMeans(const std::vector<Slice> &slices,
-                                 const KeysServer &keysServer) {
+std::vector<std::tuple<Point, Slice>>
+DataServer::calculateSlicesMeans(const std::vector<Slice> &slices) {
     auto t0_means = CLOCK::now();     //  for logging, profiling, DBG
 
     std::vector<std::tuple<Point, Slice> > slicesMeans;//(slices.size());
@@ -811,18 +811,18 @@ DataServer::calculateSlicesMeans_WithThreads(
 }
 
 
-std::vector<Point> DataServer::collectMeans(const std::vector<std::tuple<Point, Slice>> &slices,
-                                            const KeysServer &keysServer) {
+std::vector<Point> DataServer::collectMeans(
+        const std::vector<std::tuple<Point, Slice>> &slices
+        ) {
     std::vector<Point> means;
     means.reserve(slices.size());
     for (auto const &slice:slices) means.push_back(std::get<0>(slice));
     return means;
 }
 
-std::vector<std::tuple<Point, Point, EncryptedNum> >
+std::vector<std::tuple<Point, Point, EncryptedNum>>
 DataServer::collectMinimalDistancesAndClosestPoints(const std::vector<Point> &points,
-                                                    const std::vector<Point> &means,
-                                                    const KeysServer &keysServer) {
+                                                    const std::vector<Point> &means) {
     auto t0_collectMinDist = CLOCK::now();
 
     std::vector<std::tuple<Point, Point, EncryptedNum> > minDistanceTuples;
@@ -898,7 +898,8 @@ DataServer::collectMinimalDistancesAndClosestPoints_WithThreads(
 
 EncryptedNum DataServer::calculateThreshold(
         const std::vector<std::tuple<Point, Point, EncryptedNum>> &minDistanceTuples,
-        const KeysServer &keysServer, int iterationNumber) {
+        int iterationNumber
+        ) {
     //  collect minimal distances
     EncryptedNum sum;
     helib::CtPtrs_vectorCt sum_wrapper(sum);

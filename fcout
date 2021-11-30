@@ -1,188 +1,1426 @@
-'distanceFrom (cmp version)' Finished in 7057 milliseconds.
+'KeysServer Initialization' Finished in 121 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 7385 milliseconds.
+'retrievePoints_Thread' Finished in 50 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 7553 milliseconds.
+'retrievePoints_Thread' Finished in 37 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 7808 milliseconds.
+'retrievePoints_Thread' Finished in 38 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 7763 milliseconds.
+'retrievePoints_WithThreads' Finished in 199 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 7698 milliseconds.
+'pickRandomPoints' Finished in 15 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 7677 milliseconds.
+'createCmpDict_Dim_Thread' Finished in 5269 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 7673 milliseconds.
+'createCmpDict_Dim_Thread' Finished in 7488 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 8143 milliseconds.
+'createCmpDict_WithThreads' Finished in 7500 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 8518 milliseconds.
+'Split Random-Rep Thread' Finished in 4787 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 5995 milliseconds.
+'Split Random-Rep Thread' Finished in 5186 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 6101 milliseconds.
+'Split Random-Rep Thread' Finished in 5289 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 6972 milliseconds.
+'Split Slice iteration - With Treads' Finished in 5645 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 6280 milliseconds.
+'Split iteration for #0 dimension - With Threads' Finished in 5645 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 6342 milliseconds.
+'Split Random-Rep Thread' Finished in 9334 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 6545 milliseconds.
+'Split Random-Rep Thread' Finished in 9688 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 6559 milliseconds.
+'Split Random-Rep Thread' Finished in 10048 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 6250 milliseconds.
+'Split Random-Rep Thread' Finished in 9841 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 6736 milliseconds.
+'Split Random-Rep Thread' Finished in 10039 milliseconds.
 
-'distanceFrom (cmp version)' Finished in 6619 milliseconds.
+'Split Slice iteration - With Treads' Finished in 11059 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 16427 milliseconds.
+'Split Random-Rep Thread' Finished in 10092 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 17287 milliseconds.
+'Split Random-Rep Thread' Finished in 10105 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 17515 milliseconds.
+'Split Random-Rep Thread' Finished in 9732 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 17354 milliseconds.
+'Split Random-Rep Thread' Finished in 10865 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 17734 milliseconds.
+'Split Random-Rep Thread' Finished in 11179 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 17482 milliseconds.
+'Split Slice iteration - With Treads' Finished in 11651 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 17889 milliseconds.
+'Split Random-Rep Thread' Finished in 10349 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 18282 milliseconds.
+'Split Random-Rep Thread' Finished in 10373 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 18350 milliseconds.
+'Split Random-Rep Thread' Finished in 10627 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 19239 milliseconds.
+'Split Random-Rep Thread' Finished in 10635 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 20063 milliseconds.
+'Split Random-Rep Thread' Finished in 10452 milliseconds.
 
-'findMinDistFromMeans' Finished in 20068 milliseconds.
+'Split Slice iteration - With Treads' Finished in 11452 milliseconds.
 
-'findMinDistFromMeans thread' Finished in 20084 milliseconds.
+'Split iteration for #1 dimension - With Threads' Finished in 34162 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 21179 milliseconds.
+'splitIntoEpsNet_WithThreads' Finished in 39886 milliseconds.
 
-'findMinDistFromMeans' Finished in 21195 milliseconds.
+'calculateSliceMean_Slice_Thread' Finished in 8766 milliseconds.
 
-'findMinDistFromMeans thread' Finished in 21203 milliseconds.
+'calculateSliceMean_Slice_Thread' Finished in 9880 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 21795 milliseconds.
+'calculateSliceMean_Slice_Thread' Finished in 10176 milliseconds.
 
-'findMinDistFromMeans' Finished in 21798 milliseconds.
+'calculateSliceMean_Slice_Thread' Finished in 10357 milliseconds.
 
-'findMinDistFromMeans thread' Finished in 21823 milliseconds.
+'calculateSliceMean_Slice_Thread' Finished in 10980 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 21959 milliseconds.
+'calculateSliceMean_Slice_Thread' Finished in 11729 milliseconds.
 
-'findMinDistFromMeans' Finished in 21960 milliseconds.
+'calculateSliceMean_Slice_Thread' Finished in 12311 milliseconds.
 
-'findMinDistFromMeans thread' Finished in 21987 milliseconds.
+'calculateSliceMean_Slice_Thread' Finished in 12261 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 21691 milliseconds.
+'calculateSliceMean_Slice_Thread' Finished in 12090 milliseconds.
 
-'findMinDistFromMeans' Finished in 21692 milliseconds.
+'calculateSliceMean_Slice_Thread' Finished in 11830 milliseconds.
 
-'findMinDistFromMeans thread' Finished in 21714 milliseconds.
+'calculateSliceMean_Slice_Thread' Finished in 11837 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 22111 milliseconds.
+'calculateSliceMean_Slice_Thread' Finished in 11447 milliseconds.
 
-'findMinDistFromMeans' Finished in 22113 milliseconds.
+'calculateSliceMean_Slice_Thread' Finished in 11207 milliseconds.
 
-'findMinDistFromMeans thread' Finished in 22134 milliseconds.
+'calculateSliceMean_Slice_Thread' Finished in 9559 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 21868 milliseconds.
+'calculateSliceMean_Slice_Thread' Finished in 10649 milliseconds.
 
-'findMinDistFromMeans' Finished in 21869 milliseconds.
+'calculateSlicesMeans_WithThreads' Finished in 15691 milliseconds.
 
-'findMinDistFromMeans thread' Finished in 21905 milliseconds.
+'distanceFrom (cmp version)' Finished in 7465 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 22317 milliseconds.
+'distanceFrom (cmp version)' Finished in 7599 milliseconds.
 
-'findMinDistFromMeans' Finished in 22318 milliseconds.
+'distanceFrom (cmp version)' Finished in 7705 milliseconds.
 
-'findMinDistFromMeans thread' Finished in 22335 milliseconds.
+'distanceFrom (cmp version)' Finished in 7967 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 22527 milliseconds.
+'distanceFrom (cmp version)' Finished in 8153 milliseconds.
 
-'findMinDistFromMeans' Finished in 22528 milliseconds.
+'distanceFrom (cmp version)' Finished in 8370 milliseconds.
 
-'findMinDistFromMeans thread' Finished in 22539 milliseconds.
+'distanceFrom (cmp version)' Finished in 8470 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 22734 milliseconds.
+'distanceFrom (cmp version)' Finished in 8437 milliseconds.
 
-'findMinDistFromMeans' Finished in 22735 milliseconds.
+'distanceFrom (cmp version)' Finished in 8863 milliseconds.
 
-'findMinDistFromMeans thread' Finished in 22740 milliseconds.
+'distanceFrom (cmp version)' Finished in 8849 milliseconds.
 
-'collectMinimalDistancesAndClosestPoints_WithThreads' Finished in 22800 milliseconds.
+'distanceFrom (cmp version)' Finished in 8779 milliseconds.
 
-'choosePointsByDistance' Finished in 8855 milliseconds.
+'distanceFrom (cmp version)' Finished in 8859 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 418 milliseconds.
+'distanceFrom (cmp version)' Finished in 8854 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 514 milliseconds.
+'distanceFrom (cmp version)' Finished in 8921 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 312 milliseconds.
+'distanceFrom (cmp version)' Finished in 9047 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 503 milliseconds.
+'distanceFrom (cmp version)' Finished in 8855 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 420 milliseconds.
+'distanceFrom (cmp version)' Finished in 9152 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 556 milliseconds.
+'distanceFrom (cmp version)' Finished in 9025 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 366 milliseconds.
+'distanceFrom (cmp version)' Finished in 8955 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 504 milliseconds.
+'distanceFrom (cmp version)' Finished in 9079 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 317 milliseconds.
+'distanceFrom (cmp version)' Finished in 9790 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 492 milliseconds.
+'distanceFrom (cmp version)' Finished in 9628 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 465 milliseconds.
+'distanceFrom (cmp version)' Finished in 10081 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 627 milliseconds.
+'distanceFrom (cmp version)' Finished in 10304 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 470 milliseconds.
+'distanceFrom (cmp version)' Finished in 9871 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 709 milliseconds.
+'distanceFrom (cmp version)' Finished in 9689 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 404 milliseconds.
+'distanceFrom (cmp version)' Finished in 9823 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 518 milliseconds.
+'distanceFrom (cmp version)' Finished in 10443 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 675 milliseconds.
+'distanceFrom (cmp version)' Finished in 9762 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 1010 milliseconds.
+'distanceFrom (cmp version)' Finished in 10019 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 432 milliseconds.
+'distanceFrom (cmp version)' Finished in 10161 milliseconds.
 
-'choosePoint_Mean_Thread' Finished in 457 milliseconds.
+'distanceFrom (cmp version)' Finished in 9745 milliseconds.
 
-'choosePointsByDistance_WithThreads_slower' Finished in 5875 milliseconds.
+'distanceFrom (cmp version)' Finished in 10239 milliseconds.
 
-'choosePoint_Point_Thread' Finished in 2090 milliseconds.
+'distanceFrom (cmp version)' Finished in 10255 milliseconds.
 
-'choosePoint_Point_Thread' Finished in 2545 milliseconds.
+'distanceFrom (cmp version)' Finished in 9828 milliseconds.
 
-'choosePoint_Point_Thread' Finished in 3087 milliseconds.
+'distanceFrom (cmp version)' Finished in 10138 milliseconds.
 
-'choosePoint_Point_Thread' Finished in 3369 milliseconds.
+'distanceFrom (cmp version)' Finished in 9673 milliseconds.
 
-'choosePoint_Point_Thread' Finished in 3770 milliseconds.
+'distanceFrom (cmp version)' Finished in 10052 milliseconds.
 
-'choosePoint_Point_Thread' Finished in 4037 milliseconds.
+'distanceFrom (cmp version)' Finished in 10304 milliseconds.
 
-'choosePoint_Point_Thread' Finished in 4140 milliseconds.
+'distanceFrom (cmp version)' Finished in 10233 milliseconds.
 
-'choosePoint_Point_Thread' Finished in 4094 milliseconds.
+'distanceFrom (cmp version)' Finished in 9390 milliseconds.
 
-'choosePoint_Point_Thread' Finished in 4149 milliseconds.
+'distanceFrom (cmp version)' Finished in 9415 milliseconds.
 
-'choosePoint_Point_Thread' Finished in 4359 milliseconds.
+'distanceFrom (cmp version)' Finished in 9157 milliseconds.
 
-'choosePointsByDistance_WithThreads' Finished in 4455 milliseconds.
+'distanceFrom (cmp version)' Finished in 9292 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 9220 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 9714 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 9768 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 9126 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 9572 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 9381 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 9477 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 9274 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 9130 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 9080 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 9569 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 9512 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 9395 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 9583 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 9906 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 10100 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 10472 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 10587 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 10320 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 10495 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 10529 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 10800 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 10912 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 10846 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 10785 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 10730 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11013 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 10672 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11028 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 10926 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11315 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11056 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11491 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11412 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11085 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11433 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11538 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11480 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11561 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11842 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 12594 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11855 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11998 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11430 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11453 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11891 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11658 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11955 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11557 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 12103 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 12613 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 12720 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 12034 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 12807 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 12755 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 13164 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11528 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11512 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11847 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11536 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11824 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11417 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11390 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11389 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11775 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11542 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 13126 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11504 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 13325 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 13305 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 13474 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 13199 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 13189 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 13326 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 13487 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 13842 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11399 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11555 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11600 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11204 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11476 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11527 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11565 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11782 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11501 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11811 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 11822 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 15247 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 15272 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 14673 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16354 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16701 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16837 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 15097 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17542 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16815 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 13458 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 13758 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 14126 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 14215 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 14688 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 14448 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 14364 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 14456 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 14178 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 14414 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18478 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 14411 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 15860 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 15431 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 15972 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17948 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18172 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16690 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 19969 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 19007 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16430 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18723 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 19981 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16841 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17134 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17493 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18623 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17525 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 19284 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 19411 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17093 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 20246 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16369 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18731 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16080 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 15922 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16619 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16005 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 15780 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17693 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 15964 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17298 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 15251 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16422 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18247 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 15625 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 19542 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16229 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18454 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18275 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16325 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16697 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16833 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17933 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16474 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16848 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17150 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18549 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17788 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17720 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18053 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18063 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18041 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18177 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17785 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18354 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18868 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18848 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17025 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18336 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18804 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18111 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18817 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18476 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 19082 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18639 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18142 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18165 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17455 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17120 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16497 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16577 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17455 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18846 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17445 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 19221 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 19037 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 19237 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17348 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17106 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17270 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16090 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16917 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17602 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16791 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17315 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17554 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18411 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17557 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17101 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17680 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16312 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17153 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18143 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16565 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16141 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16427 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16591 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18171 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17336 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18548 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17745 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17625 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17653 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16748 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18645 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16785 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17942 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17250 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17640 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18016 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17408 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18084 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17954 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17687 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18239 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17340 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18236 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18373 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18851 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18751 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18656 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18063 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18221 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17954 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17308 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17010 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 19439 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18248 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17332 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17362 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16475 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16955 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17197 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17706 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16957 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16684 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17066 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 19845 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 18226 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 19373 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17557 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17543 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17472 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17469 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17671 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17520 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17760 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 225980 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 17571 milliseconds.
+
+'distanceFrom (cmp version)' Finished in 16067 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 227062 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 227177 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 229999 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 229966 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 230385 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 231159 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 231580 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 233353 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 235667 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 236547 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 236581 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 237942 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 240678 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 241288 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 243490 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 244247 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 244966 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 246856 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 246181 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 247356 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 248952 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 249299 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 250616 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 250458 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 251507 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 251139 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 252301 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 253539 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 255728 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 256110 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 256405 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 259204 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 259780 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 262461 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 262718 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 263112 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 263053 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 263908 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 264692 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 266340 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 266663 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 267231 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 267658 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 268878 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 269613 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 268978 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 269364 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 271759 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 271508 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 272127 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 273226 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 274613 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 275744 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 277396 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 277784 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 278096 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 278408 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 277581 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 278813 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 280032 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 280099 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 281169 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 281619 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 282239 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 282214 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 283191 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 282695 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 284625 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 284464 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 285387 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 286026 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 287773 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 288774 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 289892 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 290184 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 290774 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 290545 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 291762 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 292465 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 293483 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 294165 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 294742 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 295458 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 296351 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 297598 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 297044 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 297362 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 298270 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 297806 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 298723 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 301313 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 300404 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 303374 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 303633 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 304195 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 304867 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 304221 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 306261 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 306724 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 306760 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 307397 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 308491 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 309078 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 310198 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 311366 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 311089 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 310949 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 311849 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 311340 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 311991 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 314789 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 314267 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 317102 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 317399 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 317541 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 318785 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 318574 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 319839 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 320966 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 321134 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 320902 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 321663 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 324537 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 325120 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 325022 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 325405 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 325906 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 325300 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 326500 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 326213 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 328018 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 329937 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 329781 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 331878 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 331860 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 333816 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 334736 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 334343 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 333938 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 334854 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 335373 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 337139 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 337979 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 339086 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 339074 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 339456 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 339275 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 340014 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 340884 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 340697 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 341855 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 342589 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 345009 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 344336 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 346089 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 347059 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 347855 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 347190 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 348112 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 348356 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 348437 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 350659 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 350065 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 351136 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 351754 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 353042 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 353516 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 353750 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 354041 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 353999 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 354676 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 357741 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 358163 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 358481 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 357983 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 359204 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 361404 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 361872 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 363451 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 362590 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 363441 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 363617 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 363798 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 365034 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 365501 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 365725 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 367409 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 367566 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 367893 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 369067 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 368947 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 368756 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 369461 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 369461 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 370563 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 372294 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 373123 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 373157 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 374329 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 375036 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 376120 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 376280 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 375985 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 376856 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 375964 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 377667 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 378145 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 378352 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 378820 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 378880 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 379839 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 379145 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 380012 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 380526 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 380416 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 381593 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 383404 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 383704 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 384599 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 385607 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 385906 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 386821 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 385827 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 387106 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 387130 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 387104 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 387935 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 388257 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 388547 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 388310 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 389027 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 389656 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 391038 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 390539 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 391286 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 391572 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 392626 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 393226 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 394395 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 395518 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 395757 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 396190 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 395732 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 395982 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 396723 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 397337 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 397469 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 396999 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 397641 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 400095 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 400888 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 401353 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 401402 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 402478 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 406256 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 407890 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 410532 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 412002 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 411918 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 443686 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 444873 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 447390 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 448938 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 451914 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 456569 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 458040 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 459070 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 459143 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 461550 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 466186 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 469430 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 471532 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 495448 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 496224 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 496421 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 495653 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 500445 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 506795 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 516052 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 522395 milliseconds.
+
+'findMinDistFromMeans' Finished in 522415 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 522526 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 522245 milliseconds.
+
+'findMinDistFromMeans' Finished in 522249 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 522346 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 526660 milliseconds.
+
+'findMinDistFromMeans' Finished in 526675 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 526735 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 526360 milliseconds.
+
+'findMinDistFromMeans' Finished in 526362 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 526417 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 528120 milliseconds.
+
+'findMinDistFromMeans' Finished in 528136 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 528182 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 530111 milliseconds.
+
+'findMinDistFromMeans' Finished in 530112 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 530151 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 531635 milliseconds.
+
+'findMinDistFromMeans' Finished in 531636 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 531703 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 531721 milliseconds.
+
+'findMinDistFromMeans' Finished in 531740 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 531798 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 531928 milliseconds.
+
+'findMinDistFromMeans' Finished in 531929 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 531972 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 531257 milliseconds.
+
+'findMinDistFromMeans' Finished in 531258 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 531330 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 533089 milliseconds.
+
+'findMinDistFromMeans' Finished in 533100 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 533134 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 533345 milliseconds.
+
+'findMinDistFromMeans' Finished in 533345 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 533371 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 533795 milliseconds.
+
+'findMinDistFromMeans' Finished in 533800 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 533829 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 533222 milliseconds.
+
+'findMinDistFromMeans' Finished in 533236 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 533251 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 534229 milliseconds.
+
+'findMinDistFromMeans' Finished in 534231 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 534249 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 535240 milliseconds.
+
+'findMinDistFromMeans' Finished in 535241 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 535257 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 535986 milliseconds.
+
+'findMinDistFromMeans' Finished in 535990 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 536028 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 536401 milliseconds.
+
+'findMinDistFromMeans' Finished in 536405 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 536418 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 537623 milliseconds.
+
+'findMinDistFromMeans' Finished in 537624 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 537638 milliseconds.
+
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 537506 milliseconds.
+
+'findMinDistFromMeans' Finished in 537506 milliseconds.
+
+'findMinDistFromMeans thread' Finished in 537519 milliseconds.
+
+'collectMinimalDistancesAndClosestPoints_WithThreads' Finished in 537792 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 68147 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 68999 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 69291 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 69698 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 70620 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 71346 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 71701 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 71823 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 72359 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 73107 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 73321 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 73136 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 73367 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 73574 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 73235 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 73438 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 73821 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 73597 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 73949 milliseconds.
+
+'choosePoint_Point_Thread' Finished in 73914 milliseconds.
+
+'choosePointsByDistance_WithThreads' Finished in 74387 milliseconds.
+
+'Main' Finished in 709601 milliseconds.
 

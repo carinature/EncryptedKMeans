@@ -60,7 +60,7 @@ public:
      * @returns a list of all the points.
     * @return std::vector<Point>
      * * */
-    static
+//    static
     std::vector<Point>
     retrievePoints(
             const std::vector<Client> &clients);
@@ -71,7 +71,7 @@ public:
     void
     retrievePoints_Thread(const std::vector<Client> &clients);
 
-    void
+    std::vector<Point>
     retrievePoints_WithThreads(
             const std::vector<Client> &clients,
             short numOfThreads = NUMBER_OF_THREADS
@@ -124,8 +124,10 @@ public:
 
     void createCmpDict_Dim_Thread(short dim);
 
-    const CmpDict &
-    createCmpDict_WithThreads();
+    CmpDict &
+    createCmpDict_WithThreads(const std::vector<Point> &allPoints,
+                              const std::vector<std::vector<Point> > &randomPoints,
+                              int numOfThreads = NUMBER_OF_THREADS);
 
     /**
      * @brief Split into (1/eps) groups - each group is between 2 representative points.
@@ -141,10 +143,9 @@ public:
     >
     splitIntoEpsNet(
             const std::vector<Point> &points,
-            const std::vector<std::vector<Point> > &randomPoints,
-            const CmpDict &cmpDict,
-            const KeysServer &keysServer // for dbg todo remove
-    );
+                    const std::vector<std::vector<Point> > &randomPoints,
+                    const CmpDict &cmpDict
+                    );
 
     void splitIntoEpsNet_R_Thread(
             const Slice &baseSlice,
@@ -153,7 +154,9 @@ public:
 
     std::map<int, //DIM
             std::vector<Slice> // slices for approp dimension
-    > splitIntoEpsNet_WithThreads();
+    > splitIntoEpsNet_WithThreads(const std::vector<Point> &points,
+                                  const std::vector<std::vector<Point> > &randomPoints,
+                                  const CmpDict &cmpDict);
 
     /**
      * @brief calculate cell-means
@@ -162,12 +165,9 @@ public:
      * @return a list of slices and their corresponding means
      * @returns std::vector<std::tuple<Point, Slice> >
      * */
-    static
-    std::vector<std::tuple<Point, Slice> >
-    calculateSlicesMeans(
-            const std::vector<Slice> &slices,
-            const KeysServer &keysServer
-    );
+//    static
+    std::vector<std::tuple<Point, Slice>>
+    calculateSlicesMeans(const std::vector<Slice> &slices);
 
     void calculateSliceMean_Slice_Thread(
             const Slice &slice
@@ -181,12 +181,9 @@ public:
     /**
      * @brief collect mean point from epsNet
      * */
-    static
+//    static
     std::vector<Point>
-    collectMeans(
-            const std::vector<std::tuple<Point, Slice> > &slices,
-            const KeysServer &keysServer
-    );
+    collectMeans(const std::vector<std::tuple<Point, Slice>> &slices);
 
 
     //  collect all minimal distances into one place:
@@ -205,13 +202,10 @@ public:
      * @return tuples of [point, closest mean, minimal distance]
      * @returns
      * */
-    static
-    std::vector<std::tuple<Point, Point, EncryptedNum> >
-    collectMinimalDistancesAndClosestPoints(
-            const std::vector<Point> &points,
-            const std::vector<Point> &means,
-            const KeysServer &keysServer
-    );
+//    static
+    std::vector<std::tuple<Point, Point, EncryptedNum>>
+    collectMinimalDistancesAndClosestPoints(const std::vector<Point> &points,
+                                            const std::vector<Point> &means);
 
     std::vector<std::tuple<Point, Point, EncryptedNum>>
     collectMinimalDistancesAndClosestPoints_WithThreads(
@@ -226,17 +220,15 @@ public:
      * @return Encrypted avrage
      * @returns EncryptedNum
      * */
-    static
-    EncryptedNum
+//    static
+EncryptedNum
     calculateThreshold(
-            const std::vector<std::tuple<Point, Point, EncryptedNum> > &minDistanceTuples,
-            const KeysServer &keysServer,
-            int iterationNumber = 0
-    );
+            const std::vector<std::tuple<Point, Point, EncryptedNum>> &minDistanceTuples,
+            int iterationNumber);
 
     //  collect for each mean the points closest to it
     //  for each Point also includes a bit signifying if the point is included returns
-    static
+//    static
     std::tuple<
             std::unordered_map<long, std::vector<std::pair<Point, CBit> > >,
             std::vector<std::pair<Point, CBit> >,
@@ -248,7 +240,8 @@ public:
             EncryptedNum &threshold
     );
 
-    static std::tuple<
+//    static
+    std::tuple<
             std::unordered_map<long, std::vector<std::pair<Point, CBit>>>,
             std::vector<std::pair<Point, CBit>>
     >
@@ -257,7 +250,8 @@ public:
             std::vector<Point> &means,
             EncryptedNum &threshold);
 
-    static std::tuple<
+//    static
+    std::tuple<
     std::unordered_map<long, std::vector<std::pair<Point, CBit>>>,
     std::vector<std::pair<Point, CBit>>
     >

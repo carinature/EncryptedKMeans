@@ -62,11 +62,16 @@ void TestDataServer::testRetrievePoints_Threads() {
     printNameVal(points.size());
     cout << " --- --- --- --- ---" << endl;
 
-    dataServer.retrievePoints_WithThreads(clients);
+    std::vector<Point> points_withThreads = dataServer.retrievePoints_WithThreads(clients);
+    std::vector<Point> points_withThreads_2 = dataServer.retrievePoints_WithThreads(clients, NUMBER_OF_CLIENTS);
 
-    cout << " --- Points  ---" << endl;
-    printPoints(dataServer.retrievedPoints, keysServer);
-    printNameVal(points.size());
+
+    cout << " --- Points 1 ---" << endl;
+    printPoints(points_withThreads, keysServer);
+    printNameVal(points_withThreads.size());
+    cout << " --- Points 2 ---" << endl;
+    printPoints(points_withThreads_2, keysServer);
+    printNameVal(points_withThreads_2.size());
     cout << " --- --- --- --- ---" << endl;
 
     cout << " ------ testRetrievePoints_Threads finished ------ " << endl << endl;
@@ -192,7 +197,7 @@ void TestDataServer::testCreateCmpDict_Threads() {
                             const Point,
                             helib::Ctxt> > >
             cmp = dataServer.createCmpDict(points, randomPoints);
-    dataServer.createCmpDict_WithThreads();
+    dataServer.createCmpDict_WithThreads(0, NUMBER_OF_THREADS);
 
     cout << "The Dictionary: " << endl;
     for (short dim = 0; dim < DIM; ++dim) {
@@ -300,7 +305,7 @@ void TestDataServer::testSplitIntoEpsNet() {
     }
 
     std::map<int, std::vector<Slice> >
-            slices = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
+            slices = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict);
     for (int dim = 0; dim < DIM; ++dim) {
         cout << "   ---   For dim " << dim << "  --- " << endl;
         for (Slice &cell: slices[dim]) cell.printSlice(keysServer);
@@ -331,7 +336,7 @@ void TestDataServer::testSplitIntoEpsNet_WithThreads() {
                             const Point,
                             helib::Ctxt> > >
             cmpDict = dataServer.createCmpDict(points, randomPoints);
-    dataServer.createCmpDict_WithThreads();
+    dataServer.createCmpDict_WithThreads(0, NUMBER_OF_THREADS);
 
     cout << " --- All Points  ---" << endl;
     printPoints(points, keysServer);
@@ -361,9 +366,9 @@ void TestDataServer::testSplitIntoEpsNet_WithThreads() {
     }
 
     std::map<int, std::vector<Slice> >
-            slices = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
+            slices = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict);
     std::map<int, std::vector<Slice> >
-            slices_Threads = dataServer.splitIntoEpsNet_WithThreads();
+            slices_Threads = dataServer.splitIntoEpsNet_WithThreads(0);
 
     for (int dim = 0; dim < DIM; ++dim) {
         cout << "   ---   For dim " << dim << "  --- " << endl;
@@ -397,10 +402,10 @@ void TestDataServer::testCalculateCellMeans() {
             cmpDict = dataServer.createCmpDict(points, randomPoints);
 
     std::map<int, std::vector<Slice> >
-            epsNet = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
+            epsNet = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict);
 
     std::vector<std::tuple<Point, Slice> >
-            meanCellTuples = DataServer::calculateSlicesMeans(epsNet[DIM - 1], keysServer);
+            meanCellTuples = DataServer::calculateSlicesMeans(epsNet[DIM - 1]);
 
     cout << " === All Points  ===" << endl;
     printPoints(points, keysServer);
@@ -444,15 +449,15 @@ void TestDataServer::testCalculateCellMeans_WithThreads() {
     //  compare dict
     std::vector<std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt> > >
             cmpDict = dataServer.createCmpDict(points, randomPoints);
-    CmpDict &cmpDict_withThreads = dataServer.createCmpDict_WithThreads();
+    CmpDict &cmpDict_withThreads = dataServer.createCmpDict_WithThreads(0, NUMBER_OF_THREADS);
     //  EPS net
     std::map<int, std::vector<Slice> >
-            epsNet = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict, keysServer);
+            epsNet = dataServer.splitIntoEpsNet(points, randomPoints, cmpDict);
     std::map<int, std::vector<Slice> >
-            epsNet_Threads = dataServer.splitIntoEpsNet_WithThreads();//points, randomPoints, cmpDict, keysServer);
+            epsNet_Threads = dataServer.splitIntoEpsNet_WithThreads(0);//points, randomPoints, cmpDict, keysServer);
     //  eps-net means
     std::vector<std::tuple<Point, Slice> >
-            meanCellTuples = DataServer::calculateSlicesMeans(epsNet[DIM - 1], keysServer);
+            meanCellTuples = DataServer::calculateSlicesMeans(epsNet[DIM - 1]);
     std::vector<std::tuple<Point, Slice> >
             meanCellTuples_Threads = dataServer.calculateSlicesMeans_WithThreads(
             epsNet_Threads[DIM - 1]);
@@ -537,8 +542,7 @@ void TestDataServer::testGetMinimalDistances() {
             minDistanceTuples =
             DataServer::collectMinimalDistancesAndClosestPoints(
                     points,
-                    dummyMeans,
-                    keysServer);
+                    dummyMeans);
 
     //  Check results
     for (int i = 0; i < points.size(); ++i) {
@@ -634,8 +638,7 @@ void TestDataServer::testGetMinimalDistances_WithThreads() {
             minDistanceTuples =
             DataServer::collectMinimalDistancesAndClosestPoints(
                     points,
-                    dummyMeans,
-                    keysServer);
+                    dummyMeans);
 
     const std::vector<std::tuple<Point, Point, EncryptedNum> >
             minDistanceTuples_WithThreads =
@@ -735,14 +738,12 @@ void TestDataServer::testCalculateThreshold() {
             minDistanceTuples =
             DataServer::collectMinimalDistancesAndClosestPoints(
                     points,
-                    dummyMeans,
-                    keysServer);
+                    dummyMeans);
 
     const EncryptedNum
             threshold =
             DataServer::calculateThreshold(
                     minDistanceTuples,
-                    keysServer,
                     0);
 
     //  Print Results
@@ -793,11 +794,10 @@ void TestDataServer::testChoosePointsByDistance() {
             minDistanceTuples =
             DataServer::collectMinimalDistancesAndClosestPoints(
                     points,
-                    dummyMeans,
-                    keysServer);
+                    dummyMeans);
 
     EncryptedNum
-            threshold = DataServer::calculateThreshold(minDistanceTuples, keysServer, 0);
+            threshold = DataServer::calculateThreshold(minDistanceTuples, 0);
 
     cout << endl << "Points: ";
     printPoints(points, keysServer);
@@ -886,7 +886,7 @@ void TestDataServer::testChoosePointsByDistance_WithThreads() {
             );
 
     EncryptedNum
-            threshold = DataServer::calculateThreshold(minDistanceTuples, keysServer, 0);
+            threshold = DataServer::calculateThreshold(minDistanceTuples, 0);
 
     cout << endl << "Points: ";
     printPoints(points, keysServer);
@@ -916,6 +916,7 @@ void TestDataServer::testChoosePointsByDistance_WithThreads() {
             threshold
     );
 
+/*
     std::tuple<
             std::unordered_map<long, std::vector<std::pair<Point, CBit> > >,
             std::vector<std::pair<Point, CBit> >
@@ -924,6 +925,7 @@ void TestDataServer::testChoosePointsByDistance_WithThreads() {
             dummyMeans,
             threshold
     );
+*/
 
 
     std::tuple<
@@ -946,6 +948,8 @@ void TestDataServer::testChoosePointsByDistance_WithThreads() {
         }
         cout << endl;
     }
+
+/*
     cout << " === === === === === === === === === " << endl;
     cout << " === Groups by Means - With Threads  - 111  === " << endl;
     cout << " === === === === === === === === === " << endl;
@@ -957,6 +961,8 @@ void TestDataServer::testChoosePointsByDistance_WithThreads() {
         }
         cout << endl;
     }
+*/
+
     cout << " === === === === === === === === === " << endl;
     cout << " === Groups by Means - With Threads  - 222  === " << endl;
     cout << " === === === === === === === === === " << endl;
@@ -997,6 +1003,7 @@ void TestDataServer::testChoosePointsByDistance_WithThreads() {
     }
     cout << endl << " === === === === === " << endl << endl;
 
+/*
     cout << " === === === === === === === === === " << endl;
     cout << " === Farthest Points - With Threads  -  111  === " << endl;
     cout << " === === === === === === === === === " << endl;
@@ -1005,6 +1012,7 @@ void TestDataServer::testChoosePointsByDistance_WithThreads() {
         printPoint(pair.first, keysServer);
     }
     cout << endl << " === === === === === " << endl << endl;
+*/
 
     cout << " === === === === === === === === === " << endl;
     cout << " === Farthest Points - With Threads  -  222  === " << endl;

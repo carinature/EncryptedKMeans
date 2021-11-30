@@ -57,7 +57,7 @@ int main() {
 //    TestDataServer::testConstructor();
 //    TestDataServer::testComparePoints();
 //    TestDataServer::testRetrievePoints();
-//    TestDataServer::testRetrievePoints_Threads();
+    TestDataServer::testRetrievePoints_Threads();
 //    TestDataServer::testPickRandomPoints();
 //    TestDataServer::testCreateCmpDict();
 //    TestDataServer::testCreateCmpDict_Threads();
@@ -68,7 +68,7 @@ int main() {
 //    TestDataServer::testGetMinimalDistances();
 //    TestDataServer::testGetMinimalDistances_WithThreads();
 //    TestDataServer::testCalculateThreshold();
-    TestDataServer::testChoosePointsByDistance_WithThreads();
+//    TestDataServer::testChoosePointsByDistance_WithThreads();
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
 
 }

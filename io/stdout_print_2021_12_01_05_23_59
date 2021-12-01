@@ -1,5 +1,8 @@
+/home/karina/CLionProjects/EncryptedKMeans/cmake-build-debug/EncryptedKMeans
 'KeysServer Initialization' Finished in 77 milliseconds.
 
+DataServer()
+Initializing Client Protocol Finished
 'retrievePoints_Thread' Finished in 138 milliseconds.
 
 'retrievePoints_Thread' Finished in 156 milliseconds.
@@ -8,21 +11,821 @@
 
 'retrievePoints_WithThreads' Finished in 614 milliseconds.
 
+ ---   Points  ---
+   [ total of 40 points ]   (23,18), (4,14), (25,25), (7,10), (29,1), (8,4), (31,26), (0,8), (1,22), (10,0), (7,18), (30,5), (2,22), (19,17), (9,2), (27,18), (2,4), (29,21), (12,9), (21,10), (10,28), (17,27), (20,11), (27,16), (31,12), (14,29), (15,8), (3,22), (28,31), (18,3), (23,3), (24,18), (24,20), (2,12), (20,16), (8,15), (14,27), (31,28), (2,17), (31,27),  --- --- --- --- ---
 'pickRandomPoints' Finished in 24 milliseconds.
 
+ ---   Random Points  ---
+   [ total of 3 points ]   (0,0), (20,16), (28,31),    [ total of 5 points ]   (0,0), (20,16), (28,31), (2,17), (31,26),  --- --- --- --- ---
 'createCmpDict_Dim_Thread' Finished in 9446 milliseconds.
 
 'createCmpDict_Dim_Thread' Finished in 11783 milliseconds.
 
 'createCmpDict_WithThreads' Finished in 11794 milliseconds.
 
+ ---   The Dictionary  ---
+    ======   dim: 0
+(31,27), (28,31), pVal: 1
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 3
+ --- --- ---
+(2,17), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(31,28), (28,31), pVal: 1
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 3
+ --- --- ---
+(14,27), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(8,15), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(20,16), (31,27), pVal: 0
+(2,17), pVal: 1
+(31,28), pVal: 0
+(14,27), pVal: 1
+(8,15), pVal: 1
+(9,2), pVal: 1
+(19,17), pVal: 1
+(2,22), pVal: 1
+(30,5), pVal: 0
+(7,18), pVal: 1
+(10,0), pVal: 1
+(1,22), pVal: 1
+(0,8), pVal: 1
+(31,26), pVal: 0
+(8,4), pVal: 1
+(23,18), pVal: 0
+(0,0), pVal: 1
+(4,14), pVal: 1
+(25,25), pVal: 0
+(7,10), pVal: 1
+(29,1), pVal: 0
+(27,18), pVal: 0
+(2,4), pVal: 1
+(29,21), pVal: 0
+(12,9), pVal: 1
+(21,10), pVal: 0
+(10,28), pVal: 1
+(17,27), pVal: 1
+(20,11), pVal: 0
+(27,16), pVal: 0
+(31,12), pVal: 0
+(14,29), pVal: 1
+(15,8), pVal: 1
+(3,22), pVal: 1
+(28,31), pVal: 0
+(18,3), pVal: 1
+(23,3), pVal: 0
+(24,18), pVal: 0
+(24,20), pVal: 0
+(2,12), pVal: 1
+(20,16), pVal: 1
+map.size(): 41
+ --- --- ---
+(2,12), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(24,20), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 3
+ --- --- ---
+(24,18), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 3
+ --- --- ---
+(23,3), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 3
+ --- --- ---
+(18,3), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(28,31), (31,27), pVal: 0
+(2,17), pVal: 1
+(31,28), pVal: 0
+(14,27), pVal: 1
+(8,15), pVal: 1
+(19,17), pVal: 1
+(2,22), pVal: 1
+(30,5), pVal: 0
+(7,18), pVal: 1
+(10,0), pVal: 1
+(1,22), pVal: 1
+(0,8), pVal: 1
+(31,26), pVal: 0
+(8,4), pVal: 1
+(29,1), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+(23,18), pVal: 1
+(4,14), pVal: 1
+(25,25), pVal: 1
+(7,10), pVal: 1
+(9,2), pVal: 1
+(27,18), pVal: 1
+(2,4), pVal: 1
+(29,21), pVal: 0
+(12,9), pVal: 1
+(21,10), pVal: 1
+(10,28), pVal: 1
+(17,27), pVal: 1
+(20,11), pVal: 1
+(27,16), pVal: 1
+(31,12), pVal: 0
+(14,29), pVal: 1
+(15,8), pVal: 1
+(3,22), pVal: 1
+(28,31), pVal: 1
+(18,3), pVal: 1
+(23,3), pVal: 1
+(24,18), pVal: 1
+(24,20), pVal: 1
+(2,12), pVal: 1
+map.size(): 41
+ --- --- ---
+(3,22), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(15,8), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(14,29), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(31,12), (28,31), pVal: 1
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 3
+ --- --- ---
+(27,16), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 3
+ --- --- ---
+(20,11), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(17,27), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(1,22), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(0,8), (28,31), pVal: 0
+(0,0), pVal: 0
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(31,26), (28,31), pVal: 1
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 3
+ --- --- ---
+(8,4), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(29,1), (28,31), pVal: 1
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 3
+ --- --- ---
+(7,10), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(0,0), (0,0), pVal: 1
+(31,27), pVal: 0
+(2,17), pVal: 0
+(31,28), pVal: 0
+(14,27), pVal: 0
+(27,18), pVal: 0
+(9,2), pVal: 0
+(19,17), pVal: 0
+(2,22), pVal: 0
+(30,5), pVal: 0
+(7,18), pVal: 0
+(10,0), pVal: 0
+(1,22), pVal: 0
+(0,8), pVal: 0
+(31,26), pVal: 0
+(4,14), pVal: 0
+(23,18), pVal: 0
+(25,25), pVal: 0
+(7,10), pVal: 0
+(29,1), pVal: 0
+(8,4), pVal: 0
+(2,4), pVal: 0
+(29,21), pVal: 0
+(12,9), pVal: 0
+(21,10), pVal: 0
+(10,28), pVal: 0
+(17,27), pVal: 0
+(20,11), pVal: 0
+(27,16), pVal: 0
+(31,12), pVal: 0
+(14,29), pVal: 0
+(15,8), pVal: 0
+(3,22), pVal: 0
+(28,31), pVal: 0
+(18,3), pVal: 0
+(23,3), pVal: 0
+(24,18), pVal: 0
+(24,20), pVal: 0
+(2,12), pVal: 0
+(20,16), pVal: 0
+(8,15), pVal: 0
+map.size(): 41
+ --- --- ---
+(23,18), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 3
+ --- --- ---
+(4,14), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(25,25), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 3
+ --- --- ---
+(10,0), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(7,18), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(30,5), (28,31), pVal: 1
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 3
+ --- --- ---
+(2,22), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(19,17), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(9,2), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(27,18), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 3
+ --- --- ---
+(2,4), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(29,21), (28,31), pVal: 1
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 3
+ --- --- ---
+(12,9), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+(21,10), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 3
+ --- --- ---
+(10,28), (28,31), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 3
+ --- --- ---
+cmpDict[dim].size(): 41
+ === === ===
+    ======   dim: 1
+(31,27), (2,17), pVal: 1
+(28,31), pVal: 0
+(31,26), pVal: 1
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 5
+ --- --- ---
+(2,17), (31,27), pVal: 0
+(2,17), pVal: 1
+(31,28), pVal: 0
+(14,27), pVal: 0
+(8,15), pVal: 1
+(2,22), pVal: 0
+(7,18), pVal: 0
+(10,0), pVal: 1
+(1,22), pVal: 0
+(0,8), pVal: 1
+(31,26), pVal: 0
+(8,4), pVal: 1
+(29,1), pVal: 1
+(7,10), pVal: 1
+(0,0), pVal: 1
+(30,5), pVal: 1
+(28,31), pVal: 0
+(20,16), pVal: 1
+(23,18), pVal: 0
+(4,14), pVal: 1
+(25,25), pVal: 0
+(19,17), pVal: 0
+(9,2), pVal: 1
+(27,18), pVal: 0
+(2,4), pVal: 1
+(29,21), pVal: 0
+(12,9), pVal: 1
+(21,10), pVal: 1
+(10,28), pVal: 0
+(17,27), pVal: 0
+(20,11), pVal: 1
+(27,16), pVal: 1
+(31,12), pVal: 1
+(14,29), pVal: 0
+(15,8), pVal: 1
+(3,22), pVal: 0
+(18,3), pVal: 1
+(23,3), pVal: 1
+(24,18), pVal: 0
+(24,20), pVal: 0
+(2,12), pVal: 1
+map.size(): 41
+ --- --- ---
+(31,28), (2,17), pVal: 1
+(28,31), pVal: 0
+(31,26), pVal: 1
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 5
+ --- --- ---
+(14,27), (2,17), pVal: 1
+(28,31), pVal: 0
+(31,26), pVal: 1
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 5
+ --- --- ---
+(8,15), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(9,2), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(19,17), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 5
+ --- --- ---
+(2,22), (2,17), pVal: 1
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 5
+ --- --- ---
+(30,5), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(7,18), (2,17), pVal: 1
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 5
+ --- --- ---
+(10,0), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 0
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(1,22), (2,17), pVal: 1
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 5
+ --- --- ---
+(0,8), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(31,26), (31,27), pVal: 0
+(31,28), pVal: 0
+(14,27), pVal: 0
+(8,15), pVal: 1
+(2,12), pVal: 1
+(7,18), pVal: 1
+(10,0), pVal: 1
+(1,22), pVal: 1
+(0,8), pVal: 1
+(31,26), pVal: 1
+(8,4), pVal: 1
+(7,10), pVal: 1
+(25,25), pVal: 1
+(0,0), pVal: 1
+(30,5), pVal: 1
+(28,31), pVal: 0
+(20,16), pVal: 1
+(23,18), pVal: 1
+(29,1), pVal: 1
+(2,17), pVal: 1
+(4,14), pVal: 1
+(2,22), pVal: 1
+(19,17), pVal: 1
+(9,2), pVal: 1
+(27,18), pVal: 1
+(2,4), pVal: 1
+(29,21), pVal: 1
+(12,9), pVal: 1
+(21,10), pVal: 1
+(10,28), pVal: 0
+(17,27), pVal: 0
+(20,11), pVal: 1
+(27,16), pVal: 1
+(31,12), pVal: 1
+(14,29), pVal: 0
+(15,8), pVal: 1
+(3,22), pVal: 1
+(18,3), pVal: 1
+(23,3), pVal: 1
+(24,18), pVal: 1
+(24,20), pVal: 1
+map.size(): 41
+ --- --- ---
+(8,4), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(0,0), (0,0), pVal: 1
+(31,27), pVal: 0
+(2,17), pVal: 0
+(31,28), pVal: 0
+(14,27), pVal: 0
+(27,18), pVal: 0
+(9,2), pVal: 0
+(19,17), pVal: 0
+(2,22), pVal: 0
+(30,5), pVal: 0
+(7,18), pVal: 0
+(10,0), pVal: 0
+(1,22), pVal: 0
+(0,8), pVal: 0
+(31,26), pVal: 0
+(4,14), pVal: 0
+(23,18), pVal: 0
+(25,25), pVal: 0
+(7,10), pVal: 0
+(29,1), pVal: 0
+(8,4), pVal: 0
+(2,4), pVal: 0
+(29,21), pVal: 0
+(12,9), pVal: 0
+(21,10), pVal: 0
+(10,28), pVal: 0
+(17,27), pVal: 0
+(20,11), pVal: 0
+(27,16), pVal: 0
+(31,12), pVal: 0
+(14,29), pVal: 0
+(15,8), pVal: 0
+(3,22), pVal: 0
+(28,31), pVal: 0
+(18,3), pVal: 0
+(23,3), pVal: 0
+(24,18), pVal: 0
+(24,20), pVal: 0
+(2,12), pVal: 0
+(20,16), pVal: 0
+(8,15), pVal: 0
+map.size(): 41
+ --- --- ---
+(23,18), (2,17), pVal: 1
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 5
+ --- --- ---
+(4,14), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(25,25), (2,17), pVal: 1
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 5
+ --- --- ---
+(7,10), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(29,1), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(27,18), (2,17), pVal: 1
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 5
+ --- --- ---
+(2,4), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(29,21), (2,17), pVal: 1
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 5
+ --- --- ---
+(12,9), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(21,10), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(10,28), (2,17), pVal: 1
+(28,31), pVal: 0
+(31,26), pVal: 1
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 5
+ --- --- ---
+(17,27), (2,17), pVal: 1
+(28,31), pVal: 0
+(31,26), pVal: 1
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 5
+ --- --- ---
+(20,11), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(27,16), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(31,12), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(14,29), (2,17), pVal: 1
+(28,31), pVal: 0
+(31,26), pVal: 1
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 5
+ --- --- ---
+(15,8), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(3,22), (2,17), pVal: 1
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 5
+ --- --- ---
+(28,31), (31,27), pVal: 1
+(2,17), pVal: 1
+(31,28), pVal: 1
+(14,27), pVal: 1
+(8,15), pVal: 1
+(19,17), pVal: 1
+(2,22), pVal: 1
+(30,5), pVal: 1
+(7,18), pVal: 1
+(10,0), pVal: 1
+(1,22), pVal: 1
+(0,8), pVal: 1
+(31,26), pVal: 1
+(8,4), pVal: 1
+(29,1), pVal: 1
+(0,0), pVal: 1
+(20,16), pVal: 1
+(23,18), pVal: 1
+(4,14), pVal: 1
+(25,25), pVal: 1
+(7,10), pVal: 1
+(9,2), pVal: 1
+(27,18), pVal: 1
+(2,4), pVal: 1
+(29,21), pVal: 1
+(12,9), pVal: 1
+(21,10), pVal: 1
+(10,28), pVal: 1
+(17,27), pVal: 1
+(20,11), pVal: 1
+(27,16), pVal: 1
+(31,12), pVal: 1
+(14,29), pVal: 1
+(15,8), pVal: 1
+(3,22), pVal: 1
+(28,31), pVal: 1
+(18,3), pVal: 1
+(23,3), pVal: 1
+(24,18), pVal: 1
+(24,20), pVal: 1
+(2,12), pVal: 1
+map.size(): 41
+ --- --- ---
+(18,3), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(23,3), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(24,18), (2,17), pVal: 1
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 5
+ --- --- ---
+(24,20), (2,17), pVal: 1
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 1
+map.size(): 5
+ --- --- ---
+(2,12), (2,17), pVal: 0
+(28,31), pVal: 0
+(31,26), pVal: 0
+(0,0), pVal: 1
+(20,16), pVal: 0
+map.size(): 5
+ --- --- ---
+(20,16), (31,27), pVal: 0
+(2,17), pVal: 0
+(31,28), pVal: 0
+(14,27), pVal: 0
+(8,15), pVal: 1
+(9,2), pVal: 1
+(19,17), pVal: 0
+(2,22), pVal: 0
+(30,5), pVal: 1
+(7,18), pVal: 0
+(10,0), pVal: 1
+(1,22), pVal: 0
+(0,8), pVal: 1
+(31,26), pVal: 0
+(8,4), pVal: 1
+(23,18), pVal: 0
+(0,0), pVal: 1
+(4,14), pVal: 1
+(25,25), pVal: 0
+(7,10), pVal: 1
+(29,1), pVal: 1
+(27,18), pVal: 0
+(2,4), pVal: 1
+(29,21), pVal: 0
+(12,9), pVal: 1
+(21,10), pVal: 1
+(10,28), pVal: 0
+(17,27), pVal: 0
+(20,11), pVal: 1
+(27,16), pVal: 0
+(31,12), pVal: 1
+(14,29), pVal: 0
+(15,8), pVal: 1
+(3,22), pVal: 0
+(28,31), pVal: 0
+(18,3), pVal: 1
+(23,3), pVal: 1
+(24,18), pVal: 0
+(24,20), pVal: 0
+(2,12), pVal: 1
+(20,16), pVal: 1
+map.size(): 41
+ --- --- ---
+cmpDict[dim].size(): 41
+ === === ===
+ --- --- --- --- ---
 'Split Random-Rep Thread' Finished in 11346 milliseconds.
 
 'Split Random-Rep Thread' Finished in 12748 milliseconds.
 
 'Split Random-Rep Thread' Finished in 13915 milliseconds.
 
+
 'Split Slice iteration - With Treads' Finished in 14919 milliseconds.
+
 
 'Split iteration for #0 dimension - With Threads' Finished in 14919 milliseconds.
 
@@ -36,6 +839,7 @@
 
 'Split Random-Rep Thread' Finished in 24993 milliseconds.
 
+
 'Split Slice iteration - With Treads' Finished in 27299 milliseconds.
 
 'Split Random-Rep Thread' Finished in 22805 milliseconds.
@@ -47,6 +851,7 @@
 'Split Random-Rep Thread' Finished in 25426 milliseconds.
 
 'Split Random-Rep Thread' Finished in 24929 milliseconds.
+
 
 'Split Slice iteration - With Treads' Finished in 27236 milliseconds.
 
@@ -60,44 +865,197 @@
 
 'Split Random-Rep Thread' Finished in 23555 milliseconds.
 
+
 'Split Slice iteration - With Treads' Finished in 25753 milliseconds.
+
 
 'Split iteration for #1 dimension - With Threads' Finished in 80289 milliseconds.
 
 'splitIntoEpsNet_WithThreads' Finished in 95459 milliseconds.
 
-'calculateSliceMean_Slice_Thread' Finished in 13871 milliseconds.
+ ---   Epsilon-Net  ---
+   ---   For dim 0  ---
+For the Reps:    [ total of 1 points ]   (0,0),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 1 points ]   (20,16),
+ These 22 Points will be included: (4,14), (7,10), (8,4), (1,22), (10,0), (7,18), (2,22), (19,17), (9,2), (2,4), (12,9), (10,28), (17,27), (14,29), (15,8), (3,22), (18,3), (2,12), (20,16), (8,15), (14,27), (2,17),  		[ total of 22 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 1 points ]   (28,31),
+ These 10 Points will be included: (23,18), (25,25), (27,18), (21,10), (27,16), (28,31), (23,3), (24,18), (24,20), (20,16),  		[ total of 10 points are not empty, out of 40 ]       ---     ---
+   ---     ---
+
+   ---   For dim 1  ---
+For the Reps:    [ total of 2 points ]   (0,0), (0,0),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (0,0), (20,16),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (0,0), (2,17),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (0,0), (28,31),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (0,0), (31,26),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (20,16), (0,0),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (20,16), (20,16),
+ These 11 Points will be included: (4,14), (7,10), (8,4), (9,2), (2,4), (12,9), (15,8), (18,3), (2,12), (20,16), (8,15),  		[ total of 11 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (20,16), (28,31),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (20,16), (2,17),
+ These 2 Points will be included: (20,16), (2,17),  		[ total of 2 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (20,16), (31,26),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (28,31), (0,0),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (28,31), (20,16),
+ These 3 Points will be included: (21,10), (23,3), (20,16),  		[ total of 3 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (28,31), (28,31),
+ These 1 Points will be included: (28,31),  		[ total of 1 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (28,31), (2,17),
+ These 1 Points will be included: (20,16),  		[ total of 1 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (28,31), (31,26),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+   ---     ---
+
+ --- --- --- --- ---
+size: 0
+slice reps:    [ total of 2 points ]   (0,0), (0,0),
+slice points: size: 0
+slice reps:    [ total of 2 points ]   (0,0), (20,16),
+slice points:  		[ total of 0 points are not empty, out of 40 ]
+the current mean: (0,0),
+size: 0
+ 		[ total of 0 points are not empty, out of 40 ]
+the current mean: (10,8),
+slice reps:    [ total of 2 points ]   (0,0), (2,17),
+slice points: 'calculateSliceMean_Slice_Thread' Finished in 13871 milliseconds.
 
 'calculateSliceMean_Slice_Thread' Finished in 14614 milliseconds.
 
+ 		[ total of 0 points are not empty, out of 40 ]
+the current mean: (1,8),
+size: 0
 'calculateSliceMean_Slice_Thread' Finished in 15343 milliseconds.
 
+slice reps:    [ total of 2 points ]   (0,0), (28,31),
+slice points: size: 0
+slice reps:    [ total of 2 points ]   (0,0), (31,26),
+slice points:  		[ total of 0 points are not empty, out of 40 ]
+the current mean: (14,15),
 'calculateSliceMean_Slice_Thread' Finished in 17982 milliseconds.
 
-'calculateSliceMean_Slice_Thread' Finished in 18474 milliseconds.
+ 		[ total of 0 points are not empty, out of 40 ]
+the current mean: (15,13),
+size: 0
+slice reps:    [ total of 2 points ]   (20,16), (0,0),
+slice points: 'calculateSliceMean_Slice_Thread' Finished in 18474 milliseconds.
 
-'calculateSliceMean_Slice_Thread' Finished in 19709 milliseconds.
+size: 11
+ 		[ total of 0 points are not empty, out of 40 ]
+the current mean: (10,8),
+slice reps:    [ total of 2 points ]   (20,16), (20,16),
+slice points: (4,14), (7,10), (8,4), (9,2), (2,4), (12,9), 'calculateSliceMean_Slice_Thread' Finished in 19709 milliseconds.
 
-'calculateSliceMean_Slice_Thread' Finished in 20698 milliseconds.
+(15,8), size: 0
+(18,3), slice reps:    [ total of 2 points ]   (20,16), ((28,31),
+slice points: 2,12), (20,16), (8,15),  		[ total of 11 points are not empty, out of 40 ]
+the current mean: (11,9),
+size: 2
+slice reps:    [ total of 2 points ]   (20,16), (2,17),
+slice points: 'calculateSliceMean_Slice_Thread' Finished in 20698 milliseconds.
 
-'calculateSliceMean_Slice_Thread' Finished in 20686 milliseconds.
+ 		[ total of 0 points are not empty, out of 40 ]
+the current mean: (24,23),
+size: 0
+(20,16), (2,17),  		[ total of 2 points are not empty, out of 40 ]
+the current mean: (11,16),
+slice reps:    [ total of 2 points ]   ('calculateSliceMean_Slice_Thread' Finished in 20686 milliseconds.
 
-'calculateSliceMean_Slice_Thread' Finished in 20211 milliseconds.
+20,16), (31,26),
+slice points: 'calculateSliceMean_Slice_Thread' Finished in 20211 milliseconds.
 
+size: 0
+slice reps:    [ total of 2 points ]   (28,31), (0,0),
+slice points:  		[ total of 0 points are not empty, out of 40 ]
+the current mean: (25,21),
 'calculateSliceMean_Slice_Thread' Finished in 19886 milliseconds.
 
-'calculateSliceMean_Slice_Thread' Finished in 19169 milliseconds.
+ 		[ total of 0 points are not empty, out of 40 ]
+the current mean: (14,15),
+size: 3
+slice reps:    [ total of 2 points ]   (28,31), (20,16),
+slice points: 'calculateSliceMean_Slice_Thread' Finished in 19169 milliseconds.
 
-'calculateSliceMean_Slice_Thread' Finished in 18229 milliseconds.
+(21,10), (23,3), (20,16), size: 1
+ 		[ total of 3 points are not empty, out of 40 ]
+the current mean: (22,15),
+slice reps:    [ total of 2 points ]   (28,31), (28,31),
+slice points: size: 1
+slice reps:    [ total of 2 points ]   (28,31), (2,17),
+slice points: 'calculateSliceMean_Slice_Thread' Finished in 18229 milliseconds.
 
-'calculateSliceMean_Slice_Thread' Finished in 16752 milliseconds.
+(28,31),  		[ total of 1 points are not empty, out of 40 ]
+the current mean: (28,31),
+(20,16), size: 0
+ 		[ total of 1 points are not empty, out of 40 ]
+the current mean: (16,21),
+slice reps:    [ total of 2 points ]   (28,31), (31,26),
+slice points: 'calculateSliceMean_Slice_Thread' Finished in 16752 milliseconds.
 
 'calculateSliceMean_Slice_Thread' Finished in 14750 milliseconds.
 
+ 		[ total of 0 points are not empty, out of 40 ]
+the current mean: (29,28),
 'calculateSliceMean_Slice_Thread' Finished in 13398 milliseconds.
 
 'calculateSlicesMeans_WithThreads' Finished in 29961 milliseconds.
 
+ ---   Means  ---
+The Mean is: (0,0),
+For the Reps:    [ total of 2 points ]   (0,0), (0,0),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (10,8),
+For the Reps:    [ total of 2 points ]   (0,0), (20,16),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (1,8),
+For the Reps:    [ total of 2 points ]   (0,0), (2,17),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (14,15),
+For the Reps:    [ total of 2 points ]   (0,0), (28,31),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (15,13),
+For the Reps:    [ total of 2 points ]   (0,0), (31,26),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (10,8),
+For the Reps:    [ total of 2 points ]   (20,16), (0,0),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (11,9),
+For the Reps:    [ total of 2 points ]   (20,16), (20,16),
+ These 11 Points will be included: (4,14), (7,10), (8,4), (9,2), (2,4), (12,9), (15,8), (18,3), (2,12), (20,16), (8,15),  		[ total of 11 points are not empty, out of 40 ]       ---     ---
+The Mean is: (24,23),
+For the Reps:    [ total of 2 points ]   (20,16), (28,31),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (11,16),
+For the Reps:    [ total of 2 points ]   (20,16), (2,17),
+ These 2 Points will be included: (20,16), (2,17),  		[ total of 2 points are not empty, out of 40 ]       ---     ---
+The Mean is: (25,21),
+For the Reps:    [ total of 2 points ]   (20,16), (31,26),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (14,15),
+For the Reps:    [ total of 2 points ]   (28,31), (0,0),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (22,15),
+For the Reps:    [ total of 2 points ]   (28,31), (20,16),
+ These 3 Points will be included: (21,10), (23,3), (20,16),  		[ total of 3 points are not empty, out of 40 ]       ---     ---
+The Mean is: (28,31),
+For the Reps:    [ total of 2 points ]   (28,31), (28,31),
+ These 1 Points will be included: (28,31),  		[ total of 1 points are not empty, out of 40 ]       ---     ---
+The Mean is: (16,21),
+For the Reps:    [ total of 2 points ]   (28,31), (2,17),
+ These 1 Points will be included: (20,16),  		[ total of 1 points are not empty, out of 40 ]       ---     ---
+The Mean is: (29,28),
+For the Reps:    [ total of 2 points ]   (28,31), (31,26),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+ --- --- --- --- ---
 'distanceFrom (cmp version)' Finished in 6754 milliseconds.
 
 'distanceFrom (cmp version)' Finished in 6982 milliseconds.
@@ -437,8 +1395,6 @@
 'distanceFrom (cmp version)' Finished in 19105 milliseconds.
 
 'distanceFrom (cmp version)' Finished in 18848 milliseconds.
-
-'distanceFrom (cmp version)' Finished in 19490 milliseconds.
 
 'distanceFrom (cmp version)' Finished in 19490 milliseconds.
 
@@ -1300,110 +2256,1710 @@
 
 'distanceFrom (cmp version)' Finished in 27038 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 315681 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 315657 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 316571 milliseconds.
 
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 316080 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 316587 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 318402 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 318529 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 318456 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 318992 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 319956 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 320869 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 322193 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 321806 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 345564 milliseconds.
 
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 348668 milliseconds.
 
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 349481 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 351168 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 349855 milliseconds.
 
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 349620 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 351712 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 352094 milliseconds.
 
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 351378 milliseconds.
 
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 351875 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 352390 milliseconds.
 
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 354410 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 353462 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 354554 milliseconds.
 
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 358589 milliseconds.
 
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 359203 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 360061 milliseconds.
 
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 358102 milliseconds.
 
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 363265 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 363749 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 362749 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 355052 milliseconds.
 
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 366511 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 364504 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 379722 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 382491 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 383317 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 382830 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 385546 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 384929 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 386891 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 383946 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 383501 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 382302 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 384184 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 387080 milliseconds.
 
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 386708 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 385880 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 385941 milliseconds.
 
+  findQ(5,4) not found
+  findQ(5,3) not found
+  findQ(5,2) not found
+  findQ(5,1) not found
+  findQ(5,0) not found
+  findQ(6,4) not found
+  findQ(6,3) not found
+  findQ(6,2) not found
+  findQ(6,1) not found
+  findQ(6,0) not found
+  findQ(7,4) not found
+  findQ(7,3) not found
+  findQ(7,2) not found
+  findQ(7,1) not found
+  findQ(7,0) not found
+  findQ(8,4) not found
+  findQ(8,3) not found
+  findQ(8,2) not found
+  findQ(8,1) not found
+  findQ(8,0) not found
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 386842 milliseconds.
 
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 403459 milliseconds.
@@ -1974,9 +4530,9 @@
 
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 791394 milliseconds.
 
+'tuplePointDistance loop in findMinDistFromMeans' Finished in 795039 milliseconds.
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 786352 milliseconds.
 
-'tuplePointDistance loop in findMinDistFromMeans' Finished in 795039 milliseconds.
 
 'tuplePointDistance loop in findMinDistFromMeans' Finished in 789733 milliseconds.
 
@@ -2662,6 +5218,54 @@
 
 'collectMinimalDistancesAndClosestPoints_WithThreads' Finished in 1565866 milliseconds.
 
+ ---   Minimal Distances and Closest Means  ---
+ Point: (10,0),  Closest mean: (10,8), minDistance: 64
+ Point: (23,18),  Closest mean: (22,15), minDistance: 10
+ Point: (29,1),  Closest mean: (22,15), minDistance: 245
+ Point: (31,26),  Closest mean: (29,28), minDistance: 8
+ Point: (7,18),  Closest mean: (11,16), minDistance: 20
+ Point: (2,22),  Closest mean: (11,16), minDistance: 117
+ Point: (9,2),  Closest mean: (10,8), minDistance: 37
+ Point: (2,4),  Closest mean: (1,8), minDistance: 17
+ Point: (21,10),  Closest mean: (22,15), minDistance: 26
+ Point: (17,27),  Closest mean: (16,21), minDistance: 37
+ Point: (24,18),  Closest mean: (25,21), minDistance: 10
+ Point: (28,31),  Closest mean: (28,31), minDistance: 0
+ Point: (27,16),  Closest mean: (22,15), minDistance: 26
+ Point: (15,8),  Closest mean: (11,9), minDistance: 17
+ Point: (14,27),  Closest mean: (16,21), minDistance: 40
+ Point: (31,27),  Closest mean: (29,28), minDistance: 5
+ Point: (25,25),  Closest mean: (24,23), minDistance: 5
+ Point: (7,10),  Closest mean: (10,8), minDistance: 13
+ Point: (8,4),  Closest mean: (10,8), minDistance: 20
+ Point: (1,22),  Closest mean: (11,16), minDistance: 136
+ Point: (0,8),  Closest mean: (1,8), minDistance: 1
+ Point: (30,5),  Closest mean: (22,15), minDistance: 164
+ Point: (4,14),  Closest mean: (1,8), minDistance: 45
+ Point: (10,28),  Closest mean: (16,21), minDistance: 85
+ Point: (19,17),  Closest mean: (22,15), minDistance: 13
+ Point: (29,21),  Closest mean: (25,21), minDistance: 16
+ Point: (27,18),  Closest mean: (25,21), minDistance: 13
+ Point: (12,9),  Closest mean: (11,9), minDistance: 1
+ Point: (31,12),  Closest mean: (22,15), minDistance: 90
+ Point: (3,22),  Closest mean: (11,16), minDistance: 100
+ Point: (20,11),  Closest mean: (22,15), minDistance: 20
+ Point: (23,3),  Closest mean: (22,15), minDistance: 145
+ Point: (24,20),  Closest mean: (25,21), minDistance: 2
+ Point: (14,29),  Closest mean: (16,21), minDistance: 68
+ Point: (8,15),  Closest mean: (11,16), minDistance: 10
+ Point: (20,16),  Closest mean: (22,15), minDistance: 5
+ Point: (18,3),  Closest mean: (11,9), minDistance: 85
+ Point: (2,12),  Closest mean: (1,8), minDistance: 17
+ Point: (2,17),  Closest mean: (1,8), minDistance: 82
+ Point: (31,28),  Closest mean: (29,28), minDistance: 4
+ --- --- --- --- ---
+pow(2, iterationNumber): 1
+num: 40
+quotient: 45
+DISTANCE_BIT_SIZE: 15
+decryptNum(cQuotient): 45
+keysServer.decryptNum(threshold): 45
 'choosePoint_Point_Thread' Finished in 160845 milliseconds.
 
 'choosePoint_Point_Thread' Finished in 162145 milliseconds.
@@ -2744,35 +5348,279 @@
 
 'choosePointsByDistance_WithThreads' Finished in 185921 milliseconds.
 
+ === === === === === ===
+ === FINAL PRINTOUT ===
+ === === === === === ===
+
+ ===   All Points  ===
+   [ total of 40 points ]   (23,18), (4,14), (25,25), (7,10), (29,1), (8,4), (31,26), (0,8), (1,22), (10,0), (7,18), (30,5), (2,22), (19,17), (9,2), (27,18), (2,4), (29,21), (12,9), (21,10), (10,28), (17,27), (20,11), (27,16), (31,12), (14,29), (15,8), (3,22), (28,31), (18,3), (23,3), (24,18), (24,20), (2,12), (20,16), (8,15), (14,27), (31,28), (2,17), (31,27),  === === === === ===
+
+ ===   Random Points  ===
+   [ total of 3 points ]   (0,0), (20,16), (28,31),    [ total of 5 points ]   (0,0), (20,16), (28,31), (2,17), (31,26),  === === === === ===
+
+ ===   Slices  ===
+   ---   For dim 0  ---
+For the Reps:    [ total of 1 points ]   (0,0),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 1 points ]   (20,16),
+ These 22 Points will be included: (4,14), (7,10), (8,4), (1,22), (10,0), (7,18), (2,22), (19,17), (9,2), (2,4), (12,9), (10,28), (17,27), (14,29), (15,8), (3,22), (18,3), (2,12), (20,16), (8,15), (14,27), (2,17),  		[ total of 22 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 1 points ]   (28,31),
+ These 10 Points will be included: (23,18), (25,25), (27,18), (21,10), (27,16), (28,31), (23,3), (24,18), (24,20), (20,16),  		[ total of 10 points are not empty, out of 40 ]       ---     ---
+
+   ---   For dim 1  ---
+For the Reps:    [ total of 2 points ]   (0,0), (0,0),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (0,0), (20,16),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (0,0), (2,17),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (0,0), (28,31),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (0,0), (31,26),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (20,16), (0,0),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (20,16), (20,16),
+ These 11 Points will be included: (4,14), (7,10), (8,4), (9,2), (2,4), (12,9), (15,8), (18,3), (2,12), (20,16), (8,15),  		[ total of 11 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (20,16), (28,31),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (20,16), (2,17),
+ These 2 Points will be included: (20,16), (2,17),  		[ total of 2 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (20,16), (31,26),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (28,31), (0,0),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (28,31), (20,16),
+ These 3 Points will be included: (21,10), (23,3), (20,16),  		[ total of 3 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (28,31), (28,31),
+ These 1 Points will be included: (28,31),  		[ total of 1 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (28,31), (2,17),
+ These 1 Points will be included: (20,16),  		[ total of 1 points are not empty, out of 40 ]       ---     ---
+For the Reps:    [ total of 2 points ]   (28,31), (31,26),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+
+ === === === === ===
+
+ ===   Means  ===
+The Mean is: (0,0),
+For the Reps:    [ total of 2 points ]   (0,0), (0,0),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (10,8),
+For the Reps:    [ total of 2 points ]   (0,0), (20,16),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (1,8),
+For the Reps:    [ total of 2 points ]   (0,0), (2,17),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (14,15),
+For the Reps:    [ total of 2 points ]   (0,0), (28,31),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (15,13),
+For the Reps:    [ total of 2 points ]   (0,0), (31,26),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (10,8),
+For the Reps:    [ total of 2 points ]   (20,16), (0,0),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (11,9),
+For the Reps:    [ total of 2 points ]   (20,16), (20,16),
+ These 11 Points will be included: (4,14), (7,10), (8,4), (9,2), (2,4), (12,9), (15,8), (18,3), (2,12), (20,16), (8,15),  		[ total of 11 points are not empty, out of 40 ]       ---     ---
+The Mean is: (24,23),
+For the Reps:    [ total of 2 points ]   (20,16), (28,31),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (11,16),
+For the Reps:    [ total of 2 points ]   (20,16), (2,17),
+ These 2 Points will be included: (20,16), (2,17),  		[ total of 2 points are not empty, out of 40 ]       ---     ---
+The Mean is: (25,21),
+For the Reps:    [ total of 2 points ]   (20,16), (31,26),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (14,15),
+For the Reps:    [ total of 2 points ]   (28,31), (0,0),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+The Mean is: (22,15),
+For the Reps:    [ total of 2 points ]   (28,31), (20,16),
+ These 3 Points will be included: (21,10), (23,3), (20,16),  		[ total of 3 points are not empty, out of 40 ]       ---     ---
+The Mean is: (28,31),
+For the Reps:    [ total of 2 points ]   (28,31), (28,31),
+ These 1 Points will be included: (28,31),  		[ total of 1 points are not empty, out of 40 ]       ---     ---
+The Mean is: (16,21),
+For the Reps:    [ total of 2 points ]   (28,31), (2,17),
+ These 1 Points will be included: (20,16),  		[ total of 1 points are not empty, out of 40 ]       ---     ---
+The Mean is: (29,28),
+For the Reps:    [ total of 2 points ]   (28,31), (31,26),
+ These 0 Points will be included:  		[ total of 0 points are not empty, out of 40 ]       ---     ---
+ === === === === ===
+
+ ===   Minimal Distances and Closest Means  ===
+ Point: (10,0),  Closest mean: (10,8), minDistance: 64
+ Point: (23,18),  Closest mean: (22,15), minDistance: 10
+ Point: (29,1),  Closest mean: (22,15), minDistance: 245
+ Point: (31,26),  Closest mean: (29,28), minDistance: 8
+ Point: (7,18),  Closest mean: (11,16), minDistance: 20
+ Point: (2,22),  Closest mean: (11,16), minDistance: 117
+ Point: (9,2),  Closest mean: (10,8), minDistance: 37
+ Point: (2,4),  Closest mean: (1,8), minDistance: 17
+ Point: (21,10),  Closest mean: (22,15), minDistance: 26
+ Point: (17,27),  Closest mean: (16,21), minDistance: 37
+ Point: (24,18),  Closest mean: (25,21), minDistance: 10
+ Point: (28,31),  Closest mean: (28,31), minDistance: 0
+ Point: (27,16),  Closest mean: (22,15), minDistance: 26
+ Point: (15,8),  Closest mean: (11,9), minDistance: 17
+ Point: (14,27),  Closest mean: (16,21), minDistance: 40
+ Point: (31,27),  Closest mean: (29,28), minDistance: 5
+ Point: (25,25),  Closest mean: (24,23), minDistance: 5
+ Point: (7,10),  Closest mean: (10,8), minDistance: 13
+ Point: (8,4),  Closest mean: (10,8), minDistance: 20
+ Point: (1,22),  Closest mean: (11,16), minDistance: 136
+ Point: (0,8),  Closest mean: (1,8), minDistance: 1
+ Point: (30,5),  Closest mean: (22,15), minDistance: 164
+ Point: (4,14),  Closest mean: (1,8), minDistance: 45
+ Point: (10,28),  Closest mean: (16,21), minDistance: 85
+ Point: (19,17),  Closest mean: (22,15), minDistance: 13
+ Point: (29,21),  Closest mean: (25,21), minDistance: 16
+ Point: (27,18),  Closest mean: (25,21), minDistance: 13
+ Point: (12,9),  Closest mean: (11,9), minDistance: 1
+ Point: (31,12),  Closest mean: (22,15), minDistance: 90
+ Point: (3,22),  Closest mean: (11,16), minDistance: 100
+ Point: (20,11),  Closest mean: (22,15), minDistance: 20
+ Point: (23,3),  Closest mean: (22,15), minDistance: 145
+ Point: (24,20),  Closest mean: (25,21), minDistance: 2
+ Point: (14,29),  Closest mean: (16,21), minDistance: 68
+ Point: (8,15),  Closest mean: (11,16), minDistance: 10
+ Point: (20,16),  Closest mean: (22,15), minDistance: 5
+ Point: (18,3),  Closest mean: (11,9), minDistance: 85
+ Point: (2,12),  Closest mean: (1,8), minDistance: 17
+ Point: (2,17),  Closest mean: (1,8), minDistance: 82
+ Point: (31,28),  Closest mean: (29,28), minDistance: 4
+ === === === === ===
+
+ --- --- --- --- ---
+keysServer.decryptNum(threshold): 45
+ === Groups by Means ===
+(29,28), meanI: 14
+Close Points: -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(31,26), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(31,27), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(31,28),
+(31,26), (31,27), (31,28),  		[ total of 3 points are not empty, out of 40 ]
+(16,21), meanI: 13
+Close Points: -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(17,27), -0-(0,0), -0-(0,0), -0-(0,0), -1-(14,27), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0),
+(17,27), (14,27),  		[ total of 2 points are not empty, out of 40 ]
+(28,31), meanI: 12
+Close Points: -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(28,31), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0),
+(28,31),  		[ total of 1 points are not empty, out of 40 ]
+(22,15), meanI: 11
+Close Points: -0-(0,0), -1-(23,18), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(21,10), -0-(0,0), -0-(0,0), -0-(0,0), -1-(27,16), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(19,17), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(20,11), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(20,16), -0-(0,0),
+(23,18), (21,10), (27,16), (19,17), (20,11), (20,16),  		[ total of 6 points are not empty, out of 40 ]
+(14,15), meanI: 10
+Close Points: -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0),
+ 		[ total of 0 points are not empty, out of 40 ]
+(25,21), meanI: 9
+Close Points: -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(24,18), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(29,21), -0-(0,0), -1-(27,18), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(24,20), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0),
+(24,18), (29,21), (27,18), (24,20),  		[ total of 4 points are not empty, out of 40 ]
+(11,16), meanI: 8
+Close Points: -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(7,18), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(8,15), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0),
+(7,18), (8,15),  		[ total of 2 points are not empty, out of 40 ]
+(24,23), meanI: 7
+Close Points: -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(25,25), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0),
+(25,25),  		[ total of 1 points are not empty, out of 40 ]
+(11,9), meanI: 6
+Close Points: -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(15,8), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(12,9), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0),
+(15,8), (12,9),  		[ total of 2 points are not empty, out of 40 ]
+(10,8), meanI: 1
+Close Points: -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(9,2), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(7,10), -0-(0,0), -1-(8,4), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0),
+(9,2), (7,10), (8,4),  		[ total of 3 points are not empty, out of 40 ]
+(0,0), meanI: 0
+Close Points: -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0),
+ 		[ total of 0 points are not empty, out of 40 ]
+(1,8), meanI: 2
+Close Points: -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(2,4), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(0,8), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(2,12), -0-(0,0), -0-(0,0), -0-(0,0),
+(2,4), (0,8), (2,12),  		[ total of 3 points are not empty, out of 40 ]
+(14,15), meanI: 3
+Close Points: -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0),
+ 		[ total of 0 points are not empty, out of 40 ]
+(15,13), meanI: 4
+Close Points: -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0),
+ 		[ total of 0 points are not empty, out of 40 ]
+(10,8), meanI: 5
+Close Points: -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0),
+ 		[ total of 0 points are not empty, out of 40 ]
+ === === === === ===
+
+ === Farthest Points ===
+-1-(10,0), -0-(0,0), -1-(29,1), -1-(2,22), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(1,22), -0-(0,0), -1-(30,5), -0-(0,0), -1-(10,28), -0-(0,0), -0-(0,0), -0-(0,0), -0-(0,0), -1-(31,12), -1-(23,3), -1-(3,22), -0-(0,0), -1-(14,29), -0-(0,0), -0-(0,0), -1-(18,3), -0-(0,0), -0-(0,0), -1-(2,17), -0-(0,0),
+ === === === === ===
+
+For Group of Points:	(31,26), (31,27), (31,28),  		[ total of 3 points are not empty, out of 40 ]    Running 1-Mean Coreset Algorithm:
 'runCoreset in iteration' Finished in 18 milliseconds.
 
+For Group of Points:	(17,27), (14,27),  		[ total of 2 points are not empty, out of 40 ]    Running 1-Mean Coreset Algorithm:
 'runCoreset in iteration' Finished in 0 milliseconds.
 
+For Group of Points:	(28,31),  		[ total of 1 points are not empty, out of 40 ]    Running 1-Mean Coreset Algorithm:
 'runCoreset in iteration' Finished in 0 milliseconds.
 
+For Group of Points:	(23,18), (21,10), (27,16), (19,17), (20,11), (20,16),  		[ total of 6 points are not empty, out of 40 ]    Running 1-Mean Coreset Algorithm:
 'runCoreset in iteration' Finished in 0 milliseconds.
 
+For Group of Points:	 		[ total of 0 points are not empty, out of 40 ]    Running 1-Mean Coreset Algorithm:
 'runCoreset in iteration' Finished in 0 milliseconds.
 
+For Group of Points:	(24,18), (29,21), (27,18), (24,20),  		[ total of 4 points are not empty, out of 40 ]    Running 1-Mean Coreset Algorithm:
 'runCoreset in iteration' Finished in 3 milliseconds.
 
+For Group of Points:	(7,18), (8,15),  		[ total of 2 points are not empty, out of 40 ]    Running 1-Mean Coreset Algorithm:
 'runCoreset in iteration' Finished in 0 milliseconds.
 
+For Group of Points:	(25,25),  		[ total of 1 points are not empty, out of 40 ]    Running 1-Mean Coreset Algorithm:
 'runCoreset in iteration' Finished in 0 milliseconds.
 
+For Group of Points:	(15,8), (12,9),  		[ total of 2 points are not empty, out of 40 ]    Running 1-Mean Coreset Algorithm:
 'runCoreset in iteration' Finished in 0 milliseconds.
 
+For Group of Points:	(9,2), (7,10), (8,4),  		[ total of 3 points are not empty, out of 40 ]    Running 1-Mean Coreset Algorithm:
 'runCoreset in iteration' Finished in 0 milliseconds.
 
+For Group of Points:	 		[ total of 0 points are not empty, out of 40 ]    Running 1-Mean Coreset Algorithm:
 'runCoreset in iteration' Finished in 3 milliseconds.
 
+For Group of Points:	(2,4), (0,8), (2,12),  		[ total of 3 points are not empty, out of 40 ]    Running 1-Mean Coreset Algorithm:
 'runCoreset in iteration' Finished in 0 milliseconds.
 
+For Group of Points:	 		[ total of 0 points are not empty, out of 40 ]    Running 1-Mean Coreset Algorithm:
 'runCoreset in iteration' Finished in 0 milliseconds.
 
+For Group of Points:	 		[ total of 0 points are not empty, out of 40 ]    Running 1-Mean Coreset Algorithm:
 'runCoreset in iteration' Finished in 0 milliseconds.
 
+For Group of Points:	 		[ total of 0 points are not empty, out of 40 ]    Running 1-Mean Coreset Algorithm:
 'runCoreset in iteration' Finished in 0 milliseconds.
 
+WRITE TO FILES
 'Main' Finished in 2049936 milliseconds.
 
+  --- log_trace ---
+Wed Dec  1 04:51:08 2021
+- Starting Protocol
+- 'KeysServer Initialization' Finished in 77 milliseconds.
+
+- 'Main' Finished in 2049936 milliseconds.
+
+
+
+~Logger() for General Logger
+
+~Logger() for loggerClient
+
+~Logger() for loggerPoint
+
+~Logger() for loggerKeysServer
+
+~Logger() for loggerPoint
+
+~Logger() for loggerDataServer
+
+~Logger() for loggerPoint
+
+~Logger() for loggerPoint
+
+~Logger() for loggerMain
+
+~Logger() for loggerPoint
+
+Process finished with exit code 0

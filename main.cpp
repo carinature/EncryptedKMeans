@@ -260,9 +260,9 @@ int main() {
         pointsGroup.shrink_to_fit();
         cout << "For Group of Points:\t";
         printNonEmptyPoints(forClean, keysServer);
+cout << endl;
         //      call yoni's alg with mean-group
         cout << "Running 1-Mean Coreset Algorithm:" << endl;
-
         auto t0_itr_rep = CLOCK::now();     //  for logging, profiling, DBG
         runCoreset(pointsGroup, pointsGroup.size(), DIM, EPSILON);  // <|-------------
         loggerMain.log(printDuration(t0_itr_rep, "runCoreset in iteration"));

@@ -39,6 +39,8 @@ public:
     static void testChoosePointsByDistance();
 
     static void testChoosePointsByDistance_WithThreads();
+
+    static void testChoosePointsByDistance_WithThreads_withYonis();
 };
 
 

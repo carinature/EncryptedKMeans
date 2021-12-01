@@ -35,24 +35,35 @@ std::vector<long> decryptPoint(const Point &p, const KeysServer &keysServer) {
 }
 
 void printPoint(const Point &p, const KeysServer &keysServer) {
-    cout << "( ";
-    for (short dim = 0; dim < DIM; ++dim)
-        cout << keysServer.decryptNum(p[dim]) << " ";
-//    cout << ") ";
-    cout << "id=" << p.id << " cid=" << keysServer.decryptNum(p.cid) << " ) ";
+    //    cout << "( ";
+    //    for (short dim = 0; dim < DIM; ++dim)
+    //        cout << keysServer.decryptNum(p[dim]) << " ";
+    ////    cout << ") ";
+    //    cout << "id=" << p.id << " cid=" << keysServer.decryptNum(p.cid) << " ) ";
+    cout << "(";
+    for (short dim = 0; dim < DIM - 1; ++dim)
+        cout << keysServer.decryptNum(p[dim]) << ",";
+    cout << keysServer.decryptNum(p[DIM - 1]) << "), ";
+    //    cout << "id=" << p.id << " cid=" << keysServer.decryptNum(p.cid) << " ) ";
 }
 
-void printPoints(const std::vector<Point> &points, const KeysServer &keysServer) {
+void
+printPoints(
+        const std::vector<Point> &points,
+        const KeysServer &keysServer
+) {
     cout << "   [ total of " << points.size() << " points ]   ";
     for (const Point &p:points) printPoint(p, keysServer);
-
 }
 
-void printNonEmptyPoints(const std::vector<Point> &points, const KeysServer &keysServer) {
+void printNonEmptyPoints(
+        const std::vector<Point> &points,
+        const KeysServer &keysServer
+) {
     long arr[DIM], cnt = 0;
     for (const Point &p:points) {
         long sum = 0;
-        for (short dim = 0; dim < DIM - 1; ++dim) {
+        for (short dim = 0; dim < DIM; ++dim) {
             arr[dim] = keysServer.decryptNum(p[dim]);
             sum += arr[dim];
         }
@@ -63,6 +74,34 @@ void printNonEmptyPoints(const std::vector<Point> &points, const KeysServer &key
     }
     cout << " \t\t[ total of " << cnt << " points are not empty, out of " << points.size()
          << " ]    ";
+}
+
+void
+decAndWriteToFile(
+        const std::vector<Point> &points,
+        const std::string &filename,
+        const KeysServer &keysServer
+        ) {
+    std::vector<DecryptedPoint> decPoints;
+    decPoints.reserve(points.size());
+    for (const Point &p : points) decPoints.push_back(decryptPoint(p, keysServer));
+    std::ofstream outputFileStream(filename);
+    std::stringstream ss;
+    long sum;
+    for (const DecryptedPoint &p : decPoints) {
+        sum = 0;
+        ss.str(std::string());
+        for (long coor : p) {
+            sum += coor;
+            double coorD = double(coor) / CONVERSION_FACTOR;
+            ss << coorD << " ";
+        }
+        if (0 < sum) {
+            outputFileStream << ss.rdbuf() << endl;
+        }
+    }
+    //    outputFileStream.flush();
+    outputFileStream.close();
 }
 
 /** @brief Generate random data.
@@ -113,3 +152,4 @@ Slice &Slice::addPoint(const Point &point, const Ctxt &isIncluded) {
     pointTuples.emplace_back(point, isIncluded);
     return *this;
 }
+

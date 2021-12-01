@@ -415,19 +415,19 @@ void TestAux::testBGVPackedArithmetics__Comparison() {
     // Set it with numbers 0..nslots - 1
     // ptxt = [0] [1] [2] ... [nslots-2] [nslots-1]
     for (int i = 0; i < ptxt.size(); ++i) {
-//                ptxt[i] = 2;
-//                ptxt0[i] = 3;
-//                ptxt1[i] = 5;
-//                ptxt2[i] = 9;
-                ptxt[i] = i;
-                ptxt0[i] = 0;
-                ptxt1[i] = 1;
-                ptxt2[i] = 2 * i;
+        //                ptxt[i] = 2;
+        //                ptxt0[i] = 3;
+        //                ptxt1[i] = 5;
+        //                ptxt2[i] = 9;
+        ptxt[i] = i;
+        ptxt0[i] = 0;
+        ptxt1[i] = 1;
+        ptxt2[i] = 2 * i;
     }
-//    ptxt[0] = 2;
-//    ptxt0[0] = 3;
-//    ptxt1[0] = 5;
-//    ptxt2[0] = 9;
+    //    ptxt[0] = 2;
+    //    ptxt0[0] = 3;
+    //    ptxt1[0] = 5;
+    //    ptxt2[0] = 9;
 
     // Print the plaintext
     std::cout << "Initial Plaintext: " << ptxt << std::endl;
@@ -709,7 +709,7 @@ void TestAux::testBGVPackedArithmetics__Comparison() {
     printNameVal(temp0);
     printNameVal(temp1);
     printNameVal(temp2);
-//    std::vector<helib::CtxtPart> parts = ctxt.parts
+    //    std::vector<helib::CtxtPart> parts = ctxt.parts
     cout << "------------------------------------" << endl;
     cout << "------------------------------------" << endl;
     cout << "------------------------------------" << endl;
@@ -904,4 +904,58 @@ void TestAux::testMultithreading() {
     cout << "Execution Time : " <<
          (endTime - startTime) / double(CLOCKS_PER_SEC) << endl;
 
+}
+
+//#include <vector>
+#include <fstream>
+#include <sstream>
+#include <string>
+
+#include "../src/yonis/run1meancore.h"
+
+void TestAux::testPythonRun() {
+
+    //    string commandLS ="ls -l */*"; system(commandLS.c_str());
+    string command = "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 -m src.yonis.chkchk";
+    system(command.c_str());
+//     command = "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 src/yonis/chkchk.py";
+//    system(command.c_str());
+//     command = "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 ~/CLionProjects/EncryptedKMeans/src/yonis/chkchk.py";
+//    system(command.c_str());
+//     command = "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 -m .src.yonis.chkchk";
+//    system(command.c_str());
+//    command = "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 -m ..src.yonis.chkchk";
+//    system(command.c_str());
+//    command = "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 -m EncryptedKMeans.src.yonis.chkchk";
+//    system(command.c_str());
+//    command = "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 -m cmake-build-debug.src.yonis.chkchk";
+//    system(command.c_str());
+//    command = "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 -m .yonis.chkchk";
+//    system(command.c_str());
+//    command = "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 -m yonis.chkchk";
+//    system(command.c_str());
+//    command = "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 -m chkchk";
+//    system(command.c_str());
+//    string commandl = "ls -l ";
+//    system(commandl.c_str());
+//    string commandl2 = "pwd ";
+//    system(commandl2.c_str());
+
+
+    printNameVal(" - TIME - ");
+    auto t = std::time(nullptr);
+    auto tm = *std::localtime(&t);
+
+    printNameVal("VERSION 1");
+    std::cout << std::put_time(&tm, "%d-%m-%Y %H-%M-%S") << std::endl;
+    std::cout << std::put_time(&tm, "%Y-%m-%d-%H-%M-%S") << std::endl;
+    _Put_time<char> bla = std::put_time(&tm, "%Y-%m-%d-%H-%M-%S");
+    string blabla = string(bla._M_fmt);
+    printNameVal(blabla);
+
+    printNameVal("VERSION 2");
+    std::ostringstream oss;
+    oss << std::put_time(&tm, "%d-%m-%Y %H-%M-%S")<<endl;
+    oss << std::put_time(&tm, "%Y-%m-%d-%H-%M-%S")<<endl;
+    std::cout << oss.str() << std::endl;
 }

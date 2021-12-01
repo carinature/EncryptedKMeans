@@ -15,6 +15,8 @@ public:
     static void testBGVPackedArithmetics__Comparison();
 
     static void testMultithreading();
+
+    static void testPythonRun();
 };
 
 

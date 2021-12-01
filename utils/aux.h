@@ -52,6 +52,11 @@ void printPoints(const std::vector<Point> &points, const KeysServer &keysServer)
 
 void printNonEmptyPoints(const std::vector<Point> &points, const KeysServer &keysServer);
 
+/** Writing points to a specified.
+ *      The points are first decrypted and returned into a double form (from long) **/
+void
+decAndWriteToFile(const std::vector<Point> & points, const std::string & filename, const KeysServer &keysServer ); // <----------
+
 /* * fin * */
 
 std::chrono::time_point<std::chrono::system_clock> NowTime();

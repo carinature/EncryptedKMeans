@@ -1,6 +1,6 @@
 {
   "data_properties": {
-    "number_of_points": 20,
+    "number_of_points": 10,
     "number_of_points_comment": "FIXED! - 40 points w/ epsilon 0.3 causes weird PubKey bug",
     "number_of_clients": 10,
     "number_of_threads": 3,
@@ -29,14 +29,15 @@
     "helib_verbose": true
   },
   "files": {
-    "points_file": "/home/fares/CLionProjects/rbd/io/points",
-    "points_copy_file": "/home/fares/CLionProjects/rbd/io/points_copy",
-    "chosen_file": "/home/fares/CLionProjects/rbd/io/chosen",
-    "leftover_file": "/home/fares/CLionProjects/rbd/io/leftover",
-    "means_file": "/home/fares/CLionProjects/rbd/io/means",
-    "rands_file": "/home/fares/CLionProjects/rbd/io/rand_means",
-    "rands_bad_file": "/home/fares/CLionProjects/rbd/io/rands_bad_file",
-    "point_csv_file": "/home/fares/CLionProjects/rbd/point_csv"
+    "io_dir": "io/",
+    "points_file": "points",
+    "points_copy_file": "points_copy",
+    "rands_file": "rand_means",
+    "chosen_file": "chosen",
+    "means_file": "means",
+    "leftover_file": "leftover",
+    "rands_bad_file": "rands_bad_file",
+    "point_csv_file": "/home/karina/CLionProjects/EncryptedKMeans/point_csv"
   },
   "just_some_example_array": [
     0,

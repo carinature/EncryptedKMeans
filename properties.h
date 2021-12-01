@@ -10,7 +10,10 @@ using DecryptedPoint = std::vector<long>;     // typedef std::vector<long> Decry
 using CBit = helib::Ctxt;  // typedef helib::Ctxt CBit;   // same as `typedef/using`
 using EncNumber = NTL::Vec<CBit>;  // typedef NTL::Vec<helib::Ctxt> EncNumber;   // same as `typedef/using`
 using CLOCK = std::chrono::high_resolution_clock;
+//using CLOCK = std::chrono::time_point<std::chrono::system_clock>;
 static std::ofstream fcout("/home/karina/CLionProjects/EncryptedKMeans/fcout");  //for DBG
+
+//using std::string;
 
 /*
  * Parse JSON config file
@@ -36,14 +39,14 @@ static const short DISTANCE_BIT_SIZE =
         std::log2(NUMBER_OF_POINTS * (NUMBERS_RANGE * NUMBERS_RANGE)); //fixme make sure
 static const short CID_BIT_SIZE = NUMBER_OF_POINTS; //fixme make sure
 static const short range_lim = jsonConfig["data_properties"]["range_lim"];
+static const std::string range_lim_comment = jsonConfig["data_properties"]["range_lim_comment"];
 static const short low_limit = jsonConfig["data_properties"]["low_limit"];
 static const short N_Threads = jsonConfig["data_properties"]["N_Threads"];
 static const short decimal_digits = jsonConfig["data_properties"]["decimal_digits"];
-static const short conversion_factor = pow(10, decimal_digits);
+static const short CONVERSION_FACTOR = pow(10, decimal_digits);
+static const std::string conversion_factor_comment = jsonConfig["data_properties"]["conversion_factor_comment"];
 static const double EPSILON = jsonConfig["data_properties"]["epsilon"];
 
-[[maybe_unused]] static const std::string range_lim_comment = jsonConfig["data_properties"]["range_lim_comment"];
-[[maybe_unused]] static const std::string conversion_factor_comment = jsonConfig["data_properties"]["conversion_factor_comment"];
 
 /*
  * Flags
@@ -58,12 +61,13 @@ static const double EPSILON = jsonConfig["data_properties"]["epsilon"];
 /*
  * Data-Files Names
  * */
-static const std::string points_file = jsonConfig["files"]["points_file"];
-static const std::string points_copy_file = jsonConfig["files"]["points_copy_file"];
-static const std::string chosen_file = jsonConfig["files"]["chosen_file"];
-static const std::string leftover_file = jsonConfig["files"]["leftover_file"];
-static const std::string means_file = jsonConfig["files"]["means_file"];
-static const std::string rands_file = jsonConfig["files"]["rands_file"];
+static const std::string IO_DIR = jsonConfig["files"]["io_dir"]; // todo USE
+static const std::string POINTS_FILE = jsonConfig["files"]["points_file"];
+static const std::string POINTS_COPY_FILE = jsonConfig["files"]["points_copy_file"];
+static const std::string RANDS_FILE = jsonConfig["files"]["rands_file"];
+static const std::string MEANS_FILE = jsonConfig["files"]["means_file"];
+static const std::string CHOSEN_FILE = jsonConfig["files"]["chosen_file"];
+static const std::string LEFTOVER_FILE = jsonConfig["files"]["leftover_file"];
 static const std::string rands_bad_file = jsonConfig["files"]["rands_bad_file"];
 static const std::string point_csv_file = jsonConfig["files"]["point_csv_file"];
 

@@ -36,6 +36,7 @@ add_executable(EncryptedKMeans
         src/Client.cpp
 #        src/Point.cpp
 #        src/Point.h
+        src/yonis/run1meancore.cpp
         )
 
 target_link_libraries(EncryptedKMeans PUBLIC helib)
@@ -49,7 +50,9 @@ add_executable(Tests
         src/DataServer.cpp
         src/KeysServer.cpp
         src/Client.cpp
-#        tests
+        src/yonis/run1meancore.cpp # yonis
+
+        #        tests
         tests/test.cpp
         tests/TestKeysServer.cpp
         tests/TestPoint.cpp

@@ -176,3 +176,22 @@ std::vector<Ctxt> suffix(
         pref.push_back(v[i]);
     return pref;
 }
+
+Ctxt isEqual(
+        const std::vector<Ctxt> &a,
+             const std::vector<Ctxt> &b,
+             long w
+             ) {
+
+    Ctxt res(a.front().getPubKey());
+    res.addConstant(1L);
+
+    for (int i = 0; i < w; ++i) {
+        Ctxt temp(a[i]);
+        temp += b[i];
+        temp.addConstant(1L);
+        res *= temp;
+    }
+
+    return res;
+}

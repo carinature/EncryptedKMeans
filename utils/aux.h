@@ -134,4 +134,11 @@ struct Slice {
 std::vector<Ctxt> prefix(const std::vector<Ctxt> &v, long k);
 std::vector<Ctxt> suffix(const std::vector<Ctxt> &v, long len);
 
+Ctxt isEqual(const std::vector<Ctxt> &a,
+             const std::vector<Ctxt> &b,
+             long w=BIT_SIZE
+             );
+
+Ctxt isGreater(const std::vector<Ctxt> &a, const std::vector<Ctxt> &b, long w);
+
 #endif //ENCKMEAN_AUX_H

@@ -1486,17 +1486,17 @@ void TestAux::testPrefixAndSuffix() {
         printNameVal(i);
 
         cout << "Prefix In Binary: ";
-        for (int bit = i-1; bit >= 0; --bit) cout << ((number_compared >> bit) & 1);
+        for (int bit = i - 1; bit >= 0; --bit) cout << ((number_compared >> bit) & 1);
         cout << endl;
 
         cout << "Encrypted Prefix\n";
         prefix_encrypted = prefix(number_encrypted, long(i));
 
-        for (int bit = prefix_encrypted.size()-1; bit >= 0; --bit){
+        for (int bit = prefix_encrypted.size() - 1; bit >= 0; --bit) {
             secret_key.Decrypt(plaintext_result, prefix_encrypted[bit]);
             cout << plaintext_result[0];
         }
-        cout  << endl;
+        cout << endl;
 
         cout << "Suffix In Binary: ";
         for (int bit = BIT_SIZE - 1; bit >= i; --bit) cout << ((number_compared >> bit) & 1);
@@ -1505,11 +1505,11 @@ void TestAux::testPrefixAndSuffix() {
         cout << "Encrypted Suffix\n";
         suffix_encrypted = suffix(number_encrypted, long(i));
 
-        for (int bit = suffix_encrypted.size()-1; bit >= 0; --bit){
+        for (int bit = suffix_encrypted.size() - 1; bit >= 0; --bit) {
             secret_key.Decrypt(plaintext_result, suffix_encrypted[bit]);
             cout << plaintext_result[0];
         }
-        cout  << endl;
+        cout << endl;
 
     }
 
@@ -1533,17 +1533,24 @@ void TestAux::testIsEqualImplementation() {
     const helib::EncryptedArray &ea = context.getEA();    // Get the EncryptedArray of the context
     long nslots = ea.size();    // Get the number of slot (phi(m))
     cout << "Number of slots: " << nslots << endl;
+    cout << "---------------\n";
+    cout << "---------------\n";
+    cout << "---------------\n";
+    cout << endl;
 
     std::vector<Ctxt> number_encrypted(BIT_SIZE, helib::Ctxt(public_key));
     std::vector<Ctxt> number_encrypted_2(BIT_SIZE, helib::Ctxt(public_key));
     Ctxt mu(public_key), ni(public_key);
-    for (int i = 0; i < 5; ++i) {
+    helib::Ptxt<helib::BGV> plaintext_result(public_key);
+
+    for (int iter = 0; iter < 10; ++iter) {
 
         //  Create Data & Encrypt
         long number_compared = giveMeRandomLong();
         long number_compared_2 = giveMeRandomLong();
 
-        cout << "---------------\n";
+
+        cout << "--------------------------------------------\n";
         printNameVal(number_compared);
         cout << "In Binary: ";
         for (int bit = BIT_SIZE - 1; bit >= 0; --bit) cout << ((number_compared >> bit) & 1);
@@ -1565,16 +1572,19 @@ void TestAux::testIsEqualImplementation() {
 
         }
 
-        //        Ctxt res = isEqual()
+        for (int i = 0; i < BIT_SIZE; ++i) {
 
-        helib::Ptxt<helib::BGV> plaintext_result(public_key);
-        secret_key.Decrypt(plaintext_result, mu);
-        cout << "mu: " << plaintext_result << endl;
-        secret_key.Decrypt(plaintext_result, ni);
-        cout << "ni: " << plaintext_result << endl;
+            Ctxt res = isEqual(number_encrypted, number_encrypted_2, i);//, secret_key);
+            secret_key.Decrypt(plaintext_result, res);
+            cout << "Eq_" << i << " (n1,n2): "
+                 << (1 == long(plaintext_result[0]) ? "equal" : "different") << "\t \t";// << endl;
 
-        printNameVal(mu.bitCapacity());
-
+        }
+        cout << endl;
+        Ctxt res = isEqual(number_encrypted, number_encrypted_2, BIT_SIZE);//, secret_key);
+        secret_key.Decrypt(plaintext_result, res);
+        cout << "Eq_" << BIT_SIZE << " (n1,n2): "
+             << (1 == long(plaintext_result[0]) ? "equal" : "different") << endl;
     }
 
     cout << endl << printDuration(t0_main, "testIsEqualImplementation");

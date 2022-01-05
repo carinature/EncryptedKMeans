@@ -28,6 +28,7 @@ public:
 
     static void testPrefixAndSuffix();
 
+    static void testIsGrtImplementation();
 };
 
 

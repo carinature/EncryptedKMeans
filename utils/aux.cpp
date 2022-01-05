@@ -179,18 +179,52 @@ std::vector<Ctxt> suffix(
 
 Ctxt isEqual(
         const std::vector<Ctxt> &a,
-             const std::vector<Ctxt> &b,
-             long w
-             ) {
+        const std::vector<Ctxt> &b,
+        long w
+) {
 
-    Ctxt res(a.front().getPubKey());
-    res.addConstant(1L);
+    const helib::PubKey &public_key = a.front().getPubKey();
+    Ctxt res(public_key);
+    Ctxt temp(public_key);
+    res.addConstant(1L);    //  res = 1
 
     for (int i = 0; i < w; ++i) {
-        Ctxt temp(a[i]);
-        temp += b[i];
-        temp.addConstant(1L);
+        temp = a[i];    //  a[i]
+        temp += b[i];   //  a[i]+b[i]
+        temp.addConstant(1L);   //  a[i]+b[i]+1
         res *= temp;
+    }
+
+    return res;
+}
+//std::vector<Ctxt> one_plus_b_dot_a(
+//        const std::vector<Ctxt> &a,
+//        const std::vector<Ctxt> &b,
+//        long w
+//        ){
+//    std::vector<Ctxt> res;
+//    res.reserve(w);
+//    for (int i = 0; i < ; ++i) {
+//
+//    }
+//}
+Ctxt isGrt(const std::vector<Ctxt> &a, const std::vector<Ctxt> &b, long w,
+           const helib::SecKey &secret_key) {
+
+    const helib::PubKey &public_key = a.front().getPubKey();
+    Ctxt res(public_key);
+    Ctxt temp(public_key);
+
+    res.addConstant(1L);    //  res = 1
+    res += b[w - 1];            //  res = 1+b[i]
+    res *= a[w - 1];            //  res = ( 1+b[i] ) * a[i]
+    for (int i = 0; i < w - 1; ++i) {
+        temp.addConstant(1L);   //  temp = 1
+        temp += b[w - 1];           //  temp = 1+b[i]
+        temp *= a[w - 1];           //  temp = ( 1+b[i] ) * a[i]
+        temp *= isEqual(suffix(a, i), suffix(b, i), w - 1 - i);
+
+        res += temp;
     }
 
     return res;

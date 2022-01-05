@@ -1577,16 +1577,90 @@ void TestAux::testIsEqualImplementation() {
             Ctxt res = isEqual(number_encrypted, number_encrypted_2, i);//, secret_key);
             secret_key.Decrypt(plaintext_result, res);
             cout << "Eq_" << i << " (n1,n2): "
-                 << (1 == long(plaintext_result[0]) ? "equal" : "different") << "\t \t";// << endl;
+                 << (long(plaintext_result[0]) ? "equal" : "different") << "\t \t";// << endl;
 
         }
         cout << endl;
         Ctxt res = isEqual(number_encrypted, number_encrypted_2, BIT_SIZE);//, secret_key);
         secret_key.Decrypt(plaintext_result, res);
         cout << "Eq_" << BIT_SIZE << " (n1,n2): "
-             << (1 == long(plaintext_result[0]) ? "equal" : "different") << endl;
+             << (long(plaintext_result[0]) ? "equal" : "different") << endl;
     }
 
     cout << endl << printDuration(t0_main, "testIsEqualImplementation");
     cout << " ------ testIsEqualImplementation finished ------ " << endl << endl;
+}
+
+void TestAux::testIsGrtImplementation() {
+    cout << " ------ testIsGrtImplementation ------ " << endl << endl;
+    auto t0_main = CLOCK::now();
+
+    KeysServer keysServer;
+    const helib::Context &context = keysServer.getContextDBG();
+    context.printout();    // Print the context
+    cout << endl;
+    cout << "Security: " << context.securityLevel() << endl;    // Print the security level
+    const helib::SecKey &secret_key = keysServer.getSecKeyDBG();    // Secret key management
+    // Public key management
+    // Set the secret key (upcast: SecKey is a subclass of PubKey)
+    const helib::PubKey &public_key = secret_key;
+    const helib::EncryptedArray &ea = context.getEA();    // Get the EncryptedArray of the context
+    long nslots = ea.size();    // Get the number of slot (phi(m))
+    cout << "Number of slots: " << nslots << endl;
+    cout << "---------------\n";
+    cout << "---------------\n";
+    cout << "---------------\n";
+    cout << endl;
+
+    std::vector<Ctxt> number_encrypted(BIT_SIZE, helib::Ctxt(public_key));
+    std::vector<Ctxt> number_encrypted_2(BIT_SIZE, helib::Ctxt(public_key));
+    Ctxt mu(public_key), ni(public_key);
+    helib::Ptxt<helib::BGV> plaintext_result(public_key);
+
+    for (int iter = 0; iter < 10; ++iter) {
+
+        //  Create Data & Encrypt
+        long number_compared = giveMeRandomLong();
+        long number_compared_2 = giveMeRandomLong();
+
+        cout << "--------------------------------------------\n";
+        printNameVal(number_compared);
+        cout << "In Binary: ";
+        for (int bit = BIT_SIZE - 1; bit >= 0; --bit) cout << ((number_compared >> bit) & 1);
+        cout << endl;
+        printNameVal(number_compared_2);
+        cout << "In Binary: ";
+        for (int bit = BIT_SIZE - 1; bit >= 0; --bit) cout << ((number_compared_2 >> bit) & 1);
+        cout << endl;
+
+        for (short bit = 0; bit < BIT_SIZE; ++bit) {
+
+            public_key.Encrypt(
+                    number_encrypted[bit],
+                    NTL::to_ZZX((number_compared >> bit) & 1));
+
+            public_key.Encrypt(
+                    number_encrypted_2[bit],
+                    NTL::to_ZZX((number_compared_2 >> bit) & 1));
+
+        }
+
+//        for (int i = 0; i < BIT_SIZE; ++i) {
+        for (int i = 1; i < BIT_SIZE; ++i) {
+
+            Ctxt res = isGrt(number_encrypted, number_encrypted_2, i, secret_key);
+            secret_key.Decrypt(plaintext_result, res);
+            cout << "Gr_" << i << " (n1,n2): "
+                 << (long(plaintext_result[0]) ? "greater" : "equal or smaller") << "\t \t";// << endl;
+
+        }
+        cout << endl;
+        Ctxt res = isGrt(number_encrypted, number_encrypted_2, BIT_SIZE, secret_key);
+        secret_key.Decrypt(plaintext_result, res);
+        cout << "Gr_" << BIT_SIZE << " (n1,n2): "
+             << (long(plaintext_result[0]) ? "greater" : "equal or smaller") << endl;
+    }
+
+    cout << endl << printDuration(t0_main, "testIsGrtImplementation");
+    cout << " ------ testIsGrtImplementation finished ------ " << endl << endl;
 }

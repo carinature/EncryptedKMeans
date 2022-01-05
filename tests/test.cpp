@@ -55,8 +55,9 @@ int main() {
 //    TestAux::testMultithreading();
 //    TestAux::testPythonRun();
     //    TestAux::testIsMatchImplementation();
-    TestAux::testPrefixAndSuffix();
-    TestAux::testIsEqualImplementation();
+//    TestAux::testPrefixAndSuffix();
+//    TestAux::testIsEqualImplementation();
+    TestAux::testIsGrtImplementation();
     cout << " ============ Test Client Finished ============ " << endl << endl;
 
     cout << " ============ Test DataServer ============ " << endl;

@@ -139,6 +139,7 @@ Ctxt isEqual(const std::vector<Ctxt> &a,
              long w=BIT_SIZE
              );
 
-Ctxt isGreater(const std::vector<Ctxt> &a, const std::vector<Ctxt> &b, long w);
+Ctxt isGrt(const std::vector<Ctxt> &a, const std::vector<Ctxt> &b, long w,
+           const helib::SecKey &secret_key);
 
 #endif //ENCKMEAN_AUX_H

@@ -28,10 +28,11 @@ using helib::Ctxt;
 using EncryptedNum = std::vector<helib::Ctxt>;
 
 #include <random>
-static std::random_device rd;
-static std::mt19937 mt(rd());
 //static std::mt19937 mt;
+static std::random_device rd;
+static std::mt19937 mt(rd()); //    for extra randomness
 static std::uniform_int_distribution<long> randomLongInRange(0, NUMBERS_RANGE);
+#define giveMeRandomLong() randomLongInRange(mt)
 
 class KeysServer;
 
@@ -125,5 +126,12 @@ struct Slice {
     }
 
 };
+
+/**
+ * Implementing the alg in the article:
+ * "Setup-Free Secure Search on Encrypted Data: Faster and Post-Processing Free"
+ */
+std::vector<Ctxt> prefix(const std::vector<Ctxt> &v, long k);
+std::vector<Ctxt> suffix(const std::vector<Ctxt> &v, long len);
 
 #endif //ENCKMEAN_AUX_H

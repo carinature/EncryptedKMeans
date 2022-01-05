@@ -17,6 +17,17 @@ public:
     static void testMultithreading();
 
     static void testPythonRun();
+
+    static void testComparison_diffCtxtRepresentation();
+
+    static void testComparison_diffCtxtRepresentation_BGVPackedArithmetics();
+
+    static void testIsMatchImplementation();
+
+    static void testIsEqualImplementation();
+
+    static void testPrefixAndSuffix();
+
 };
 
 

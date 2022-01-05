@@ -16,8 +16,9 @@ std::chrono::time_point<std::chrono::system_clock> NowTime() {
     return CLOCK::now();
 }
 
-std::string printDuration(const std::chrono::time_point<std::chrono::system_clock> &t1,
-                          const std::string &funcName) {
+std::string printDuration(
+        const std::chrono::time_point<std::chrono::system_clock> &t1,
+        const std::string &funcName) {
     auto t2 = CLOCK::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
     std::string str =
@@ -81,7 +82,7 @@ decAndWriteToFile(
         const std::vector<Point> &points,
         const std::string &filename,
         const KeysServer &keysServer
-        ) {
+) {
     std::vector<DecryptedPoint> decPoints;
     decPoints.reserve(points.size());
     for (const Point &p : points) decPoints.push_back(decryptPoint(p, keysServer));
@@ -135,7 +136,9 @@ std::vector<Client> generateDataClients(const KeysServer &keysServer) {
     return clients;
 }
 
-void Slice::printSlice(const KeysServer &keysServer) const {
+void Slice::printSlice(
+        const KeysServer &keysServer)
+const {
     cout << "For the Reps: ";
     printPoints(reps, keysServer);
     cout << endl << " These " << keysServer.decryptSize(counter)
@@ -145,11 +148,31 @@ void Slice::printSlice(const KeysServer &keysServer) const {
     cout << "   ---     --- " << endl;
 }
 
-Slice &Slice::addPoint(const Point &point, const Ctxt &isIncluded) {
+Slice &Slice::addPoint(
+        const Point &point,
+        const Ctxt &isIncluded) {
     points.push_back(point);
     counter.push_back(isIncluded);
-    //        std::tuple<Point, CBit> pointTuple;
     pointTuples.emplace_back(point, isIncluded);
     return *this;
 }
 
+std::vector<Ctxt> prefix(
+        const std::vector<Ctxt> &v,
+        long k) {
+    std::vector<Ctxt> pref;
+    pref.reserve(k);
+    for (int i = 0; i < k; ++i)
+        pref.push_back(v[i]);
+    return pref;
+}
+
+std::vector<Ctxt> suffix(
+        const std::vector<Ctxt> &v,
+        long k) {
+    std::vector<Ctxt> pref;
+    pref.reserve(k);
+    for (int i = k; i < v.size(); ++i)
+        pref.push_back(v[i]);
+    return pref;
+}

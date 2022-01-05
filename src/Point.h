@@ -69,7 +69,7 @@ public:
             for (short dim = 0; dim < DIM; ++dim) {
                 pCoordinatesDBG.push_back(coordinates[dim]);
                 // Extract the i'th bit of coordinates[dim]
-                //                                for (long bit = 0; bit < BIT_SIZE; ++bit)
+                //  for (long bit = 0; bit < BIT_SIZE; ++bit)
                 for (long bit = 0; bit < cCoordinates[dim].size(); ++bit)
                     this->public_key.Encrypt(cCoordinates[dim][bit],
                                              NTL::to_ZZX((coordinates[dim] >> bit) & 1));

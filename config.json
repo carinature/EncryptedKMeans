@@ -1,6 +1,6 @@
 {
   "data_properties": {
-    "number_of_points": 40,
+    "number_of_points": 30,
     "number_of_points_comment": "FIXED! - 40 points w/ epsilon 0.3 causes weird PubKey bug",
     "number_of_clients": 10,
     "number_of_threads": 3,

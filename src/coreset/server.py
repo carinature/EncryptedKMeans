@@ -1,4 +1,4 @@
-from src.yonis.utils import *
+from src.coreset.utils import *
 
 
 class Server:

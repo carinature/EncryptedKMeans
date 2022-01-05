@@ -13,13 +13,13 @@
 int main() {
 
     cout << " ============ Test KeysServer ============ " << endl;
-////    TestKeysServer::testConstructor();
-////    TestKeysServer::testEncryptCtxt();
+//    TestKeysServer::testConstructor();
+//    TestKeysServer::testEncryptCtxt();
 //    TestKeysServer::testDecryptCtxt();
-////    TestKeysServer::testEncryptNum();
+//    TestKeysServer::testEncryptNum();
 //    TestKeysServer::testDecryptNum();
-////    TestKeysServer::testScratchPoint();
-////    TestKeysServer::testTinyRandomPoint();
+//    TestKeysServer::testScratchPoint();
+//    TestKeysServer::testTinyRandomPoint();
     cout << " ============ Test KeysServer Finished ============ " << endl << endl;
 
     cout << " ============ Test Point ============ " << endl;
@@ -51,13 +51,13 @@ int main() {
 //    TestAux::testBGVPackedArithmetics_Original();
 //    TestAux::testBGVPackedArithmetics__Comparison();
 //    TestAux::testMultithreading();
-    TestAux::testPythonRun();
+//    TestAux::testPythonRun();
     cout << " ============ Test Client Finished ============ " << endl << endl;
 
     cout << " ============ Test DataServer ============ " << endl;
 //    TestDataServer::testConstructor();
 //    TestDataServer::testComparePoints();
-    TestDataServer::testRetrievePoints();
+//    TestDataServer::testRetrievePoints();
 //    TestDataServer::testRetrievePoints_Threads();
 //    TestDataServer::testPickRandomPoints();
 //    TestDataServer::testCreateCmpDict();
@@ -71,7 +71,7 @@ int main() {
 //    TestDataServer::testCalculateThreshold();
 //    TestDataServer::testChoosePointsByDistance();
 //    TestDataServer::testChoosePointsByDistance_WithThreads();
-    TestDataServer::testChoosePointsByDistance_WithThreads_withYonis();
+//    TestDataServer::testChoosePointsByDistance_WithThreads_withYonis();
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
 
 }

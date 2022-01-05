@@ -125,7 +125,8 @@ public:
             // encryptions done via publicKey will actually use the secret key, which has
             // certain advantages. If one left out the "&", then encryptions done via
             // publicKey will NOT use the secret key.
-            public_key(secKey) {
+            public_key(secKey)
+            {
 
         if (seed) NTL::SetSeed(NTL::ZZ(seed));
         if (nthreads > 1) NTL::SetNumThreads(nthreads);
@@ -171,19 +172,27 @@ public:
     long decryptNum(const EncryptedNum &cNum) const;
 
     long decryptSize(const std::vector<helib::Ctxt> &size) const;
-    /* * *  end for DBG    * * */
 
+    const helib::Context &getContextDBG() const {
+        return getContext();
+    }
+
+    const helib::SecKey &getSecKeyDBG() const {
+        return getSecKey();
+    }
+
+    /* * *  end for DBG    * * */
 
 protected:
     helib::SecKey &getSecKey() const { // return CONST SecKey?
         return secKeyRef;
     }
 
-    [[nodiscard]] const helib::Context &getContext() const {
+    const helib::Context &getContext() const {
         return context;
     }
 
-    [[nodiscard]] const helib::EncryptedArray &getEA() const {
+     const helib::EncryptedArray &getEA() const {
         return context.getEA();
     }
 

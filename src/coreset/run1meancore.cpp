@@ -32,9 +32,9 @@ vector<vector<double>> &runCoreset(std::vector<vector<double> > &P, int n, int d
     string filename = "io/" + timestamp + "_coreset.csv";
 
     string command =
-            //            "/home/fares/.virtualenvs/kmeans/bin/python -m impl.yonis.simulator points.csv "
-            "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 -m src.yonis.simulator points.csv "
-            //            "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 ~/CLionProjects/EncryptedKMeans/src/yonis/simulator.py points.csv "
+            //            "/home/fares/.virtualenvs/kmeans/bin/python -m impl.coreset.simulator points.csv "
+            "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 -m src.coreset.simulator points.csv "
+            //            "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 ~/CLionProjects/EncryptedKMeans/src/coreset/simulator.py points.csv "
             + to_string(eps) + " " + to_string(alpha) + " " + to_string(delta) +
             " -s " + to_string(security) + (isPrivate ? "" : " -n") + " -f" + filename;
     system(command.c_str());

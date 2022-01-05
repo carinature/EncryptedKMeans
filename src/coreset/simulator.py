@@ -2,19 +2,19 @@
 
 import argparse
 
-# from pies.yonis.client import Client
-# from pies.yonis.crypto_authority import CA
-# from pies.yonis.server import Server
-# from pies.yonis.utils import *
+# from pies.coreset.client import Client
+# from pies.coreset.crypto_authority import CA
+# from pies.coreset.server import Server
+# from pies.coreset.utils import *
 
 # from .client import Client
 # from .crypto_authority import CA
 # from .server import Server
 # from .utils import *
-from src.yonis.client import Client
-from src.yonis.crypto_authority import CA
-from src.yonis.server import Server
-from src.yonis.utils import *
+from src.coreset.client import Client
+from src.coreset.crypto_authority import CA
+from src.coreset.server import Server
+from src.coreset.utils import *
 
 
 class Simulator:

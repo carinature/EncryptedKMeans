@@ -17,10 +17,10 @@ Point::Point(const helib::PubKey &public_key, const long coordinates[]) :
         public_key(public_key),
         id(counter++),
         cid(CID_BIT_SIZE, Ctxt(public_key)),
-        cidCompact(CID_BIT_SIZE, Ctxt(public_key)),
+//        cidCompact(CID_BIT_SIZE, Ctxt(public_key)),
         pubKeyPtrDBG(&public_key),
         cCoordinates(DIM, std::vector(BIT_SIZE, helib::Ctxt(public_key))),
-        coordinatesCompact(DIM, helib::Ctxt(public_key)) {
+//        coordinatesCompact(DIM, helib::Ctxt(public_key)) {
 
     originalPointAddress = this;
     for (long bit = 0; bit < cid.size(); ++bit)

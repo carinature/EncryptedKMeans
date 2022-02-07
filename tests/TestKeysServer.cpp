@@ -2,7 +2,7 @@
 #include "TestKeysServer.h"
 
 #include "utils/Logger.h"
-#include "src/Client.h"
+#include "src/ClientDevice.h"
 
 void TestKeysServer::testConstructor() {
     cout << " ------ testConstructor ------ " << endl;
@@ -93,7 +93,7 @@ void TestKeysServer::testTinyRandomPoint() {
 
     for (int i = 0; i < 10; ++i) {
         Point tiny(keysServer.tinyRandomPoint());
-        printPoint(tiny, keysServer);
+        cout << printPoint(tiny, keysServer);
     }
 
     cout << " ------ testTinyRandomPoint finished ------ " << endl << endl;

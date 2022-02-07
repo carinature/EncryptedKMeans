@@ -29,6 +29,8 @@ public:
     static void testPrefixAndSuffix();
 
     static void testIsGrtImplementation();
+
+    static void testSizesAndTimes();
 };
 
 

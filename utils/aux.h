@@ -26,6 +26,7 @@ using std::endl;
 using helib::Ctxt;
 //using EncryptedBit = helib::Ctxt;
 using EncryptedNum = std::vector<helib::Ctxt>;
+//using EncryptedNum = helib::Ctxt;
 
 #include <random>
 //static std::mt19937 mt;
@@ -38,18 +39,18 @@ class KeysServer;
 
 class Point;
 
-class Client;
+class ClientDevice;
 
 //  print both the value and it's name. comfy for dgb  // best. macro. EVA!
 #define printNameVal(val)   cout << # val << ": " << (val) << endl
 // TODO save this somewhere (list of useful tricks)
 
-/* * for DBG * */
-void printPoint(const Point &p, const KeysServer &keysServer);
+/* * for BDG * */
+std::string printPoint(const Point &p, const KeysServer &keysServer);
 
 std::vector<long> decryptPoint(const Point &p, const KeysServer &keysServer);
 
-void printPoints(const std::vector<Point> &points, const KeysServer &keysServer);
+std::string printPoints(const std::vector<Point> &points, const KeysServer &keysServer);
 
 void printNonEmptyPoints(const std::vector<Point> &points, const KeysServer &keysServer);
 
@@ -58,7 +59,7 @@ void printNonEmptyPoints(const std::vector<Point> &points, const KeysServer &key
 void
 decAndWriteToFile(const std::vector<Point> & points, const std::string & filename, const KeysServer &keysServer ); // <----------
 
-/* * fin * */
+/* * fin `for BDG` * */
 
 std::chrono::time_point<std::chrono::system_clock> NowTime();
 
@@ -70,9 +71,9 @@ printDuration(const std::chrono::time_point<std::chrono::system_clock> &t1,
  * @brief generate a database of Clients and their data Points (randomized)
  * @param keysServer - a reference to the CA
  * @returns a list of data Clients
- * @return std::vector<Client>
+ * @return std::vector<ClientDevice>
  * */
-std::vector<Client> generateDataClients(const KeysServer &keysServer);
+std::vector<ClientDevice> generateDataClients(const KeysServer &keysServer);
 
 //struct PointTuple {
 //    const Point &point;

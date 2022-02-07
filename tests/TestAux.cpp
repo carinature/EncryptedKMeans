@@ -2,18 +2,18 @@
 #include "utils/aux.h"
 
 #include "TestAux.h"
-#include "src/Client.h"
+#include "src/ClientDevice.h"
 
 void TestAux::testGenerateDataClients() {
     cout << " ------ testGenerateDataClients ------ " << endl << endl;
     KeysServer keysServer;
     auto t0_main = CLOCK::now();
 
-    const std::vector<Client> clients = generateDataClients(keysServer);
+    const std::vector<ClientDevice> clients = generateDataClients(keysServer);
 
-    for (const Client &client:clients)
+    for (const ClientDevice &client:clients)
         for (const Point &point:client.getPoints())
-            printPoint(point, keysServer);
+            cout << printPoint(point, keysServer);
 
     cout << endl << printDuration(t0_main, "testGenerateDataClients");
     cout << " ------ testGenerateDataClients finished ------ " << endl << endl;
@@ -86,10 +86,10 @@ void TestAux::minitest() {
     pubKey.Encrypt(ctxt4, NTL::ZZX(4));
     ctxt *= ctxt4;
     ctxt2 *= ctxt3;
-    printNameVal((ctxt) ==
-                 (ctxt2));      //  true when both initialized to the same ctxt, false when initialize to the same (p)
-    printNameVal(ctxt.equalsTo(
-            ctxt2)); //  true when both initialized to the same ctxt, false when initialize to the same (p)value
+    //  true when both initialized to the same ctxt, false when initialize to the same (p)
+    printNameVal((ctxt) == (ctxt2));
+    //  true when both initialized to the same ctxt, false when initialize to the same (p)value
+    printNameVal(ctxt.equalsTo(ctxt2));
     printNameVal(&(ctxt) == &(ctxt2));    //  never true
 
     cout << "flalallsdf" << endl;
@@ -107,6 +107,16 @@ void TestAux::minitest() {
     keysServer.decryptCtxt(ctxt);
 
 
+    Logger loggerMini(log_default_level, "LoggerMini");
+    loggerMini.log("checkcheck logger mini");
+    loggerMini.log("checkcheck log_trace", log_trace);
+    loggerMini.log("checkcheck log_debug", log_debug);
+    loggerMini.log("checkcheck log_info", log_info);
+    loggerMini.log("checkcheck log_warning", log_warning);
+    loggerMini.log("checkcheck log_error", log_error);
+    loggerMini.log("checkcheck log_fatal", log_fatal);
+
+    loggerMini.print_log(log_default_level, true);
     cout << " ------ minitest finished ------ " << endl << endl;
 
 }
@@ -131,6 +141,7 @@ void TestAux::minitest2() {
     printNameVal(&bla);
     cout << "fin" << endl;
 }
+
 
 void TestAux::testBGVPackedArithmetics_Original() {
     /*  Example of BGV scheme  */
@@ -1617,11 +1628,13 @@ void TestAux::testIsGrtImplementation() {
     Ctxt mu(public_key), ni(public_key);
     helib::Ptxt<helib::BGV> plaintext_result(public_key);
 
-    for (int iter = 0; iter < 10; ++iter) {
+    for (int iter = 0; iter < NUMBER_OF_ITERATIONS; ++iter) {
 
         //  Create Data & Encrypt
         long number_compared = giveMeRandomLong();
         long number_compared_2 = giveMeRandomLong();
+        //        long number_compared = 30;
+        //        long number_compared_2 = 24;
 
         cout << "--------------------------------------------\n";
         printNameVal(number_compared);
@@ -1645,22 +1658,89 @@ void TestAux::testIsGrtImplementation() {
 
         }
 
-//        for (int i = 0; i < BIT_SIZE; ++i) {
+        //        for (int i = 0; i < BIT_SIZE; ++i) {
         for (int i = 1; i < BIT_SIZE; ++i) {
-
+            auto t0_isGrt = CLOCK::now();
             Ctxt res = isGrt(number_encrypted, number_encrypted_2, i, secret_key);
             secret_key.Decrypt(plaintext_result, res);
             cout << "Gr_" << i << " (n1,n2): "
-                 << (long(plaintext_result[0]) ? "greater" : "equal or smaller") << "\t \t";// << endl;
+                 << (long(plaintext_result[0]) ? "greater" : "equal or smaller")
+                 << "\t \t";// << endl;
 
+            printDuration(t0_isGrt, "isGrt_" + to_string(i));
         }
-        cout << endl;
+        //        cout << endl;
+        auto t0_isGrt = CLOCK::now();
+
         Ctxt res = isGrt(number_encrypted, number_encrypted_2, BIT_SIZE, secret_key);
         secret_key.Decrypt(plaintext_result, res);
         cout << "Gr_" << BIT_SIZE << " (n1,n2): "
-             << (long(plaintext_result[0]) ? "greater" : "equal or smaller") << endl;
+             << (long(plaintext_result[0]) ? "greater" : "equal or smaller") << "\t \t";// << endl;
+        printDuration(t0_isGrt, "isGrt-full");
+        cout << "-------------";
+        cout << "-------------";
+        //                assert(long(plaintext_result[0])==(number_compared> number_compared_2));
+
     }
 
-    cout << endl << printDuration(t0_main, "testIsGrtImplementation");
+    cout << endl;
+    printDuration(t0_main, "testIsGrtImplementation");
+    cout << " ------ testIsGrtImplementation finished ------ " << endl << endl;
+}
+
+void TestAux::testSizesAndTimes() {
+    cout << " ------ testIsGrtImplementation ------ " << endl << endl;
+    auto t0_main = CLOCK::now();
+
+    KeysServer keysServer;
+    const helib::Context &context = keysServer.getContextDBG();
+    context.printout();    // Print the context
+    cout << endl;
+    cout << "Security: " << context.securityLevel() << endl;    // Print the security level
+    const helib::SecKey &secret_key = keysServer.getSecKeyDBG();    // Secret key management
+    // Public key management
+    // Set the secret key (upcast: SecKey is a subclass of PubKey)
+    const helib::PubKey &public_key = secret_key;
+    const helib::EncryptedArray &ea = context.getEA();    // Get the EncryptedArray of the context
+    long nslots = ea.size();    // Get the number of slot (phi(m))
+    cout << "Number of slots: " << nslots << endl;
+    cout << "---------------\n";
+    cout << "---------------\n";
+    cout << "---------------\n";
+    cout << endl;
+
+    std::vector<Ctxt> number_encrypted(BIT_SIZE, helib::Ctxt(public_key));
+    Ctxt mu(public_key), ni(public_key);
+    helib::Ptxt<helib::BGV> plaintext_result(public_key);
+
+
+    //  Create Data & Encrypt
+    long number_compared = giveMeRandomLong();
+
+    printNameVal(sizeof(secret_key));
+    printNameVal(sizeof(public_key));
+    printNameVal(sizeof(mu));
+    printNameVal(sizeof(number_compared));
+    printNameVal(sizeof(number_encrypted[0]));
+    printNameVal(sizeof(number_encrypted));
+    printNameVal(sizeof(helib::Ctxt));
+    printNameVal(sizeof(helib::PubKey));
+    printNameVal(sizeof(helib::SecKey));
+
+    for (short bit = 0; bit < BIT_SIZE; ++bit) {
+
+        //            printNameVal(sizeof(number_encrypted[bit]));
+        cout << "Encrypt\n";
+
+        public_key.Encrypt(
+                number_encrypted[bit],
+                NTL::to_ZZX((number_compared >> bit) & 1));
+
+        //            printNameVal(sizeof(number_encrypted[bit]));
+        printNameVal(sizeof(number_encrypted));
+    }
+
+    cout << endl;
+    printDuration(t0_main, "testIsGrtImplementation");
     cout << " ------ testIsGrtImplementation finished ------ " << endl << endl;
 }

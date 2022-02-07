@@ -3,18 +3,24 @@
 #ifndef ENCKMEAN_PROPERTIES_H
 #define ENCKMEAN_PROPERTIES_H
 
+#include <fstream>
+
+using CLOCK = std::chrono::high_resolution_clock;
+//using CLOCK = std::chrono::time_point<std::chrono::system_clock>;
+
+static std::ofstream
+fcout("/home/karina/CLionProjects/EncryptedKMeans/fcout");  //for DBG
+
+//using std::string;
+using std::cout;
+using std::endl;
+using std::cerr;
 
 #include <helib/helib.h>
 
-using DecryptedPoint = std::vector<long>;     // typedef std::vector<long> DecryptedPoint;  // same as `typedef/using`
-using CBit = helib::Ctxt;  // typedef helib::Ctxt CBit;   // same as `typedef/using`
-using EncNumber = NTL::Vec<CBit>;  // typedef NTL::Vec<helib::Ctxt> EncNumber;   // same as `typedef/using`
-using CLOCK = std::chrono::high_resolution_clock;
-//using CLOCK = std::chrono::time_point<std::chrono::system_clock>;
-static std::ofstream fcout("/home/karina/CLionProjects/EncryptedKMeans/fcout");  //for DBG
-
-//using std::string;
-
+using DecryptedPoint = std::vector<long>;
+using CBit = helib::Ctxt;
+using EncNumber = NTL::Vec<CBit>;
 /*
  * Parse JSON config file
  * */
@@ -31,6 +37,7 @@ static const short NUMBER_OF_THREADS = jsonConfig["data_properties"]["number_of_
 static const short NUMBER_OF_POINTS = jsonConfig["data_properties"]["number_of_points"];
 //static const short NUMBER_OF_CLIENTS = NUMBER_OF_POINTS / NUMBER_OF_THREADS;
 static const short NUMBER_OF_CLIENTS = jsonConfig["data_properties"]["number_of_clients"];
+static const short NUMBER_OF_ITERATIONS = jsonConfig["data_properties"]["number_of_iterations"];
 static const short DIM = jsonConfig["data_properties"]["DIM"];
 static const short BIT_SIZE = jsonConfig["data_properties"]["bitSize"];
 static const short OUT_SIZE = 2 * BIT_SIZE;
@@ -52,9 +59,9 @@ static const double EPSILON = jsonConfig["data_properties"]["epsilon"];
  * Flags
  * */
 [[maybe_unused]] static const bool DBG = jsonConfig["flags"]["DBG"];
-[[maybe_unused]] static const bool VERBOSE = jsonConfig["flags"]["VERBOSE"];
-//// in productopn sould be `#define`d and not `statc const..`
-//#define VERBOSE true
+//[[maybe_unused]] static const bool VERBOSE = jsonConfig["flags"]["VERBOSE"];
+//// in productopn sould be `#define`d and not `static const..`
+#define VERBOSE false
 //#define DBG true //#define DBG false
 [[maybe_unused]] static const bool helib_bootstrap = jsonConfig["helib_flags"]["helib_bootstrap"];
 
@@ -72,7 +79,6 @@ static const std::string rands_bad_file = jsonConfig["files"]["rands_bad_file"];
 static const std::string point_csv_file = jsonConfig["files"]["point_csv_file"];
 
 static const unsigned long PLAINTEXT_PRIME_MODULUS = 4999;
-
 
 //#define HELIB_DEBUG
 
@@ -102,5 +108,7 @@ static const unsigned long PLAINTEXT_PRIME_MODULUS = 4999;
 //    typedef PtrVector_slice <Ctxt> CtPtrs_slice;
 //
 //}
+
+
 
 #endif //ENCKMEAN_PROPERTIES_H

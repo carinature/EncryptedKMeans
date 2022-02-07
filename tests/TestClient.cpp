@@ -1,13 +1,13 @@
 
 #include "TestClient.h"
 
-#include "src/Client.h"
+#include "src/ClientDevice.h"
 
 void TestClient::testConstructor() {
     cout << " ------ testConstructor ------ " << endl;
     KeysServer keysServer;
 
-    Client client(keysServer);
+    ClientDevice client(keysServer);
     cout << " ------ testConstructor finished ------ " << endl << endl;
 }
 
@@ -18,7 +18,7 @@ void TestClient::testEncryptCoordinates() {
     long arr[DIM];
     for (long &a :arr) a = randomLongInRange(mt);
 
-    Client client(keysServer);
+    ClientDevice client(keysServer);
     client.encryptPoint(arr);
     cout << " ------ testEncryptCoordinates finished ------ " << endl << endl;
 }
@@ -31,7 +31,7 @@ void TestClient::testDecryptCoordinates() {
     long arr[DIM];
     for (long &a :arr) a = randomLongInRange(mt);
     
-    Client client(keysServer);
+    ClientDevice client(keysServer);
     client.encryptPoint(arr);
     
     std::vector<long> decryptCoordinates = client.decryptCoordinate(0);
@@ -45,7 +45,7 @@ void TestClient::testEncryptScratchPoint() {
     cout << " ------ testEncryptScratchPoint ------ " << endl << endl;
     KeysServer keysServer;
 
-    Client client(keysServer);
+    ClientDevice client(keysServer);
     client.encryptPoint();
 
     std::vector<long> decryptCoordinates = client.decryptCoordinate(0);
@@ -63,11 +63,11 @@ void TestClient::testCompare() {
         arr2[dim] = randomLongInRange(mt);
     }
 
-    Client client1(keysServer);
+    ClientDevice client1(keysServer);
     client1.encryptPoint(arr1);
     Point point1(client1.getPoints().back());
 
-    Client client2(keysServer);
+    ClientDevice client2(keysServer);
     client2.encryptPoint(arr2);
     Point point2(client2.getPoints().back());
 

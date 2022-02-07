@@ -41,11 +41,11 @@ void TestDataServer::testRetrievePoints() {
     KeysServer keysServer;
     DataServer dataServer(keysServer);
 
-    std::vector<Client> clients = generateDataClients(keysServer);
+    std::vector<ClientDevice> clients = generateDataClients(keysServer);
     std::vector<Point> points = dataServer.retrievePoints(clients);
 
     cout << " --- Points  ---" << endl;
-    printPoints(points, keysServer);
+    cout << printPoints(points, keysServer);
     cout << " --- --- --- --- ---" << endl;
 
     decAndWriteToFile(points, POINTS_FILE, keysServer);
@@ -57,11 +57,11 @@ void TestDataServer::testRetrievePoints_Threads() {
     KeysServer keysServer;
     DataServer dataServer(keysServer);
 
-    std::vector<Client> clients = generateDataClients(keysServer);
+    std::vector<ClientDevice> clients = generateDataClients(keysServer);
     std::vector<Point> points = dataServer.retrievePoints(clients);
 
     cout << " --- Points  ---" << endl;
-    printPoints(points, keysServer);
+    cout << printPoints(points, keysServer);
     printNameVal(points.size());
     cout << " --- --- --- --- ---" << endl;
 
@@ -70,10 +70,10 @@ void TestDataServer::testRetrievePoints_Threads() {
 
 
     cout << " --- Points 1 ---" << endl;
-    printPoints(points_withThreads, keysServer);
+    cout << printPoints(points_withThreads, keysServer);
     printNameVal(points_withThreads.size());
     cout << " --- Points 2 ---" << endl;
-    printPoints(points_withThreads_2, keysServer);
+    cout << printPoints(points_withThreads_2, keysServer);
     printNameVal(points_withThreads_2.size());
     cout << " --- --- --- --- ---" << endl;
 
@@ -85,20 +85,20 @@ void TestDataServer::testPickRandomPoints() {
     KeysServer keysServer;
     DataServer dataServer(keysServer);
 
-    std::vector<Client>
+    std::vector<ClientDevice>
             clients = generateDataClients(keysServer);
     std::vector<Point>
             points = dataServer.retrievePoints(clients);
 
     cout << " --- All Points  ---" << endl;
-    printPoints(points, keysServer);
+    cout << printPoints(points, keysServer);
     cout << " --- --- --- --- ---" << endl;
 
     std::vector<std::vector<Point>>
             randomPoints = dataServer.pickRandomPoints(points); //, 1 / EPSILON);
 
     cout << " --- Random Points  ---" << endl;
-    for (auto vec :randomPoints) printPoints(vec, keysServer);
+    for (auto vec :randomPoints) cout << printPoints(vec, keysServer);
     cout << " --- --- --- --- ---" << endl;
 
     cout << " ------ testPickRandomPoints finished ------ " << endl << endl;
@@ -109,20 +109,20 @@ void TestDataServer::testCreateCmpDict() {
     KeysServer keysServer;
     DataServer dataServer(keysServer);
 
-    std::vector<Client>
+    std::vector<ClientDevice>
             clients = generateDataClients(keysServer);
     std::vector<Point>
             points = dataServer.retrievePoints(clients);
 
     cout << " --- All Points  ---" << endl;
-    printPoints(points, keysServer);
+    cout << printPoints(points, keysServer);
     cout << " --- --- --- --- ---" << endl;
 
     std::vector<std::vector<Point>>
             randomPoints = dataServer.pickRandomPoints(points);//, 1 / EPSILON);
 
     cout << " --- Random Points  ---" << endl;
-    for (auto vec :randomPoints) printPoints(vec, keysServer);
+    for (auto vec :randomPoints) cout << printPoints(vec, keysServer);
     cout << " --- --- --- --- ---" << endl;
 
     std::vector<
@@ -138,7 +138,7 @@ void TestDataServer::testCreateCmpDict() {
         cout << "    ======   ";
         printNameVal(dim);// << " ======" << endl;
         for (auto const&[point, map] : cmp[dim]) {
-            printPoint(point, keysServer);
+            cout << printPoint(point, keysServer);
             cout << endl;
 
             long p1c = keysServer.decryptNum(point[dim]);
@@ -150,7 +150,7 @@ void TestDataServer::testCreateCmpDict() {
                 long pVal = keysServer.decryptCtxt(val);
                 assert(pVal == (p1c > p2c) || pVal == (p1c == p2c));
 
-                printPoint(point2, keysServer);
+                cout << printPoint(point2, keysServer);
                 printNameVal(pVal);
 
             }
@@ -169,20 +169,20 @@ void TestDataServer::testCreateCmpDict_Threads() {
     KeysServer keysServer;
     DataServer dataServer(keysServer);
 
-    std::vector<Client>
+    std::vector<ClientDevice>
             clients = generateDataClients(keysServer);
     std::vector<Point>
             points = dataServer.retrievePoints(clients);
 
     cout << " --- All Points  ---" << endl;
-    printPoints(points, keysServer);
+    cout << printPoints(points, keysServer);
     printNameVal(points.size());
     cout << " --- --- --- --- ---" << endl;
 
     dataServer.retrievePoints_WithThreads(clients);
 
     cout << " --- Points  ---" << endl;
-    printPoints(dataServer.retrievedPoints, keysServer);
+    cout << printPoints(dataServer.retrievedPoints, keysServer);
     printNameVal(dataServer.retrievedPoints.size());
     cout << " --- --- --- --- ---" << endl;
 
@@ -190,7 +190,7 @@ void TestDataServer::testCreateCmpDict_Threads() {
             randomPoints = dataServer.pickRandomPoints(points);//, 1 / EPSILON);
 
     cout << " --- Random Points  ---" << endl;
-    for (const auto &vec :randomPoints) printPoints(vec, keysServer);
+    for (const auto &vec :randomPoints) cout << printPoints(vec, keysServer);
     cout << " --- --- --- --- ---" << endl;
 
     std::vector<
@@ -207,7 +207,7 @@ void TestDataServer::testCreateCmpDict_Threads() {
         cout << "    ======   ";
         printNameVal(dim);// << " ======" << endl;
         for (auto const&[point, map] : cmp[dim]) {
-            printPoint(point, keysServer);
+            cout << printPoint(point, keysServer);
             cout << endl;
 
             long p1c = keysServer.decryptNum(point[dim]);
@@ -219,7 +219,7 @@ void TestDataServer::testCreateCmpDict_Threads() {
                 long pVal = keysServer.decryptCtxt(val);
                 assert(pVal == (p1c > p2c) || pVal == (p1c == p2c));
 
-                printPoint(point2, keysServer);
+                cout << printPoint(point2, keysServer);
                 printNameVal(pVal);
 
             }
@@ -235,7 +235,7 @@ void TestDataServer::testCreateCmpDict_Threads() {
         cout << "    ======   ";
         printNameVal(dim);// << " ======" << endl;
         for (auto const&[point, map] : dataServer.cmpDict[dim]) {
-            printPoint(point, keysServer);
+            cout << printPoint(point, keysServer);
             cout << endl;
 
             long p1c = keysServer.decryptNum(point[dim]);
@@ -247,7 +247,7 @@ void TestDataServer::testCreateCmpDict_Threads() {
                 long pVal = keysServer.decryptCtxt(val);
                 assert(pVal == (p1c > p2c) || pVal == (p1c == p2c));
 
-                printPoint(point2, keysServer);
+                cout << printPoint(point2, keysServer);
                 printNameVal(pVal);
 
             }
@@ -266,7 +266,7 @@ void TestDataServer::testSplitIntoEpsNet() {
     KeysServer keysServer;
     DataServer dataServer(keysServer);
 
-    std::vector<Client>
+    std::vector<ClientDevice>
             clients = generateDataClients(keysServer);
     std::vector<Point>
             points = dataServer.retrievePoints(clients);
@@ -282,11 +282,11 @@ void TestDataServer::testSplitIntoEpsNet() {
             cmpDict = dataServer.createCmpDict(points, randomPoints);
 
     cout << " --- All Points  ---" << endl;
-    printPoints(points, keysServer);
+    cout << printPoints(points, keysServer);
     cout << " --- --- --- --- ---" << endl;
 
     cout << " --- Random Points  ---" << endl;
-    for (auto vec :randomPoints) printPoints(vec, keysServer);
+    for (auto vec :randomPoints) cout << printPoints(vec, keysServer);
     cout << " --- --- --- --- ---" << endl;
 
     cout << "The Dictionary: " << endl;
@@ -294,10 +294,10 @@ void TestDataServer::testSplitIntoEpsNet() {
         cout << "    ======   ";
         printNameVal(dim);// << " ======" << endl;
         for (auto const&[point, map] : cmpDict[dim]) {
-            printPoint(point, keysServer);
+            cout << printPoint(point, keysServer);
             cout << endl;
             for (auto const&[point2, val]: map) {
-                printPoint(point2, keysServer);
+                cout << printPoint(point2, keysServer);
                 printNameVal(keysServer.decryptCtxt(val));
             }
             printNameVal(map.size());
@@ -325,7 +325,7 @@ void TestDataServer::testSplitIntoEpsNet_WithThreads() {
     KeysServer keysServer;
     DataServer dataServer(keysServer);
 
-    std::vector<Client> clients = generateDataClients(keysServer);
+    std::vector<ClientDevice> clients = generateDataClients(keysServer);
 
     std::vector<Point> points = dataServer.retrievePoints(clients);
     dataServer.retrievePoints_WithThreads(clients);
@@ -342,12 +342,12 @@ void TestDataServer::testSplitIntoEpsNet_WithThreads() {
     dataServer.createCmpDict_WithThreads(points, randomPoints, NUMBER_OF_THREADS);
 
     cout << " --- All Points  ---" << endl;
-    printPoints(points, keysServer);
+    cout << printPoints(points, keysServer);
     printNameVal(points.size());
     cout << " --- --- --- --- ---" << endl;
 
     cout << " --- Random Points  ---" << endl;
-    for (auto vec :randomPoints) printPoints(vec, keysServer);
+    for (auto vec :randomPoints) cout << printPoints(vec, keysServer);
     cout << " --- --- --- --- ---" << endl;
 
     cout << "The Dictionary: " << endl;
@@ -355,10 +355,10 @@ void TestDataServer::testSplitIntoEpsNet_WithThreads() {
         cout << "    ======   ";
         printNameVal(dim);// << " ======" << endl;
         for (auto const&[point, map] : cmpDict[dim]) {
-            printPoint(point, keysServer);
+            cout << printPoint(point, keysServer);
             cout << endl;
             for (auto const&[point2, val]: map) {
-                printPoint(point2, keysServer);
+                cout << printPoint(point2, keysServer);
                 printNameVal(keysServer.decryptCtxt(val));
             }
             printNameVal(map.size());
@@ -398,7 +398,7 @@ void TestDataServer::testCalculateCellMeans() {
     KeysServer keysServer;
     DataServer dataServer(keysServer);
 
-    std::vector<Client> clients = generateDataClients(keysServer);
+    std::vector<ClientDevice> clients = generateDataClients(keysServer);
     std::vector<Point> points = dataServer.retrievePoints(clients);
     std::vector<std::vector<Point> > randomPoints = dataServer.pickRandomPoints(points);
     std::vector<std::unordered_map<const Point, std::unordered_map<const Point, helib::Ctxt> > >
@@ -411,10 +411,10 @@ void TestDataServer::testCalculateCellMeans() {
             meanCellTuples = dataServer.calculateSlicesMeans(epsNet[DIM - 1]);
 
     cout << " === All Points  ===" << endl;
-    printPoints(points, keysServer);
+    cout << printPoints(points, keysServer);
     cout << " === === === === ===" << endl;
     cout << " === Random Points  ===" << endl;
-    for (auto const &vec :randomPoints) printPoints(vec, keysServer);
+    for (auto const &vec :randomPoints) cout << printPoints(vec, keysServer);
     cout << " === === === === ===" << endl;
     cout << " === Slices  ===" << endl;
     for (int dim = 0; dim < DIM; ++dim) {
@@ -427,7 +427,7 @@ void TestDataServer::testCalculateCellMeans() {
     cout << " === === === === ===" << endl;
     for (auto const &tup:meanCellTuples) {
         cout << "The Mean is: ";
-        printPoint(std::get<0>(tup), keysServer);
+        cout << printPoint(std::get<0>(tup), keysServer);
         cout << endl;
         std::get<1>(tup).printSlice(keysServer);
     }
@@ -441,7 +441,7 @@ void TestDataServer::testCalculateCellMeans_WithThreads() {
     KeysServer keysServer;
     DataServer dataServer(keysServer);
 
-    std::vector<Client> clients = generateDataClients(keysServer);
+    std::vector<ClientDevice> clients = generateDataClients(keysServer);
     //  collect points
     std::vector<Point> points = dataServer.retrievePoints(clients);
     dataServer.retrievePoints_WithThreads(clients);
@@ -468,11 +468,11 @@ void TestDataServer::testCalculateCellMeans_WithThreads() {
     cout << " === === === === ===" << endl;
     cout << " === All Points  ===" << endl;
     cout << " === === === === ===" << endl;
-    printPoints(points, keysServer);
+    cout << printPoints(points, keysServer);
     cout << " === === === === ===" << endl;
     cout << " === Random Points  ===" << endl;
     cout << " === === === === ===" << endl;
-    for (auto const &vec :randomPoints) printPoints(vec, keysServer);
+    for (auto const &vec :randomPoints) cout << printPoints(vec, keysServer);
     cout << " === === === === ===" << endl;
     cout << " === Slices  ===" << endl;
     cout << " === === === === ===" << endl;
@@ -494,7 +494,7 @@ void TestDataServer::testCalculateCellMeans_WithThreads() {
     cout << " === === === === ===" << endl;
     for (auto const &tup:meanCellTuples) {
         cout << "The Mean is: ";
-        printPoint(std::get<0>(tup), keysServer);
+        cout << printPoint(std::get<0>(tup), keysServer);
         cout << endl;
         std::get<1>(tup).printSlice(keysServer);
     }
@@ -504,7 +504,7 @@ void TestDataServer::testCalculateCellMeans_WithThreads() {
     cout << " === === === === === ===" << endl;
     for (auto const &tup:meanCellTuples_Threads) {
         cout << "The Mean is: ";
-        printPoint(std::get<0>(tup), keysServer);
+        cout << printPoint(std::get<0>(tup), keysServer);
         cout << endl;
         std::get<1>(tup).printSlice(keysServer);
     }
@@ -535,9 +535,9 @@ void TestDataServer::testGetMinimalDistances() {
     std::vector<Point> dummyMeans(points2.begin(), points2.begin() + 1 / EPSILON);
 
     cout << endl << "Points: ";
-    printPoints(points, keysServer);
+    cout << printPoints(points, keysServer);
     cout << endl << "Dummies: ";
-    printPoints(dummyMeans, keysServer);
+    cout << printPoints(dummyMeans, keysServer);
     cout << endl;
 
     //  Calculating Algorithm
@@ -567,11 +567,11 @@ void TestDataServer::testGetMinimalDistances() {
         const Point &pClosestMean = dummyMeans[closestMinIndex];
 /*
         cout << " Point: ";
-        printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
+        cout << printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
         cout << " pClosestMean: ";
-        printPoint(pClosestMean, keysServer);
+        cout << printPoint(pClosestMean, keysServer);
         cout << " closestMean: ";
-        printPoint(closestMean, keysServer);
+        cout << printPoint(closestMean, keysServer);
         cout << endl;
 */
 
@@ -651,9 +651,9 @@ void TestDataServer::testGetMinimalDistances_WithThreads() {
             );
     /*
     cout << endl << "Points: ";
-    printPoints(points, keysServer);
+    cout << printPoints(points, keysServer);
     cout << endl << "Dummies: ";
-    printPoints(dummyMeans, keysServer);
+    cout << printPoints(dummyMeans, keysServer);
     cout << endl;
     */
 
@@ -674,22 +674,22 @@ void TestDataServer::testGetMinimalDistances_WithThreads() {
         Point &pClosestMean_WithThreads = dummyMeans[closestMinIndices[appropI]];
         /*
            cout << " Point: ";
-           printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
+           cout << printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
            cout << " pClosestMean: ";
-           printPoint(pClosestMean, keysServer);
+           cout << printPoint(pClosestMean, keysServer);
            cout << " closestMean: ";
-           printPoint(closestMean, keysServer);
+           cout << printPoint(closestMean, keysServer);
            cout << " Point: with threads:";
-           printPoint(pointWithThreads, keysServer);
+           cout << printPoint(pointWithThreads, keysServer);
            cout << " closestMean_withThreads: ";
-           printPoint(closestMean_WithThreads, keysServer);
+           cout << printPoint(closestMean_WithThreads, keysServer);
            cout << " Point by id:";
-           printPoint(approPoint, keysServer);
+           cout << printPoint(approPoint, keysServer);
            cout << " Point by index:";
-           printPoint(points[appropI], keysServer);
+           cout << printPoint(points[appropI], keysServer);
            printNameVal(appropI);
            cout << "pClosestMean_WithThreads: ";
-           printPoint(pClosestMean_WithThreads, keysServer);
+           cout << printPoint(pClosestMean_WithThreads, keysServer);
            cout << endl;
            */
         long pClosestMeanCid = keysServer.decryptNum(pClosestMean.cid);
@@ -751,17 +751,17 @@ void TestDataServer::testCalculateThreshold() {
 
     //  Print Results
     cout << endl << "Points: ";
-    printPoints(points, keysServer);
+    cout << printPoints(points, keysServer);
     cout << endl << "Dummies: ";
-    printPoints(dummyMeans, keysServer);
+    cout << printPoints(dummyMeans, keysServer);
     cout << endl;
 
     for (int i = 0; i < points.size(); ++i) {
         cout << " Point: ";
-        printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
+        cout << printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
         Point closestMean = std::get<1>(minDistanceTuples[i]);
         cout << " closestMean: ";
-        printPoint(closestMean, keysServer);
+        cout << printPoint(closestMean, keysServer);
         cout << endl;
         long minDistance = keysServer.decryptNum(std::get<2>(minDistanceTuples[i]));
         printNameVal(minDistance);
@@ -803,17 +803,17 @@ void TestDataServer::testChoosePointsByDistance() {
             threshold = dataServer.calculateThreshold(minDistanceTuples, 0);
 
     cout << endl << "Points: ";
-    printPoints(points, keysServer);
+    cout << printPoints(points, keysServer);
     cout << endl << "Dummies: ";
-    printPoints(dummyMeans, keysServer);
+    cout << printPoints(dummyMeans, keysServer);
     cout << endl;
 
     for (int i = 0; i < points.size(); ++i) {
         cout << " Point: ";
-        printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
+        cout << printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
         Point closestMean = std::get<1>(minDistanceTuples[i]);
         cout << " closestMean: ";
-        printPoint(closestMean, keysServer);
+        cout << printPoint(closestMean, keysServer);
         cout << endl;
         long minDistance = keysServer.decryptNum(std::get<2>(minDistanceTuples[i]));
         printNameVal(minDistance);
@@ -835,7 +835,7 @@ void TestDataServer::testChoosePointsByDistance() {
         printNameVal(meanI) << "\tClose Points: ";
         for (auto const &pair: points) {
             cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
-            printPoint(pair.first, keysServer);
+            cout << printPoint(pair.first, keysServer);
         }
         cout << endl;
     }
@@ -844,14 +844,14 @@ void TestDataServer::testChoosePointsByDistance() {
     cout << " === Closest Points === " << endl;
     for (auto const &pair : std::get<1>(groups)) {
         cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
-        printPoint(pair.first, keysServer);
+        cout << printPoint(pair.first, keysServer);
     }
     cout << endl << " === === === === === " << endl << endl;
 
     cout << " === Farthest Points === " << endl;
     for (auto const &pair : std::get<2>(groups)) {
         cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
-        printPoint(pair.first, keysServer);
+        cout << printPoint(pair.first, keysServer);
     }
     cout << endl << " === === === === === " << endl << endl;
 
@@ -892,17 +892,17 @@ void TestDataServer::testChoosePointsByDistance_WithThreads() {
             threshold = dataServer.calculateThreshold(minDistanceTuples, 0);
 
     cout << endl << "Points: ";
-    printPoints(points, keysServer);
+    cout << printPoints(points, keysServer);
     cout << endl << "Dummies: ";
-    printPoints(dummyMeans, keysServer);
+    cout << printPoints(dummyMeans, keysServer);
     cout << endl;
 
     for (int i = 0; i < points.size(); ++i) {
         cout << " Point: ";
-        printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
+        cout << printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
         Point closestMean = std::get<1>(minDistanceTuples[i]);
         cout << " closestMean: ";
-        printPoint(closestMean, keysServer);
+        cout << printPoint(closestMean, keysServer);
         cout << endl;
         long minDistance = keysServer.decryptNum(std::get<2>(minDistanceTuples[i]));
         printNameVal(minDistance);
@@ -947,7 +947,7 @@ void TestDataServer::testChoosePointsByDistance_WithThreads() {
         printNameVal(meanI) << "\tClose Points: ";
         for (auto const &pair: points) {
             cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
-            printPoint(pair.first, keysServer);
+            cout << printPoint(pair.first, keysServer);
         }
         cout << endl;
     }
@@ -960,7 +960,7 @@ void TestDataServer::testChoosePointsByDistance_WithThreads() {
         printNameVal(meanI) << "\tClose Points: ";
         for (auto const &pair: points) {
             cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
-            printPoint(pair.first, keysServer);
+            cout << printPoint(pair.first, keysServer);
         }
         cout << endl;
     }
@@ -973,7 +973,7 @@ void TestDataServer::testChoosePointsByDistance_WithThreads() {
         printNameVal(meanI) << "\tClose Points: ";
         for (auto const &pair: points) {
             cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
-            printPoint(pair.first, keysServer);
+            cout << printPoint(pair.first, keysServer);
         }
         cout << endl;
     }
@@ -984,7 +984,7 @@ void TestDataServer::testChoosePointsByDistance_WithThreads() {
         cout << " === === === === === " << endl;
         for (auto const &pair : std::get<1>(groups)) {
             cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
-            printPoint(pair.first, keysServer);
+            cout << printPoint(pair.first, keysServer);
         }
         cout << endl << " === === === === === " << endl << endl;
 
@@ -993,7 +993,7 @@ void TestDataServer::testChoosePointsByDistance_WithThreads() {
         cout << " === === === === === === === === === " << endl;
         for (auto const &pair : std::get<1>(groups_withThreads)) {
             cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
-            printPoint(pair.first, keysServer);
+            cout << printPoint(pair.first, keysServer);
         }
         cout << endl << " === === === === === " << endl << endl;
     */
@@ -1002,7 +1002,7 @@ void TestDataServer::testChoosePointsByDistance_WithThreads() {
     cout << " === === === === === " << endl;
     for (auto const &pair : std::get<2>(groups)) {
         cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
-        printPoint(pair.first, keysServer);
+        cout << printPoint(pair.first, keysServer);
     }
     cout << endl << " === === === === === " << endl << endl;
 
@@ -1012,7 +1012,7 @@ void TestDataServer::testChoosePointsByDistance_WithThreads() {
     cout << " === === === === === === === === === " << endl;
     for (auto const &pair : std::get<1>(groups_withThreads1)) {
         cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
-        printPoint(pair.first, keysServer);
+        cout << printPoint(pair.first, keysServer);
     }
     cout << endl << " === === === === === " << endl << endl;
 */
@@ -1022,7 +1022,7 @@ void TestDataServer::testChoosePointsByDistance_WithThreads() {
     cout << " === === === === === === === === === " << endl;
     for (auto const &pair : std::get<1>(groups_withThreads2)) {
         cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
-        printPoint(pair.first, keysServer);
+        cout << printPoint(pair.first, keysServer);
     }
     cout << endl << " === === === === === " << endl << endl;
 
@@ -1066,10 +1066,10 @@ void TestDataServer::testChoosePointsByDistance_WithThreads_withYonis() {
 
     for (int i = 0; i < points.size(); ++i) {
         cout << " Point: ";
-        printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
+        cout << printPoint(std::get<0>(minDistanceTuples[i]), keysServer);
         Point closestMean = std::get<1>(minDistanceTuples[i]);
         cout << " closestMean: ";
-        printPoint(closestMean, keysServer);
+        cout << printPoint(closestMean, keysServer);
         cout << endl;
         long minDistance = keysServer.decryptNum(std::get<2>(minDistanceTuples[i]));
         printNameVal(minDistance);
@@ -1086,22 +1086,22 @@ void TestDataServer::testChoosePointsByDistance_WithThreads_withYonis() {
     );
 
     cout << endl << "Points: ";
-    printPoints(points, keysServer);
+    cout << printPoints(points, keysServer);
     cout << endl << "Dummies: ";
-    printPoints(dummyMeans, keysServer);
+    cout << printPoints(dummyMeans, keysServer);
     cout << endl;
     cout << endl;
 
     cout << " === Groups by Means === " << endl;
     for (auto const &[meanI, points] : std::get<0>(groups)) {
-        printPoint(dummyMeans[meanI], keysServer);
+        cout << printPoint(dummyMeans[meanI], keysServer);
         printNameVal(meanI) << "Close Points: ";
         std::vector<Point> pointsGroup;
         pointsGroup.reserve(points.size());
         for (auto const &pair: points) {
             // todo do not remove yet
 //            cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
-//            printPoint(pair.first, keysServer);
+//            cout << printPoint(pair.first, keysServer);
             pointsGroup.emplace_back(pair.first);
         }
         cout << endl;
@@ -1121,14 +1121,15 @@ void TestDataServer::testChoosePointsByDistance_WithThreads_withYonis() {
     leftover.reserve(points.size());
     for (auto const &[point, isIn] : farthest) {
         cout << "-" << keysServer.decryptCtxt(isIn) << "-";
-        printPoint(point, keysServer);
+        cout << printPoint(point, keysServer);
         leftover.emplace_back(point);
     }
     leftover.shrink_to_fit();
     cout << endl << " === === === === === " << endl << endl;
 
 
-    loggerPoint.log(printDuration(t0_test, "testChoosePointsByDistance_WithThreads_withYonis - part 1"));
+    printDuration(t0_test,
+                  "testChoosePointsByDistance_WithThreads_withYonis - part 1");
 
 
     /**********   integration to coreset alg    ***********/
@@ -1158,10 +1159,10 @@ void TestDataServer::testChoosePointsByDistance_WithThreads_withYonis() {
 
         auto t0_itr_rep = CLOCK::now();     //  for logging, profiling, DBG
         runCoreset(pointsGroup, pointsGroup.size(), DIM, EPSILON);  // <|-------------
-        loggerPoint.log(printDuration(t0_itr_rep, "runCoreset in iteration"));
+        printDuration(t0_itr_rep, "runCoreset in iteration");
 
     }
-    loggerPoint.log(printDuration(t0_test, "testChoosePointsByDistance_WithThreads_withYonis"));
+    printDuration(t0_test, "testChoosePointsByDistance_WithThreads_withYonis");
 
 
     // CT for coreset.csv result for multiple iterations

@@ -4,7 +4,7 @@
 
 
 #include <vector>
-#include <src/Client.h>
+#include <src/ClientDevice.h>
 
 class TestDataServer {
 public:

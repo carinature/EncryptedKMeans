@@ -215,8 +215,8 @@ void TestPoint::testCalculateDistanceFromPoint() {
         for (int dim = 0; dim < DIM; ++dim)
             pDistSquared += std::pow((arrs[i][dim] - arrs[i + 1][dim]), 2);
 
-        //        printPoint(points[i], keysServer);
-        //        printPoint(points[i + 1], keysServer);
+        //        cout << printPoint(points[i], keysServer);
+        //        cout << printPoint(points[i + 1], keysServer);
         //        printNameVal(i) << "  ----------  " << endl;
         //        printNameVal(dDistance);
         //        printNameVal(pDistSquared);
@@ -277,7 +277,7 @@ void TestPoint::testFindMinimalDistancesFromMeans() {
     //        printNameVal(minDistPoint.cid[bit].equalsTo(minimalDistance.first.cid[bit]));
     //    }
 
-    //    printPoint(minDistPoint, keysServer);
+    //    cout << printPoint(minDistPoint, keysServer);
     //    printNameVal(pMinDist);// << endl;
     //    printNameVal(minimalDistance.first.id);// << endl;
     //    printNameVal(minDistPoint.id);// << endl;

@@ -109,7 +109,7 @@ def main():
     if args.plot:
         plt.show()
 
-        plt.savefig("/home/rbd/workspace/rbd/rbd_helib_with_remote_debugger/yonis_res.png")
+        plt.savefig("/home/karina/CLionProjects/EncryptedKMeans/io/coreset_res.png")
 
     if args.file is not None:
         np.savetxt(args.file, core_table, delimiter=',')

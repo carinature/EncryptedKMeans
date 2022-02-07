@@ -1,16 +1,11 @@
 
-#include "Client.h"
-
-
-//helib
-#include <helib/binaryArith.h>
-//#include <helib/binaryCompare.h>
+#include "ClientDevice.h"
 
 using std::cout;
 using std::endl;
 static Logger loggerClient(log_debug, "loggerClient");
 
-Client::Client(const KeysServer &keysServer) :
+ClientDevice::ClientDevice(const KeysServer &keysServer) :
         encryptionKey(keysServer.getSecKey()),
         //        public_key(encryptionKey),
         public_key(keysServer.getPublicKey()),
@@ -19,11 +14,11 @@ Client::Client(const KeysServer &keysServer) :
         scratch(encryptionKey)
 //        cCoordinatesStd(DIM)
 {
-    loggerClient.log("Initializing Client Protocol Finished");
-    cout << "Initializing Client Protocol Finished" << endl;
+    loggerClient.log("Initializing ClientDevice Protocol Finished");
+    cout << "Initializing ClientDevice Protocol Finished" << endl;
 }
 
-std::vector<std::vector<helib::Ctxt> > Client::encryptPoint(const long coordinates[]) {
+std::vector<std::vector<helib::Ctxt> > ClientDevice::encryptPoint(const long coordinates[]) {
 #if VERBOSE
     printNameVal(ea.size());
         cout << "encryptPoint for coordinates: " << endl;
@@ -36,13 +31,13 @@ std::vector<std::vector<helib::Ctxt> > Client::encryptPoint(const long coordinat
     return points.back().cCoordinates;
 }
 
-Client &Client::addEncryptedPoint(Point &point) {
+ClientDevice &ClientDevice::addEncryptedPoint(Point &point) {
     points.emplace_back(point);
     return *this;
 }
 
-std::vector<long> Client::decryptCoordinate(int i) {
-    cout << "Client::decryptCoordinate" << endl;
+std::vector<long> ClientDevice::decryptCoordinate(int i) {
+    cout << "ClientDevice::decryptCoordinate" << endl;
     loggerClient.log("decryptCoordiantes", log_debug);
     std::vector<long> dCoordinates(DIM);
     if (points[i][0][0].isEmpty()) return dCoordinates;

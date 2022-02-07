@@ -26,9 +26,8 @@ vector<vector<double>> &runCoreset(std::vector<vector<double> > &P, int n, int d
     auto tm = *localtime(&t);
     std::ostringstream oss;
     oss << std::put_time(&tm, "%Y_%m_%d_%H_%M_%S");
-    string timestamp = oss.str();
-//    oss.flush();
-        oss.clear();
+    string timestamp = oss.str(); //    oss.flush();
+    oss.clear();
     string filename = "io/" + timestamp + "_coreset.csv";
 
     string command =
@@ -38,12 +37,14 @@ vector<vector<double>> &runCoreset(std::vector<vector<double> > &P, int n, int d
             + to_string(eps) + " " + to_string(alpha) + " " + to_string(delta) +
             " -s " + to_string(security) + (isPrivate ? "" : " -n") + " -f" + filename;
     system(command.c_str());
-    string commandl = "ls -l ";
-    system(commandl.c_str());
-    string commandl2 = "pwd ";
-    system(commandl2.c_str());
+    /*
+        string commandl = "ls -l ";
+        system(commandl.c_str());
+        string commandl2 = "pwd ";
+        system(commandl2.c_str());
+        */
     return parseCSV(filename);
-//    return parseCSV("coreset.csv");
+    //    return parseCSV("coreset.csv");
 }
 
 void toCSV(vector<vector<double>> P, int n, int d, string file) {
@@ -62,7 +63,7 @@ vector<vector<double>> &parseCSV(string file) {
     ifstream data;
     data.open(file);
     string line;
-    vector<vector<double>> parsedCsv;
+    std::vector<std::vector<double>> parsedCsv;
 
     while (getline(data, line)) {
         stringstream lineStream(line);

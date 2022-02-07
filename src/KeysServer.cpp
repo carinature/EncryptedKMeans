@@ -79,7 +79,7 @@ void KeysServer::prepareSecKey(helib::SecKey &key) const {
     if (VERBOSE) {
         cout << "\ncomputing key-dependent tables..." << std::flush;
     }
-    key.GenSecKey();
+    key.GenSecKey();    //  fixme cause mem leak
     addSome1DMatrices(key); // compute key-switching matrices
     addFrbMatrices(key);
     if (bootstrap) key.genRecryptData();
@@ -248,7 +248,7 @@ KeysServer::getQuotientPoint(
         const short repsNum) const {
 
     long size = decryptSize(sizeBitVector), arr[DIM];
-    printNameVal(size);
+//    printNameVal(size);
     //    if (size)
     long pCoor;
     for (short dim = 0; dim < DIM; ++dim) {
@@ -268,7 +268,7 @@ KeysServer::getQuotient(
 
     long quotient = decryptNum(encryptedNum) / (num);
 
-    printNameVal(quotient);
+//    printNameVal(quotient);
 
     const helib::PubKey &public_key = encryptedNum[0].getPubKey();//getPublicKey();
     EncryptedNum cQuotient(DISTANCE_BIT_SIZE, Ctxt(public_key));

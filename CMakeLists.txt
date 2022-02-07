@@ -5,6 +5,7 @@ project(EncryptedKMeans)
 set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_SOURCE_DIR "/home/karina/CLionProjects/EncryptedKMeans")
+
 # Includes Directory
 set(BASEPATH "${CMAKE_SOURCE_DIR}")
 include_directories("${BASEPATH}")
@@ -33,9 +34,8 @@ add_executable(EncryptedKMeans
         utils/Logger.cpp
         src/DataServer.cpp
         src/KeysServer.cpp
-        src/Client.cpp
-#        src/Point.cpp
-#        src/Point.h
+        src/ClientDevice.cpp
+        src/Point.cpp
         src/coreset/run1meancore.cpp
         )
 
@@ -49,7 +49,8 @@ add_executable(Tests
         utils/Logger.cpp
         src/DataServer.cpp
         src/KeysServer.cpp
-        src/Client.cpp
+        src/ClientDevice.cpp
+        src/Point.cpp
         src/coreset/run1meancore.cpp # coreset
 
         #        tests

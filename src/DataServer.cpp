@@ -4,12 +4,23 @@
 
 #include <algorithm> //for the random shuffle
 
-using std::cout;
-using std::endl;
-
 static Logger loggerDataServer(log_debug, "loggerDataServer");
 
-//DataServer::DataServer(KeysServer &keysServer) ;
+DataServer::DataServer(
+        const KeysServer &keysServer
+) :
+        keysServer(keysServer),
+        tinyRandomPoint(keysServer.tinyRandomPoint()) {
+    loggerDataServer.log("DataServer()");
+    cmpDict.resize(DIM);
+    randomPointsList.resize(DIM);
+    retrievedPoints.reserve(NUMBER_OF_POINTS);
+}
+
+void DataServer::clearForNextIteration() {
+    randomPointsList.clear();
+    cmpDict.clear();
+}
 
 /**
  * @brief request data from clients and conentrate into one list
@@ -19,13 +30,13 @@ static Logger loggerDataServer(log_debug, "loggerDataServer");
  * */
 std::vector<Point>
 DataServer::retrievePoints(
-        const std::vector<Client> &clients) {
+        const std::vector<ClientDevice> &clients) {
     auto t0_retrievePoints = CLOCK::now();     //  for logging, profiling, DBG// logging
 
     std::vector<Point> points;
     if (clients.empty()) return points;
     points.reserve(pow(clients.size(), 2) / 2); // preallocate memory
-    for (const Client &c:clients)
+    for (const ClientDevice &c:clients)
         for (const Point &p:c.getPoints())
             points.emplace_back(Point(p));
     //            points.insert(points.end(),c.getPoints().begin(), c.getPoints().end());
@@ -40,11 +51,11 @@ DataServer::retrievePoints(
 
 void
 DataServer::retrievePoints_Thread(
-        const std::vector<Client> &clients) {
+        const std::vector<ClientDevice> &clients) {
     auto t0_retrievePoints = CLOCK::now();     //  for logging, profiling, DBG// logging
     if (clients.empty()) return;
 
-    for (const Client &c:clients)
+    for (const ClientDevice &c:clients)
         for (const Point &p:c.getPoints()) {
             retrievedPointsLock.lock();
             retrievedPoints.emplace_back(Point(p));
@@ -58,19 +69,19 @@ DataServer::retrievePoints_Thread(
 
 std::vector<Point>
 DataServer::retrievePoints_WithThreads(
-        const std::vector<Client> &clients,
+        const std::vector<ClientDevice> &clients,
         short numOfThreads
 ) {
     auto t0_retrievePoints = CLOCK::now();  //  for logging, profiling, DBG// logging
-//    if (clients.empty()) return;
+    //    if (clients.empty()) return;
 
     unsigned long splitSize = clients.size() / numOfThreads;
-    std::vector<Client> splits[numOfThreads];
+    std::vector<ClientDevice> splits[numOfThreads];
     std::vector<std::thread> threadVec;
     for (int i = 0; i < numOfThreads; ++i) {
         splits[i] = (i == numOfThreads - 1) ?
-                    std::vector<Client>(clients.begin() + i * splitSize, clients.end()) :
-                    std::vector<Client>(clients.begin() + i * splitSize,
+                    std::vector<ClientDevice>(clients.begin() + i * splitSize, clients.end()) :
+                    std::vector<ClientDevice>(clients.begin() + i * splitSize,
                                         clients.begin() + (i + 1) * splitSize);
         threadVec.emplace_back(&DataServer::retrievePoints_Thread, this, splits[i]);
     }
@@ -113,7 +124,8 @@ DataServer::pickRandomPoints(
         //todo shuffle only m instead of all ? check which is more efficient
 
         for (int i = 0; i < pow(m, dim + 1); ++i) {
-            randomPointsList[dim].emplace_back(retrievedPoints[indices[i]]);
+            //            randomPointsList[dim].emplace_back(retrievedPoints[indices[i]]);
+            randomPointsList[dim].emplace_back(points[indices[i]]);
         }
     }
 
@@ -224,8 +236,8 @@ DataServer::createCmpDict_WithThreads(const std::vector<Point> &allPoints,
     for (short dim = 0; dim < DIM; ++dim)
         threadVec.emplace_back(
                 &DataServer::createCmpDict_Dim_Thread,
-                               this,
-                               dim);
+                this,
+                dim);
     for (auto &t:threadVec) t.join();
 
     loggerDataServer.log(
@@ -240,9 +252,9 @@ std::map<int, //DIM
 >
 DataServer::splitIntoEpsNet(
         const std::vector<Point> &points,
-                            const std::vector<std::vector<Point> > &randomPoints,
-                            const CmpDict &cmpDict
-                            ) {
+        const std::vector<std::vector<Point> > &randomPoints,
+        const CmpDict &cmpDict
+) {
     auto t0_split = CLOCK::now();     //  for logging, profiling, DBG
 
     std::map<int, std::vector<Slice> > slices;
@@ -289,9 +301,9 @@ DataServer::splitIntoEpsNet(
                                     cout << endl << endl;
                                     printNameVal(dim) << "Base Slice (prev) reps: ";
                                     for (auto const &baseRep: baseSlice.reps)
-                                        printPoint(baseRep, keysServer);
+                                        cout << printPoint(baseRep, keysServer);
                                     cout << endl << " ========== R: ";
-                                    printPoint(R, keysServer);
+                                    cout << printPoint(R, keysServer);
                                     cout << " ========== " << endl;
                 */
 
@@ -330,7 +342,7 @@ DataServer::splitIntoEpsNet(
                                             //                        if (7 == p.id) cout << "*******";// << endl;
                                             cout << " ~~~~~~ current point: { id=" << p.id
                                                  << " [" << p.pCoordinatesDBG[0] << "," << p.pCoordinatesDBG[1] << "] ";
-                                            printPoint(p, keysServer);
+                                            cout << printPoint(p, keysServer);
                                             cout << "}";
                     */
 
@@ -345,7 +357,7 @@ DataServer::splitIntoEpsNet(
 
                     for (const Point &r: randomPoints[dim]) {
                         /*                            cout << "       --- other r: ";
-                                                    printPoint(r, keysServer);*/
+                                                    cout << printPoint(r, keysServer);*/
                         if ((r == R) || (p == r)) continue;
                         // make sure with adi and dan current solution makes sense
 
@@ -412,15 +424,15 @@ DataServer::splitIntoEpsNet(
                            *//*
                              cout << endl;
                             cout << endl << "  ******  ";
-                            printPoint(pointIsInSlice, keysServer);
+                            cout << printPoint(pointIsInSlice, keysServer);
                             cout << "      Point is in group of       ";
                             printNameVal(dim);
                             cout << "Base Slice (prev) reps: ";
                             for (auto const &baseRep: baseSlice.reps)
-                                printPoint(baseRep, keysServer);
+                                cout << printPoint(baseRep, keysServer);
                             //                            cout << endl;
                             cout << " ========== current R: ";
-                            printPoint(R, keysServer);
+                            cout << printPoint(R, keysServer);
                             cout << "  ******  " << endl;
 
                             long psum = 0;
@@ -451,10 +463,10 @@ DataServer::splitIntoEpsNet(
             }
             slices[dim].emplace_back(tailSlice);
              */
-            cout << endl;
+            //            cout << endl;
             loggerDataServer.log(printDuration(t0_itr_slice, "Split Slice iteration"));
         }
-        cout << endl;
+        //        cout << endl;
         loggerDataServer.log(printDuration(
                 t0_itr_dim,
                 "Split iteration for #" + std::to_string(dim) + " dimension"));
@@ -485,9 +497,9 @@ DataServer::splitIntoEpsNet_R_Thread(
             cout << endl << endl;
             printNameVal(dim) << "Base Slice (prev) reps: ";
             for (auto const &baseRep: baseSlice.reps)
-                printPoint(baseRep, keysServer);
+                cout << printPoint(baseRep, keysServer);
             cout << endl << " ========== R: ";
-            printPoint(R, keysServer);
+            cout << printPoint(R, keysServer);
             cout << " ========== " << endl;
 */
     /**     for DBG  (todo remove)    **/
@@ -534,7 +546,7 @@ DataServer::splitIntoEpsNet_R_Thread(
                                 //                        if (7 == p.id) cout << "*******";// << endl;
                                 cout << " ~~~~~~ current point: { id=" << p.id
                                      << " [" << p.pCoordinatesDBG[0] << "," << p.pCoordinatesDBG[1] << "] ";
-                                printPoint(p, keysServer);
+                                cout << printPoint(p, keysServer);
                                 cout << "}";
         */
 
@@ -549,7 +561,7 @@ DataServer::splitIntoEpsNet_R_Thread(
 
         for (const Point &r: randomPointsList[dim]) {
             /*                            cout << "       --- other r: ";
-                                        printPoint(r, keysServer);*/
+                                        cout << printPoint(r, keysServer);*/
             if ((r == R) || (p == r)) continue;
             // make sure with adi and dan current solution makes sense
 
@@ -616,15 +628,15 @@ DataServer::splitIntoEpsNet_R_Thread(
                *//*
                  cout << endl;
                 cout << endl << "  ******  ";
-                printPoint(pointIsInSlice, keysServer);
+                cout << printPoint(pointIsInSlice, keysServer);
                 cout << "      Point is in group of       ";
                 printNameVal(dim);
                 cout << "Base Slice (prev) reps: ";
                 for (auto const &baseRep: baseSlice.reps)
-                    printPoint(baseRep, keysServer);
+                    cout << printPoint(baseRep, keysServer);
                 //                            cout << endl;
                 cout << " ========== current R: ";
-                printPoint(R, keysServer);
+                cout << printPoint(R, keysServer);
                 cout << "  ******  " << endl;
 
                 long psum = 0;
@@ -641,7 +653,7 @@ DataServer::splitIntoEpsNet_R_Thread(
     slices[dim].emplace_back(newSlice);
     slicesLock.unlock();
 
-    loggerDataServer.log(printDuration(t0_itr_rep, "Split Random-Rep Thread"));
+//    loggerDataServer.log(printDuration(t0_itr_rep, "Split Random-Rep Thread"));
 }
 
 
@@ -706,13 +718,13 @@ DataServer::splitIntoEpsNet_WithThreads(const std::vector<Point> &points,
             }
             slices[dim].emplace_back(tailSlice);
              */
-            cout << endl;
+            //            cout << endl;
             loggerDataServer.log(
                     printDuration(t0_itr_slice, "Split Slice iteration - With Treads"));
         }
 
 
-        cout << endl;
+        //        cout << endl;
         loggerDataServer.log(printDuration(
                 t0_itr_dim,
                 "Split iteration for #" + std::to_string(dim) + " dimension - With Threads"));
@@ -743,16 +755,17 @@ DataServer::calculateSlicesMeans(const std::vector<Slice> &slices) {
         Point sum(Point::addManyPoints(points, keysServer));
 
         const Point mean(keysServer.getQuotientPoint(sum, slice.counter, DIM));
-
-        cout << "slice reps: ";
-        printPoints(slice.reps, keysServer);
-        cout << endl;
-        cout << "slice points: ";
-        printNonEmptyPoints(slice.points, keysServer);
-        cout << endl;
-        cout << "the currnt mean: ";
-        printPoint(mean, keysServer);
-        cout << endl;
+        /*
+                cout << "slice reps: ";
+                cout << printPoints(slice.reps, keysServer);
+                cout << endl;
+                cout << "slice points: ";
+                printNonEmptyPoints(slice.points, keysServer);
+                cout << endl;
+                cout << "the currnt mean: ";
+                cout << printPoint(mean, keysServer);
+                cout << endl;
+        */
         slicesMeans.emplace_back(mean, slice);
     }
 
@@ -774,20 +787,21 @@ void DataServer::calculateSliceMean_Slice_Thread(const Slice &slice) const {
     Point sum(Point::addManyPoints(points, keysServer));
 
     const Point mean(keysServer.getQuotientPoint(sum, slice.counter, DIM));
-
-    cout << "slice reps: ";
-    printPoints(slice.reps, keysServer);
-    cout << endl;
-    cout << "slice points: ";
-    printNonEmptyPoints(slice.points, keysServer);
-    cout << endl;
-    cout << "the current mean: ";
-    printPoint(mean, keysServer);
-    cout << endl;
+    /*
+        cout << "slice reps: ";
+        cout << printPoints(slice.reps, keysServer);
+        cout << endl;
+        cout << "slice points: ";
+        printNonEmptyPoints(slice.points, keysServer);
+        cout << endl;
+        cout << "the current mean: ";
+        cout << printPoint(mean, keysServer);
+        cout << endl;
+        */
     slicesMeansLock.lock();
     slicesMeans.emplace_back(mean, slice);
     slicesMeansLock.unlock();
-    loggerDataServer.log(printDuration(t0_means, "calculateSliceMean_Slice_Thread"));
+//    loggerDataServer.log(printDuration(t0_means, "calculateSliceMean_Slice_Thread"));
 }
 
 std::vector<std::tuple<Point, Slice> >
@@ -813,7 +827,7 @@ DataServer::calculateSlicesMeans_WithThreads(
 
 std::vector<Point> DataServer::collectMeans(
         const std::vector<std::tuple<Point, Slice>> &slices
-        ) {
+) {
     std::vector<Point> means;
     means.reserve(slices.size());
     for (auto const &slice:slices) means.push_back(std::get<0>(slice));
@@ -864,9 +878,9 @@ findMinDist(
             minDistFromMeans.second);
     minDistanceTuplesLock.unlock();
 
-    loggerDataServer.log(
-            printDuration(t0_collectMinDist,
-                          "findMinDistFromMeans thread"));
+//    loggerDataServer.log(
+//            printDuration(t0_collectMinDist,
+//                          "findMinDistFromMeans thread"));
 
 }
 
@@ -899,7 +913,7 @@ DataServer::collectMinimalDistancesAndClosestPoints_WithThreads(
 EncryptedNum DataServer::calculateThreshold(
         const std::vector<std::tuple<Point, Point, EncryptedNum>> &minDistanceTuples,
         int iterationNumber
-        ) {
+) {
     //  collect minimal distances
     EncryptedNum sum;
     helib::CtPtrs_vectorCt sum_wrapper(sum);
@@ -914,6 +928,7 @@ EncryptedNum DataServer::calculateThreshold(
     );
 
     //  find average distance
+    //fixme this should be the number of points for this iteration (count of isIn bits)
     long num = long(NUMBER_OF_POINTS / pow(2, iterationNumber));
     printNameVal(pow(2, iterationNumber));
     printNameVal(num);
@@ -996,7 +1011,7 @@ std::mutex groupsLock, farthestLock;
 
 void choosePoint_Mean_Thread(Point point,
                              Point meanClosest,
-                              std::vector<Point> &means,
+                             std::vector<Point> &means,
                              int i,
                              Ctxt ni
 ) {
@@ -1026,8 +1041,8 @@ void choosePoint_Mean_Thread(Point point,
     groupsOfClosestPoints[i].emplace_back(point * isCloseToCurrentMean, isCloseToCurrentMean);
     groupsLock.unlock();
 
-    loggerDataServer.log(
-            printDuration(t0_choosePoint_Thread, "choosePoint_Mean_Thread"));
+//    loggerDataServer.log(
+//            printDuration(t0_choosePoint_Thread, "choosePoint_Mean_Thread"));
 }
 
 std::tuple<
@@ -1060,20 +1075,20 @@ std::tuple<
         for (int i = 0; i < means.size(); ++i)
             threadVec.emplace_back(
                     &choosePoint_Mean_Thread,
-//                    std::ref(point),
+                    //                    std::ref(point),
                     point,
-//                    std::ref(meanClosest),
+                    //                    std::ref(meanClosest),
                     meanClosest,
                     std::ref(means),
-//                    means,
+                    //                    means,
                     i,
-//                    std::ref(ni)
+                    //                    std::ref(ni)
                     ni
-                    );
-//        for (std::thread &t:threadVec) t.join();  //  fixme
+            );
+        //        for (std::thread &t:threadVec) t.join();  //  fixme
 
     }
-            for (std::thread &t:threadVec) t.join();  //  fixme
+    for (std::thread &t:threadVec) t.join();  //  fixme
 
     loggerDataServer.log(
             printDuration(t0_choosePoint, "choosePointsByDistance_WithThreads_slower"));
@@ -1129,8 +1144,8 @@ choosePoint_Point_Thread(
         groupsLock.unlock();
     }
 
-    loggerDataServer.log(
-            printDuration(t0_choosePoint_Thread, "choosePoint_Point_Thread"));
+//    loggerDataServer.log(
+//            printDuration(t0_choosePoint_Thread, "choosePoint_Point_Thread"));
 
 }
 

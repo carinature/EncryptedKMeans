@@ -13,7 +13,7 @@
  * @class KeysServer
  * @brief A wrapper for the Keys Server (CA)
  * Creates the context and keys for the encryption services.
- * Manages protocols for creating Client and Data-Centers (DataServer) shared keys.
+ * Manages protocols for creating ClientDevice and Data-Centers (DataServer) shared keys.
  * */
 class KeysServer {
 public:
@@ -28,8 +28,7 @@ protected:
     friend class TestDataServer;
 
     //fixme -https://stackoverflow.com/questions/3903180/make-a-friend-class-have-only-special-access-to-1-function-of-another-class
-    friend class Client;
-
+    friend class ClientDevice;
 
     constexpr static long mValues[][15] = { // todo note it's 15 param for the 5 first line and 14 for the rest (because you took them from 2 different files)
             // { p, phi(m),   m,   d, m1, m2, m3,    g1,   g2,   g3, ord1,ord2,ord3, B,c}

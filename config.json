@@ -1,9 +1,10 @@
 {
   "data_properties": {
-    "number_of_points": 30,
+    "number_of_points": 40,
     "number_of_points_comment": "FIXED! - 40 points w/ epsilon 0.3 causes weird PubKey bug",
     "number_of_clients": 10,
     "number_of_threads": 3,
+    "number_of_iterations": 20,
     "DIM": 2,
     "range_lim": 1,
     "range_lim_comment": "for python, defines the range of the points (from BOTTOM_LIM to RANGE_LIM)",
@@ -21,7 +22,7 @@
     "dbg_flag": true,
     "verbose_flag": false,
     "DBG": true,
-    "VERBOSE": false
+    "VERBOSE": true
   },
   "helib_flags": {
     "helib_bootstrap": false,

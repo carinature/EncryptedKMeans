@@ -12,25 +12,26 @@
 
 int main() {
 
-    cout << " ============ Test KeysServer ============ " << endl;
-        TestKeysServer::testConstructor();
-    //    TestKeysServer::testEncryptCtxt();
-    //    TestKeysServer::testDecryptCtxt();
-    //    TestKeysServer::testEncryptNum();
-    //    TestKeysServer::testDecryptNum();
-    //    TestKeysServer::testScratchPoint();
-    //    TestKeysServer::testTinyRandomPoint();
-    cout << " ============ Test KeysServer Finished ============ " << endl << endl;
+    //    cout << " ============ Test KeysServer ============ " << endl;
+    //        TestKeysServer::testConstructor();
+    //        TestKeysServer::testEncryptCtxt();
+    //        TestKeysServer::testDecryptCtxt();
+    //    //    TestKeysServer::testEncryptNum();
+    //    //    TestKeysServer::testDecryptNum();
+    //    //    TestKeysServer::testScratchPoint();
+    //    //    TestKeysServer::testTinyRandomPoint();
+    //    cout << " ============ Test KeysServer Finished ============ " << endl << endl;
 
     cout << " ============ Test Point ============ " << endl;
-        TestPoint::testConstructor();
-    //    TestPoint::testEncryptCoordinates();
+    TestPoint::testConstructor();
+    TestPoint::testEncryptCoordinates();
     //    TestPoint::testOperatorSubscript();
-    //    TestPoint::testIsEmpty();
-    //    TestPoint::testAddition();
+    TestPoint::testIsEmpty();
+    for (int i = 0; i < 3; ++i)
+        TestPoint::testAddition();
     //    TestPoint::testAddManyPoints();
-    //    TestPoint::testMultiplication();
-    //    TestPoint::testMultiplicationByBit();
+    //        TestPoint::testMultiplication();
+    TestPoint::testMultiplicationByBit();
     //    TestPoint::testCompare();
     //    TestPoint::testCalculateDistanceFromPoint();
     //    TestPoint::testFindMinimalDistancesFromMeans();
@@ -46,19 +47,19 @@ int main() {
 
     cout << " ============ Test Aux ============ " << endl;
     //    TestAux::testGenerateDataClients();
-//        TestAux::minitest();
+    //        TestAux::minitest();
     //    TestAux::minitest2();
-    //    TestAux::testBGVPackedArithmetics_Original();
-    //    TestAux::testBGVPackedArithmetics__Comparison();
+    TestAux::testBGVPackedArithmetics_Original();
+    //        TestAux::testBGVPackedArithmetics__Comparison();
     //    TestAux::testComparison_diffCtxtRepresentation();
-    //    TestAux::testComparison_diffCtxtRepresentation_BGVPackedArithmetics();
+    //        TestAux::testComparison_diffCtxtRepresentation_BGVPackedArithmetics();
     //    TestAux::testMultithreading();
     //    TestAux::testPythonRun();
     //    TestAux::testIsMatchImplementation();
     //    TestAux::testPrefixAndSuffix();
     //    TestAux::testIsEqualImplementation();
-//        TestAux::testIsGrtImplementation();
-//        TestAux::testSizesAndTimes();
+    //        TestAux::testIsGrtImplementation();
+    //        TestAux::testSizesAndTimes();
     cout << " ============ Test ClientDevice Finished ============ " << endl << endl;
 
     cout << " ============ Test DataServer ============ " << endl;
@@ -66,19 +67,19 @@ int main() {
     //    TestDataServer::testComparePoints();
     ////    TestDataServer::testRetrievePoints();
     //    TestDataServer::testRetrievePoints_Threads();
-//    TestDataServer::testPickRandomPoints();
-////    TestDataServer::testCreateCmpDict();
-//    TestDataServer::testCreateCmpDict_Threads();
-////    TestDataServer::testSplitIntoEpsNet();
-//    TestDataServer::testSplitIntoEpsNet_WithThreads();
-////    TestDataServer::testCalculateCellMeans();
-//    TestDataServer::testCalculateCellMeans_WithThreads();
-//    //    TestDataServer::testGetMinimalDistances();
-//    TestDataServer::testGetMinimalDistances_WithThreads();
-//    TestDataServer::testCalculateThreshold();
-//    //    TestDataServer::testChoosePointsByDistance();
-//    TestDataServer::testChoosePointsByDistance_WithThreads();
-//    TestDataServer::testChoosePointsByDistance_WithThreads_withYonis();
+    //    TestDataServer::testPickRandomPoints();
+    ////    TestDataServer::testCreateCmpDict();
+    //    TestDataServer::testCreateCmpDict_Threads();
+    ////    TestDataServer::testSplitIntoEpsNet();
+    //    TestDataServer::testSplitIntoEpsNet_WithThreads();
+    ////    TestDataServer::testCalculateCellMeans();
+    //    TestDataServer::testCalculateCellMeans_WithThreads();
+    //    //    TestDataServer::testGetMinimalDistances();
+    //    TestDataServer::testGetMinimalDistances_WithThreads();
+    //    TestDataServer::testCalculateThreshold();
+    //    //    TestDataServer::testChoosePointsByDistance();
+    //    TestDataServer::testChoosePointsByDistance_WithThreads();
+    //    TestDataServer::testChoosePointsByDistance_WithThreads_withYonis();
     cout << " ============ Test DataServer Finished ============ " << endl << endl;
 
 }

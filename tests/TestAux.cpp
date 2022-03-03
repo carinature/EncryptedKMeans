@@ -332,7 +332,7 @@ void TestAux::testBGVPackedArithmetics__Comparison() {
     /*  Example of BGV scheme  */
 
     // Plaintext prime modulus
-    unsigned long p = 17;
+    unsigned long p = 2;
     //    unsigned long p = 4999;
     // Cyclotomic polynomial - defines phi(m)
     unsigned long m = 105;
@@ -433,7 +433,7 @@ void TestAux::testBGVPackedArithmetics__Comparison() {
         ptxt[i] = i;
         ptxt0[i] = 0;
         ptxt1[i] = 1;
-        ptxt2[i] = 2 * i;
+        ptxt2[i] = 1 + i;
     }
     //    ptxt[0] = 2;
     //    ptxt0[0] = 3;
@@ -475,6 +475,22 @@ void TestAux::testBGVPackedArithmetics__Comparison() {
     cout << "Plaintext ptxt0: " << ptxt0 << endl;
     cout << "Plaintext ptxt1: " << ptxt1 << endl;
     cout << "Plaintext ptxt2: " << ptxt2 << endl;
+
+    printNameVal("========@@@@@@@@=======");
+    std::vector<helib::Ctxt> digitsVec;
+//    helib::extractDigits(digitsVec, ctxt2);
+//    printNameVal(digitsVec.size());
+//    for (auto const &digit: digitsVec) {
+//        secret_key.Decrypt(plaintext_result, digit);
+//        printNameVal(plaintext_result);
+//    }
+    helib::extractDigits(digitsVec, ctxt2, 4);
+    printNameVal(digitsVec.size());
+    for (auto const &digit: digitsVec) {
+        secret_key.Decrypt(plaintext_result, digit);
+        printNameVal(plaintext_result);
+    }
+    printNameVal("========@@@@@@@@=======");
 
     /********** Operations **********/
     // Ciphertext and plaintext operations are performed
@@ -573,6 +589,10 @@ void TestAux::testBGVPackedArithmetics__Comparison() {
     secret_key.Decrypt(dNi, ni);
     cout << "Decrypted dNi: " << dNi << endl;
     cout << "------------------------------------" << endl;
+
+    cout << "***************************************" << endl;
+    cout << "***************************************" << endl;
+    cout << "***************************************" << endl;
 
     cout << "------------------------------------" << endl;
     cout << " ctxt > ctxt2 " << endl;
@@ -795,7 +815,7 @@ void TestAux::testBGVPackedArithmetics__Comparison() {
     // Raise the copy to the exponent p-2
     // [0] [1] [4] ... [16] -> [0] [1] [1] ... [1]
     // Note: 0 is a special case because 0^n = 0 for any power n
-    ctxt_divisor.power(p - 2);
+    //    ctxt_divisor.power(p - 2);  fixme this should not be in a comment but raises an exception "Cannot raise a ctxt to a non positive exponent"
     // a^{p-2}*a = a^{-1}*a = a / a = 1;
     ctxt.multiplyBy(ctxt_divisor);
 

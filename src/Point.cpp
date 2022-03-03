@@ -17,18 +17,15 @@ Point::Point(const helib::PubKey &public_key, const long coordinates[]) :
         public_key(public_key),
         id(counter++),
         cid(CID_BIT_SIZE, Ctxt(public_key)),
-//        cidCompact(CID_BIT_SIZE, Ctxt(public_key)),
-        pubKeyPtrDBG(&public_key),
+        cidCompact(public_key),
         cCoordinates(DIM, std::vector(BIT_SIZE, helib::Ctxt(public_key))),
-//        coordinatesCompact(DIM, helib::Ctxt(public_key)) {
+        coordinatesCompact(DIM, helib::Ctxt(public_key)) {
 
     originalPointAddress = this;
     for (long bit = 0; bit < cid.size(); ++bit)
         this->public_key.Encrypt(cid[bit],
                                  NTL::to_ZZX((id >> bit) & 1));
-    for (long bit = 0; bit < cid.size(); ++bit)
-        this->public_key.Encrypt(cid[bit],
-                                 NTL::to_ZZX((id >> bit) & 1));
+
     pCoordinatesDBG.reserve(DIM);
     //        cout << " Point Init" << endl;
     if (coordinates) {
@@ -38,8 +35,25 @@ Point::Point(const helib::PubKey &public_key, const long coordinates[]) :
             // Extract the i'th bit of coordinates[dim]
             //  for (long bit = 0; bit < BIT_SIZE; ++bit)
             for (long bit = 0; bit < cCoordinates[dim].size(); ++bit)
-                this->public_key.Encrypt(cCoordinates[dim][bit],
+                public_key.Encrypt(cCoordinates[dim][bit],
                                          NTL::to_ZZX((coordinates[dim] >> bit) & 1));
+
+        }
+    }
+
+    /*  for Packed  */
+    helib::Ptxt<helib::BGV> ptxt(public_key);
+    printNameVal(ptxt.size());
+
+    for (int slot = 0; slot < ptxt.size(); ++slot)
+        ptxt[slot] = (id >> slot) & 1;
+    public_key.Encrypt(cidCompact, ptxt);
+
+    if (coordinates) {
+        for (short dim = 0; dim < DIM; ++dim) {
+            for (long slot = 0; slot < ptxt.size(); ++slot)
+                ptxt[slot] = (coordinates[dim] >> slot) & 1;
+            this->public_key.Encrypt(coordinatesCompact[dim], ptxt);
 
         }
     }
@@ -51,9 +65,8 @@ Point::Point(const std::vector<EncryptedNum> &cCoordinates) :
         public_key(cCoordinates[0][0].getPubKey()),
         id(counter++),
         cid(CID_BIT_SIZE, Ctxt(cCoordinates[0][0].getPubKey())),
-        pubKeyPtrDBG(&public_key),
-        pCoordinatesDBG(DIM)
-{
+        cidCompact(public_key),
+        pCoordinatesDBG(DIM) {
     originalPointAddress = this;
     for (long bit = 0; bit < cid.size(); ++bit)
         this->public_key.Encrypt(cid[bit],
@@ -72,26 +85,26 @@ Point::Point(const std::vector<EncryptedNum> &cCoordinates) :
 
 Point::Point(const Point &point) :
 //todo maybe better to init to 0, depending future impl & use
-        cmpCounter(point.cmpCounter),
-        addCounter(point.addCounter),
-        multCounter(point.multCounter),
+        cmpCounter(point.cmpCounter), addCounter(point.addCounter), multCounter(point.multCounter),
         public_key(point.public_key),
         //todo make sure this approach for `id` won't cause some unpredictable behaviour later
         // (e.g in cases of EXPLICIT copy (instead of implicit, in which this way makes sense))
         id(point.id),
         cid(point.cid),//.Encrypt(cid,NTL::ZZX(id))),
         originalPointAddress(point.originalPointAddress),
-        pubKeyPtrDBG(&(point.public_key)),
         cCoordinates(point.cCoordinates),
+        cidCompact(public_key),
+        coordinatesCompact(point.coordinatesCompact),
         pCoordinatesDBG(point.pCoordinatesDBG),
         isEmptyDBG(point.isEmptyDBG),
         isCopyDBG(true) {
     //        cout << " Point copy copy" << endl; //this print is important for later. efficiency...
     if (!point.isEmpty())
         for (short dim = 0; dim < DIM; ++dim) {
-            vecCopy(cCoordinates[dim],
-                    point.cCoordinates[dim]); //helibs version of vec copy //fixme throws an exception sometimes
-            //                                cCoordinates[dim] = point.cCoordinates[dim];
+            //helibs version of vec copy //fixme throws an exception sometimes
+            vecCopy(cCoordinates[dim], point.cCoordinates[dim]);
+            coordinatesCompact[dim] = point.coordinatesCompact[dim];
+
         }
     else std::cerr << "point is empty!" << endl;
 
@@ -106,6 +119,7 @@ Point &Point::operator=(const Point &point) {
     for (short dim = 0; dim < DIM; ++dim) {
         //   cCoordinates[dim] = point.cCoordinates[dim];
         vecCopy(cCoordinates[dim], point.cCoordinates[dim]); //helibs version of vec copy
+        coordinatesCompact[dim] = point.coordinatesCompact[dim];
         if (!point.pCoordinatesDBG.empty())
             pCoordinatesDBG[dim] = point.pCoordinatesDBG[dim];
     }
@@ -162,8 +176,17 @@ Point Point::operator+(Point &point) {
                 //                    OUT_SIZE,   // sizeLimit=0 means use as many bits as needed.
                 //                    &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
         );
-        sum.pCoordinatesDBG[dim] += point.pCoordinatesDBG[dim];
     }
+
+    /*  for Packed  */
+    sum.cidCompact += cidCompact;
+    sum.cidCompact += point.cidCompact;
+
+    for (int dim = 0; dim < DIM; ++dim) {
+        sum.coordinatesCompact[dim] += coordinatesCompact[dim];
+        sum.coordinatesCompact[dim] += point.coordinatesCompact[dim];
+    }
+
     return sum;
 }
 
@@ -201,6 +224,15 @@ Point Point::operator+(Point point) {
                 &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
         );
         sum.pCoordinatesDBG[dim] += point.pCoordinatesDBG[dim];
+    }
+
+    /*  for Packed  */
+    sum.cidCompact += cidCompact;
+    sum.cidCompact += point.cidCompact;
+
+    for (int dim = 0; dim < DIM; ++dim) {
+        sum.coordinatesCompact[dim] += coordinatesCompact[dim];
+        sum.coordinatesCompact[dim] += point.coordinatesCompact[dim];
     }
     return sum;
 }
@@ -271,6 +303,15 @@ Point Point::operator*(const Ctxt &bit) const {
         //                    productCoors[i]->multiplyBy(*(lhs[0]));
 
     }
+
+    /*  for Packed  */
+    product.cidCompact *= bit;
+    for (short dim = 0; dim < DIM; ++dim) {
+        // fixme ?
+        helib::CtPtrs_vectorCt result_wrapper(product.coordinatesCompact);
+        binaryMask(result_wrapper, bit);
+    }
+
     return product;
 }
 
@@ -545,8 +586,8 @@ std::pair<Point, EncryptedNum> Point::findMinDistFromMeans(
         //        cout << printPoint(closestPoint, keysServer);
         //        printNameVal(keysServer.decryptNum(minimalDistance));
         //            cout << "------------------------" << endl;
-//        loggerPoint.log(printDuration(t0_minDist,
-//                                      "tuplePointDistance loop in findMinDistFromMeans"));
+        //        loggerPoint.log(printDuration(t0_minDist,
+        //                                      "tuplePointDistance loop in findMinDistFromMeans"));
     }
 
     //        cout << "     Final: " << endl;

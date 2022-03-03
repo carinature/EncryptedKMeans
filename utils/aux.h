@@ -45,6 +45,8 @@ class ClientDevice;
 #define printNameVal(val)   cout << # val << ": " << (val) << endl
 // TODO save this somewhere (list of useful tricks)
 
+#define GiveMeRand randomLongInRange(mt)
+
 /* * for BDG * */
 std::string printPoint(const Point &p, const KeysServer &keysServer);
 

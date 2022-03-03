@@ -124,8 +124,7 @@ public:
             // encryptions done via publicKey will actually use the secret key, which has
             // certain advantages. If one left out the "&", then encryptions done via
             // publicKey will NOT use the secret key.
-            public_key(secKey)
-            {
+            public_key(secKey) {
 
         if (seed) NTL::SetSeed(NTL::ZZ(seed));
         if (nthreads > 1) NTL::SetNumThreads(nthreads);
@@ -157,16 +156,27 @@ public:
         return cl;
     }
 
+    helib::Ctxt encryptCtxtCompact(long num) const {
+        helib::Ptxt<helib::BGV> ptxt(public_key);
+        for (int slot = 0; slot < ptxt.size(); ++slot)
+            ptxt[slot] = (num >> slot) & 1;
+        helib::Ctxt ctxt(public_key);
+        public_key.Encrypt(ctxt, ptxt);
+        return ctxt;
+    }
+
     EncryptedNum encryptNum(long l) const {
-        helib::PubKey & public_key = getPublicKey();
+        helib::PubKey &public_key = getPublicKey();
         EncryptedNum cl(BIT_SIZE, helib::Ctxt(public_key));
         for (long bit = 0; bit < BIT_SIZE; ++bit)
             public_key.Encrypt(cl[bit],
-                                     NTL::to_ZZX((l >> bit) & 1));
+                               NTL::to_ZZX((l >> bit) & 1));
         return cl;
     }
 
     long decryptCtxt(const helib::Ctxt &ctxt) const;
+
+    long decryptCtxtCompact(const helib::Ctxt &ctxt) const;
 
     long decryptNum(const EncryptedNum &cNum) const;
 
@@ -191,7 +201,7 @@ protected:
         return context;
     }
 
-     const helib::EncryptedArray &getEA() const {
+    const helib::EncryptedArray &getEA() const {
         return context.getEA();
     }
 

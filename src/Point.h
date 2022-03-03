@@ -24,6 +24,9 @@ public:
     EncryptedNum cid;
     const helib::PubKey &public_key;// = encryptionKey;
     std::vector<EncryptedNum> cCoordinates;
+    /*  Compact Representaiton  */
+    std::vector<helib::Ctxt> coordinatesCompact;
+    helib::Ctxt cidCompact;
 
     /*
      Each bit of the binary number is encoded into a single ciphertext. Thus
@@ -57,7 +60,8 @@ public:
     explicit Point(const std::vector<EncryptedNum> &cCoordinates);
 
     bool isEmpty() const {
-        return cCoordinates[0][0].isEmpty();
+        return cCoordinates[0][0].isEmpty() ||
+               coordinatesCompact[0].isEmpty(); // note might cause unexpected behaviour later on
     }
 
     /**
@@ -162,7 +166,7 @@ public:
     std::vector<long> pCoordinatesDBG;
     bool isCopyDBG = false;
     bool isEmptyDBG = true;
-    const helib::PubKey *pubKeyPtrDBG;
+//    const helib::PubKey *pubKeyPtrDBG;
     long cmpCounter, addCounter, multCounter; //todo
 };
 
@@ -206,28 +210,5 @@ struct hashPoints {
     //    }
 };
 
-//int counter = 0;
-//
-//class PointCompact {
-//    helib::PubKey public_key;
-//    std::vector<helib::Ctxt> coordinates;
-//    long id;
-//    helib::Ctxt cid;
-//    /*  for DBG */
-//    std::vector<long> pCoordinates;
-//    /*  end for DBG */
-//
-///**
-// * Ctor
-// * */
-//    PointCompact(const helib::PubKey &public_key, const std::vector<long> coordinates) :
-//            public_key(public_key),
-//            id(counter++),
-//            cid(public_key),
-//            coordinates(DIM, helib::Ctxt(public_key)),
-//            pCoordinates(coordinates) {
-//        for
-//    }
-//};
 
 #endif //ENCRYPTEDKMEANS_POINT_H

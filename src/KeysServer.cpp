@@ -125,6 +125,17 @@ long KeysServer::decryptCtxt(const helib::Ctxt &ctxt) const {
     return long(plaintext_result[0]); //fixme
 }
 
+long KeysServer::decryptCtxtCompact(const helib::Ctxt &ctxt) const {
+    //    helib::Ptxt <helib::BGV> ptxt(getPublicKey());
+    helib::Ptxt<helib::BGV> ptxt(ctxt.getPubKey());
+    getSecKey().Decrypt(ptxt, ctxt);
+    cout << ptxt << endl;
+    long dc = 0;
+    for (int slot = 0; slot < ptxt.size(); ++slot)
+        dc += long(ptxt[slot]) * pow(2, slot);
+    return dc;
+}
+
 //long KeysServer::decryptNum(EncryptedNum cNum, bool isProduct) {
 long KeysServer::decryptNum(const EncryptedNum &cNum) const {
     if (!cNum.size()) return -1; //todo should return 0?
@@ -142,12 +153,12 @@ long KeysServer::decryptNum(const EncryptedNum &cNum) const {
 */
     NTL::ZZX pp;
     for (int bit = 0; bit < cNum.size(); ++bit) {
-//        if (cNum[bit].isEmpty()) continue;
+        //        if (cNum[bit].isEmpty()) continue;
         //        secKey.Decrypt(pp, cNum[bit]);
         long pp = decryptCtxt(cNum[bit]);
         //        printNameVal(pp);
         if (NTL::IsOne(NTL::ZZX(pp))) pNum += std::pow(2, bit);
-//        return pNum;
+        //        return pNum;
     }
 
     /*    printNameVal(pNum);
@@ -248,14 +259,14 @@ KeysServer::getQuotientPoint(
         const short repsNum) const {
 
     long size = decryptSize(sizeBitVector), arr[DIM];
-//    printNameVal(size);
+    //    printNameVal(size);
     //    if (size)
     long pCoor;
     for (short dim = 0; dim < DIM; ++dim) {
         pCoor = decryptNum(point[dim]);
         arr[dim] = decryptNum(point[dim]) / (repsNum + size);
-//        printNameVal(pCoor);
-//        printNameVal(arr[dim]);
+        //        printNameVal(pCoor);
+        //        printNameVal(arr[dim]);
     }
 
     return Point(point.public_key, arr);
@@ -268,12 +279,12 @@ KeysServer::getQuotient(
 
     long quotient = decryptNum(encryptedNum) / (num);
 
-//    printNameVal(quotient);
+    //    printNameVal(quotient);
 
     const helib::PubKey &public_key = encryptedNum[0].getPubKey();//getPublicKey();
     EncryptedNum cQuotient(DISTANCE_BIT_SIZE, Ctxt(public_key));
     for (int bit = 0; bit < cQuotient.size(); ++bit)
-        public_key.Encrypt(cQuotient[bit],  NTL::to_ZZX((quotient >> bit)&1));
+        public_key.Encrypt(cQuotient[bit], NTL::to_ZZX((quotient >> bit) & 1));
 
 
     printNameVal(DISTANCE_BIT_SIZE);

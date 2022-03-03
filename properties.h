@@ -78,7 +78,8 @@ static const std::string LEFTOVER_FILE = jsonConfig["files"]["leftover_file"];
 static const std::string rands_bad_file = jsonConfig["files"]["rands_bad_file"];
 static const std::string point_csv_file = jsonConfig["files"]["point_csv_file"];
 
-static const unsigned long PLAINTEXT_PRIME_MODULUS = 4999;
+static const unsigned long PLAINTEXT_PRIME_MODULUS = 2;
+//static const unsigned long PLAINTEXT_PRIME_MODULUS = 4999;
 
 //#define HELIB_DEBUG
 

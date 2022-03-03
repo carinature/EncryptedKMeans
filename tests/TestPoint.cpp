@@ -18,8 +18,20 @@ void TestPoint::testEncryptCoordinates() {
 
     long arr[DIM];
     for (long &a :arr) a = randomLongInRange(mt);
-
     Point point(keysServer.getPublicKey(), arr);
+
+    helib::Ptxt<helib::BGV> decCoor(keysServer.getPublicKey());
+
+    for (int dim = 0; dim < DIM; ++dim) {
+        keysServer.secKey.Decrypt(decCoor, point.coordinatesCompact[dim]);
+//        printNameVal(arr[dim]);
+//        printNameVal(decCoor);
+        long dc = 0;
+        for (int slot = 0; slot < decCoor.size(); ++slot)
+            dc += long(decCoor[slot]) * pow(2, slot);
+        assert(dc == arr[dim]);
+
+    }
     cout << " ------ testEncryptCoordinates finished ------ " << endl << endl;
 }
 
@@ -32,10 +44,8 @@ void TestPoint::testOperatorSubscript() {
     Point point(keysServer.getPublicKey(), arr);
 
     for (short dim = 0; dim < DIM; ++dim) {
-        EncryptedNum cCoordiante(point[dim]);
-        assert(cCoordiante == point.cCoordinates[dim]);
-        long coordinate = keysServer.decryptNum(cCoordiante);
-        assert(coordinate == arr[dim]);
+        assert(point[dim] == point.cCoordinates[dim]);
+        assert(keysServer.decryptNum(point[dim]) == arr[dim]);
     }
     cout << " ------ testOperatorSubscript finished ------ " << endl << endl;
 
@@ -62,8 +72,8 @@ void TestPoint::testAddition() {
     KeysServer keysServer;
     long arr[DIM], arr2[DIM], arrSum[DIM];
     for (short dim = 0; dim < DIM; ++dim) {
-        arr[dim] = randomLongInRange(mt);
-        arr2[dim] = randomLongInRange(mt);
+        arr[dim] = GiveMeRand;
+        arr2[dim] = GiveMeRand;
         arrSum[dim] = arr[dim] + arr2[dim];
     }
 
@@ -75,9 +85,21 @@ void TestPoint::testAddition() {
     const Point point2(keysServer.getPublicKey(), arr2);
     Point sum = point + point2;
 
-    for (short dim = 0; dim < DIM; ++dim)
+    helib::Ptxt<helib::BGV> ptxt(keysServer.getPublicKey());
+    for (short dim = 0; dim < DIM; ++dim) {
+        keysServer.getSecKey().Decrypt(ptxt, point.coordinatesCompact[dim]);
+        printNameVal(ptxt);
+        keysServer.getSecKey().Decrypt(ptxt, point2.coordinatesCompact[dim]);
+        printNameVal(ptxt);
+        long dc = keysServer.decryptCtxtCompact(sum.coordinatesCompact[dim]);
+        printNameVal(dc);
+        printNameVal(arrSum[dim]);
+        printNameVal(arr[dim]);
+        printNameVal(arr2[dim]);
+//        assert(arrSum[dim] == dc);    fixme
         assert(arrSum[dim] == keysServer.decryptNum(sum[dim]));
 
+    }
     cout << " ------ testAddition finished ------ " << endl << endl;
 }
 
@@ -98,7 +120,7 @@ void TestPoint::testAddManyPoints() {
     //    for (auto a: arr3) printNameVal(a);
     //    for (auto a: arrSum) printNameVal(a);
 */
-    std::vector<Point> points;
+    std::vector <Point> points;
     points.reserve(4 * NUMBER_OF_POINTS);
     printNameVal(NUMBER_OF_POINTS);
     for (int i = 0; i < NUMBER_OF_POINTS; ++i) {
@@ -108,20 +130,16 @@ void TestPoint::testAddManyPoints() {
     }
     Point sum(Point::addManyPoints(points, keysServer));
 
-//    printNameVal(keysServer.decryptNum(sum[0]));
-//    printNameVal(arrSum[0]);
-//    printNameVal(keysServer.decryptNum(sum[1]));
-//    printNameVal(arrSum[1]);
-
     for (short dim = 0; dim < DIM; ++dim) {
         cout << "----" << endl;
-                printNameVal(arrSum[dim]);
-                printNameVal(NUMBER_OF_POINTS * arrSum[dim]);
-                printNameVal(keysServer.decryptNum(sum[dim]));
+        printNameVal(arrSum[dim]);
+        printNameVal(NUMBER_OF_POINTS * arrSum[dim]);
+        printNameVal(keysServer.decryptNum(sum[dim]));
         assert(NUMBER_OF_POINTS * arrSum[dim] == keysServer.decryptNum(sum[dim]));
-        //fixme this part of the test acts weird when running after _all_ the other tests.
-        // incidentally, looks like the 2nd coordinate of sum is just a copy of the 1st.
-        // could be problem w/ the decryption result?
+
+        /*  for Compact */
+        assert(arrSum[dim] == keysServer.decryptCtxtCompact(sum.coordinatesCompact[dim]));
+
     }
     cout << " ------ testAddManyPoints finished ------ " << endl << endl;
 }
@@ -132,8 +150,8 @@ void TestPoint::testMultiplication() {
 
     long arr[DIM], arr2[DIM], arrProd[DIM];
     for (short dim = 0; dim < DIM; ++dim) {
-        arr[dim] = randomLongInRange(mt);
-        arr2[dim] = randomLongInRange(mt);
+        arr[dim] = GiveMeRand;
+        arr2[dim] = GiveMeRand;
         arrProd[dim] = arr[dim] * arr2[dim];
     }
 
@@ -152,7 +170,7 @@ void TestPoint::testMultiplicationByBit() {
     helib::PubKey &publicKey = keysServer.getPublicKey();
 
     long arr[DIM], arr0[] = {0, 0};
-    for (long &a :arr) a = randomLongInRange(mt);
+    for (long &a :arr) a = GiveMeRand;
 
     Point point(keysServer.getPublicKey(), arr);
     helib::Ctxt bit0(publicKey);
@@ -167,6 +185,17 @@ void TestPoint::testMultiplicationByBit() {
         assert(arr[dim] == keysServer.decryptNum(product1[dim]));
         assert(arr0[dim] == keysServer.decryptNum(product0[dim]));
     }
+
+    /*  for Compact */
+
+    for (int dim = 0; dim < DIM; ++dim) {
+//        assert(arrProd[dim] == keysServer.decryptCtxtCompact(product.coordinatesCompact[dim]));
+        printNameVal(arr[dim]);
+        printNameVal(keysServer.decryptCtxtCompact(product0.coordinatesCompact[dim]));
+        printNameVal(keysServer.decryptCtxtCompact(product1.coordinatesCompact[dim]));
+    }
+
+
     cout << " ------ testMultiplicationByBit finished ------ " << endl << endl;
 }
 
@@ -199,7 +228,7 @@ void TestPoint::testCalculateDistanceFromPoint() {
     cout << " ------ testCalculateDistanceFromPoint ------ " << endl;
     KeysServer keysServer;
     int n = NUMBER_OF_POINTS;
-    std::vector<Point> points;
+    std::vector <Point> points;
 
     long arrs[n][DIM];
     for (int i = 0; i < n; ++i) {
@@ -231,8 +260,8 @@ void TestPoint::testFindMinimalDistancesFromMeans() {
     cout << " ------ testFindMinimalDistancesFromMeans ------ " << endl;
     KeysServer keysServer;
     int n = NUMBER_OF_POINTS;
-    std::vector<Point> points;  //    points.reserve(n);
-    std::vector<std::pair<Point, long> > distPairs; //    distPairs.reserve(n);
+    std::vector <Point> points;  //    points.reserve(n);
+    std::vector <std::pair<Point, long>> distPairs; //    distPairs.reserve(n);
 
     long arrs[n][DIM], arr[DIM];
     for (int dim = 0; dim < DIM; ++dim) arr[dim] = randomLongInRange(mt);
@@ -243,7 +272,7 @@ void TestPoint::testFindMinimalDistancesFromMeans() {
         points.push_back(Point(keysServer.getPublicKey(), arrs[i]));
     }
 
-    std::pair<Point, EncryptedNum>
+    std::pair <Point, EncryptedNum>
             minimalDistance = point.findMinDistFromMeans(points, keysServer);
 
     Point &minDistPoint = points[0];

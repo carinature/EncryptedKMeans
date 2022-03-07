@@ -23,10 +23,10 @@ int main() {
     //    cout << " ============ Test KeysServer Finished ============ " << endl << endl;
 
     cout << " ============ Test Point ============ " << endl;
-    TestPoint::testConstructor();
-    TestPoint::testEncryptCoordinates();
+//    TestPoint::testConstructor();
+//    TestPoint::testEncryptCoordinates();
     //    TestPoint::testOperatorSubscript();
-    TestPoint::testIsEmpty();
+//    TestPoint::testIsEmpty();
     for (int i = 0; i < 3; ++i)
         TestPoint::testAddition();
     //    TestPoint::testAddManyPoints();
@@ -49,7 +49,7 @@ int main() {
     //    TestAux::testGenerateDataClients();
     //        TestAux::minitest();
     //    TestAux::minitest2();
-    TestAux::testBGVPackedArithmetics_Original();
+//    TestAux::testBGVPackedArithmetics_Original();
     //        TestAux::testBGVPackedArithmetics__Comparison();
     //    TestAux::testComparison_diffCtxtRepresentation();
     //        TestAux::testComparison_diffCtxtRepresentation_BGVPackedArithmetics();

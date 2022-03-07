@@ -179,8 +179,8 @@ Point Point::operator+(Point &point) {
     }
 
     /*  for Packed  */
-    sum.cidCompact += cidCompact;
-    sum.cidCompact += point.cidCompact;
+//    sum.cidCompact += cidCompact;
+//    sum.cidCompact += point.cidCompact;
 
     for (int dim = 0; dim < DIM; ++dim) {
         sum.coordinatesCompact[dim] += coordinatesCompact[dim];
@@ -204,6 +204,7 @@ Point Point::operator+(Point point) {
             CID_BIT_SIZE,   // sizeLimit=0 means use as many bits as needed.
             &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
     );
+    auto t0 = CLOCK::now();
     for (short dim = 0; dim < DIM; ++dim) {
         helib::CtPtrs_vectorCt result_wrapper(sum.cCoordinates[dim]);
         //             * @brief Adds two numbers in binary representation where each ciphertext of the
@@ -225,6 +226,8 @@ Point Point::operator+(Point point) {
         );
         sum.pCoordinatesDBG[dim] += point.pCoordinatesDBG[dim];
     }
+    printDuration(t0, "addidtion time");
+
 
     /*  for Packed  */
     sum.cidCompact += cidCompact;

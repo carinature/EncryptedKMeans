@@ -85,6 +85,7 @@ void TestPoint::testAddition() {
     const Point point2(keysServer.getPublicKey(), arr2);
     Point sum = point + point2;
 
+
     helib::Ptxt<helib::BGV> ptxt(keysServer.getPublicKey());
     for (short dim = 0; dim < DIM; ++dim) {
         keysServer.getSecKey().Decrypt(ptxt, point.coordinatesCompact[dim]);

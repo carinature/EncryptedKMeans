@@ -393,7 +393,8 @@ public:
                 compareTwoNumbers(mu,
                                   ni,
                                   helib::CtPtrs_vectorCt(c),
-                                  helib::CtPtrs_vectorCt(coor),
+                                  helib::CtPtrs_vectorCt(coor)
+                                  ,
                                   false,
                                   &KeysServer::unpackSlotEncoding
                 );

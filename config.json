@@ -1,7 +1,7 @@
 {
   "data_properties": {
-    "number_of_points": 30,
-    "number_of_points_comment": "FIXED! - 40 points w/ epsilon 0.3 causes weird PubKey bug",
+    "number_of_points": 10,
+    "number_of_points_comment": "minimum 10. also, FIXED! - 40 points w/ epsilon 0.3 causes weird PubKey bug",
     "number_of_clients": 10,
     "number_of_threads": 3,
     "DIM": 2,
@@ -37,7 +37,8 @@
     "means_file": "means",
     "leftover_file": "leftover",
     "rands_bad_file": "rands_bad_file",
-    "point_csv_file": "/home/karina/CLionProjects/EncryptedKMeans/point_csv"
+    "point_csv_file": "/home/carina/CLionProjects/EncryptedKMeans/point_csv",
+    "point_csv_file_": "/home/carina/CLionProjects/EncKMeans/point_csv"
   },
   "just_some_example_array": [
     0,

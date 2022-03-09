@@ -919,10 +919,20 @@ void TestAux::testMultithreading() {
 #include "src/coreset/run1meancore.h"
 
 void TestAux::testPythonRun() {
-
+    string command;
     //    string commandLS ="ls -l */*"; system(commandLS.c_str());
-    string command = "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 -m src.coreset.chkchk";
+//    string command = "/home/carina/CLionProjects/EncryptedKMeans/venv/bin/python -m src.coreset.client";
+//    system(command.c_str());
+//     command = "/home/carina/CLionProjects/EncryptedKMeans/venv/bin/python3.8 -m src.coreset.client";
+//    system(command.c_str());
+//     command = "python -m src.coreset.client";
+//    system(command.c_str());
+//    command = "venv/bin/python3 -m src.coreset.client";
+    command = "python3 -m src.coreset.client";
     system(command.c_str());
+     command = "python3 -m checking_something";
+    system(command.c_str());
+    //    string command = "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 -m src.coreset.chkchk";
     //     command = "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 src/coreset/chkchk.py";
     //    system(command.c_str());
     //     command = "/home/karina/CLionProjects/EncryptedKMeans/venv/bin/python3.7 ~/CLionProjects/EncryptedKMeans/src/coreset/chkchk.py";
@@ -950,7 +960,6 @@ void TestAux::testPythonRun() {
     printNameVal(" - TIME - ");
     auto t = std::time(nullptr);
     auto tm = *std::localtime(&t);
-
     printNameVal("VERSION 1");
     cout << std::put_time(&tm, "%d-%m-%Y %H-%M-%S") << endl;
     cout << std::put_time(&tm, "%Y-%m-%d-%H-%M-%S") << endl;

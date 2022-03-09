@@ -22,6 +22,9 @@ protected:
     //    const helib::PubKey &public_key;// = encryptionKey;
     const KeysServer &keysServer;
     const Point tinyRandomPoint;
+
+
+
 public:
     /**
      * Constructor for \class{Client},
@@ -48,10 +51,37 @@ public:
 
     }
 
-    void clearForNextIteration() {
+    void clearForNextIteration(std::vector<Point> &initial_points) {
+        retrievedPoints.clear();
+        retrievedPoints.shrink_to_fit();
+        for(const Point & p:initial_points) retrievedPoints.push_back(p);
+
         randomPointsList.clear();
-        cmpDict.clear();
-        //        cmpDict.clear();
+        randomPointsList.resize(DIM);
+        for (int dim = 0; dim < DIM; ++dim) {
+            randomPointsList[dim].clear();
+            randomPointsList[dim].shrink_to_fit();
+        }
+
+        //todo - consider not clearing and adding a check in init_dict - if entry exists (from prev iteration) then no need to cmp
+//        cmpDict.clear(); // fixme clearing cmpDict creates bug, probably since it's a map and needs to be resized etc.
+//        cmpDict.shrink_to_fit();
+//        cmpDict.resize(DIM);
+
+        slices.clear();
+//        slices.shrink_to_fit();
+
+        slicesMeans.clear();
+        slicesMeans.shrink_to_fit();
+
+        farthest.clear();
+        farthest.shrink_to_fit();
+
+        minDistanceTuples.clear();
+        minDistanceTuples.shrink_to_fit();
+
+        groupsOfClosestPoints.clear();
+//        groupsOfClosestPoints.shrink_to_fit();
     }
 
     /**
@@ -60,7 +90,7 @@ public:
      * @returns a list of all the points.
     * @return std::vector<Point>
      * * */
-//    static
+
     std::vector<Point>
     retrievePoints(
             const std::vector<Client> &clients);
@@ -143,9 +173,12 @@ public:
     >
     splitIntoEpsNet(
             const std::vector<Point> &points,
-                    const std::vector<std::vector<Point> > &randomPoints,
-                    const CmpDict &cmpDict
-                    );
+            const std::vector<std::vector<Point> > &randomPoints,
+            const CmpDict &cmpDict
+    );
+
+    std::map<int, std::vector<Slice> > slices;
+    std::mutex slicesLock;
 
     void splitIntoEpsNet_R_Thread(
             const Slice &baseSlice,
@@ -169,9 +202,12 @@ public:
     std::vector<std::tuple<Point, Slice>>
     calculateSlicesMeans(const std::vector<Slice> &slices);
 
+    std::vector<std::tuple<Point, Slice> > slicesMeans;//(slices.size());
+    std::mutex slicesMeansLock;
+
     void calculateSliceMean_Slice_Thread(
             const Slice &slice
-    ) const;
+    );
 
     std::vector<std::tuple<Point, Slice> >
     calculateSlicesMeans_WithThreads(
@@ -207,6 +243,11 @@ public:
     collectMinimalDistancesAndClosestPoints(const std::vector<Point> &points,
                                             const std::vector<Point> &means);
 
+    std::vector<std::tuple<Point, Point, EncryptedNum> > minDistanceTuples;
+    std::mutex minDistanceTuplesLock;
+
+    void findMinDist(const Point &point, const std::vector<Point> &means, const KeysServer &keysServer);
+
     std::vector<std::tuple<Point, Point, EncryptedNum>>
     collectMinimalDistancesAndClosestPoints_WithThreads(
             const std::vector<Point> &points,
@@ -221,7 +262,7 @@ public:
      * @returns EncryptedNum
      * */
 //    static
-EncryptedNum
+    EncryptedNum
     calculateThreshold(
             const std::vector<std::tuple<Point, Point, EncryptedNum>> &minDistanceTuples,
             int iterationNumber);
@@ -250,15 +291,29 @@ EncryptedNum
             std::vector<Point> &means,
             EncryptedNum &threshold);
 
+
+    std::unordered_map<
+            long, //mean index
+            std::vector<std::pair<Point, CBit> > > groupsOfClosestPoints;
+
+    std::vector<std::pair<Point, CBit> > farthest;
+
+    std::mutex groupsLock, farthestLock;
+
 //    static
     std::tuple<
-    std::unordered_map<long, std::vector<std::pair<Point, CBit>>>,
-    std::vector<std::pair<Point, CBit>>
+            std::unordered_map<long, std::vector<std::pair<Point, CBit>>>,
+            std::vector<std::pair<Point, CBit>>
     >
     choosePointsByDistance_WithThreads(
             const std::vector<std::tuple<Point, Point, EncryptedNum>> &minDistanceTuples,
             std::vector<Point> &means,
             EncryptedNum &threshold);
+
+    void choosePoint_Mean_Thread(Point point, Point meanClosest, std::vector<Point> &means, int i, Ctxt ni);
+
+    void choosePoint_Point_Thread(const std::tuple<Point, Point, EncryptedNum> &tuple, std::vector<Point> &means,
+                                  EncryptedNum &threshold);
 
 };
 

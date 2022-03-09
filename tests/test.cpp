@@ -53,11 +53,11 @@ int main() {
 //    TestAux::testComparison_diffCtxtRepresentation();
 //    TestAux::testComparison_diffCtxtRepresentation_BGVPackedArithmetics();
 //    TestAux::testMultithreading();
-//    TestAux::testPythonRun();
+    TestAux::testPythonRun();
     //    TestAux::testIsMatchImplementation();
 //    TestAux::testPrefixAndSuffix();
 //    TestAux::testIsEqualImplementation();
-    TestAux::testIsGrtImplementation();
+//    TestAux::testIsGrtImplementation();
     cout << " ============ Test Client Finished ============ " << endl << endl;
 
     cout << " ============ Test DataServer ============ " << endl;

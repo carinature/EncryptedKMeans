@@ -16,9 +16,9 @@ using std::endl;
 
 //helib
 #include <helib/binaryArith.h>
-#include <helib/binaryCompare.h>
+//#include <helib/binaryCompare.h>
 #include <bitset>
-#include <src/yonis/run1meancore.h>
+#include <src/coreset/run1meancore.h>
 
 static Logger loggerMain(log_debug, "loggerMain");
 
@@ -35,264 +35,281 @@ int main() {
     const std::vector<Client> clients = generateDataClients(keysServer);
 
     ////    Retrieve Data from Clients
-    const std::vector<Point> points = dataServer.retrievePoints_WithThreads(clients);
-    cout << " ---   Points  ---" << endl;
-    printPoints(points, keysServer);
-    cout << " --- --- --- --- ---" << endl;
+    std::vector<Point> points = dataServer.retrievePoints_WithThreads(clients);
 
-    ////    Pick Random Representatives
-    const Point &tinyRandomPoint = keysServer.tinyRandomPoint();
+    int num_of_iterarions = log(NUMBER_OF_POINTS);
+    printNameVal(num_of_iterarions);
 
-    const std::vector<std::vector<Point> >
-            randomPoints = dataServer.pickRandomPoints(points);//, (1 / EPSILON)-1);
+    for (int i = 0; i < num_of_iterarions; ++i) {
 
-    cout << " ---   Random Points  ---" << endl;
-    for (auto vec :randomPoints) printPoints(vec, keysServer);
-    cout << " --- --- --- --- ---" << endl;
+        cout << " ---   Points  ---" << endl;
+        printPoints(points, keysServer);
+        cout << " --- --- --- --- ---" << endl;
 
-    ////  Create points-comparing dict
-    ///     - for every 2 points (p1,p2) answers p1[dim]>p2[dim]
-    const std::vector<
-            std::unordered_map<
-                    const Point,
-                    std::unordered_map<
-                            const Point,
-                            helib::Ctxt> > >
-            cmpDict = dataServer.createCmpDict_WithThreads(
-            points,
-            randomPoints
-    );
+        ////    Pick Random Representatives
+        const Point &tinyRandomPoint = keysServer.tinyRandomPoint();
 
-    cout << " ---   The Dictionary  ---" << endl;
-    for (short dim = 0; dim < DIM; ++dim) {
-        cout << "    ======   ";
-        printNameVal(dim);
-        for (auto const&[point, map] : cmpDict[dim]) {
-            printPoint(point, keysServer);
-            for (auto const&[point2, val]: map) {
-                printPoint(point2, keysServer);
-                long pVal = keysServer.decryptCtxt(val);
-                printNameVal(pVal);
+        std::vector<std::vector<Point> >
+                randomPoints = dataServer.pickRandomPoints(points);//, (1 / EPSILON)-1);
+
+//        cout << " ---   Random Points  ---" << endl;
+//        for (auto vec: randomPoints) printPoints(vec, keysServer);
+//        cout << " --- --- --- --- ---" << endl;
+
+        ////  Create points-comparing dict
+        ///     - for every 2 points (p1,p2) answers p1[dim]>p2[dim]
+        std::vector<
+                std::unordered_map<
+                        const Point,
+                        std::unordered_map<
+                                const Point,
+                                helib::Ctxt> > >
+                cmpDict = dataServer.createCmpDict_WithThreads(
+                points,
+                randomPoints
+        );
+
+//        cout << " ---   The Dictionary  ---" << endl;
+//        for (short dim = 0; dim < DIM; ++dim) {
+//            cout << "    ======   ";
+//            printNameVal(dim);
+//            for (auto const&[point, map]: cmpDict[dim]) {
+//                printPoint(point, keysServer);
+//                for (auto const&[point2, val]: map) {
+//                    printPoint(point2, keysServer);
+//                    long pVal = keysServer.decryptCtxt(val);
+//                    printNameVal(pVal);
+//                }
+//                printNameVal(map.size()) << " --- --- ---" << endl;
+//            }
+//            printNameVal(cmpDict[dim].size()) << " === === ===" << endl;
+//        }
+//        cout << " --- --- --- --- ---" << endl;
+
+        ////    Eps-Net - Split Data into Slices
+        std::map<int, std::vector<Slice> >
+                epsNet = dataServer.splitIntoEpsNet_WithThreads(
+                points,
+                randomPoints,
+                cmpDict
+        );
+
+        cout << " ---   Epsilon-Net  ---" << endl;
+        for (int dim = 0; dim < DIM; ++dim) {
+            cout << "   ---   For dim " << dim << "  --- " << endl;
+            for (Slice &cell: epsNet[dim]) {
+                cell.printSlice(keysServer);
             }
-            printNameVal(map.size()) << " --- --- ---" << endl;
+            cout << "   ---     --- " << endl;
+            cout << endl;
         }
-        printNameVal(cmpDict[dim].size()) << " === === ===" << endl;
-    }
-    cout << " --- --- --- --- ---" << endl;
+        cout << " --- --- --- --- ---" << endl;
 
+        ////    Calculate Eps-Net means
+        std::vector<std::tuple<Point, Slice> >
+                meanCellTuples = dataServer.calculateSlicesMeans_WithThreads(epsNet[DIM - 1]);
 
-    ////    Eps-Net - Split Data into Slices
-    std::map<int, std::vector<Slice> >
-            epsNet = dataServer.splitIntoEpsNet_WithThreads(
-            points,
-            randomPoints,
-            cmpDict
-    );
+//        cout << " ---   Means  ---" << endl;
+//        for (auto const &tup: meanCellTuples) {
+//            cout << "The Mean is: ";
+//            printPoint(std::get<0>(tup), keysServer);
+//            cout << endl;
+//            std::get<1>(tup).printSlice(keysServer);
+//        }
+//        cout << " --- --- --- --- ---" << endl;
 
-    cout << " ---   Epsilon-Net  ---" << endl;
-    for (int dim = 0; dim < DIM; ++dim) {
-        cout << "   ---   For dim " << dim << "  --- " << endl;
-        for (Slice &cell: epsNet[dim]) {
-            cell.printSlice(keysServer);
+        ////    Find Minimal Distances from Means and the Closest Mean
+        std::vector means = dataServer.collectMeans(meanCellTuples);
+        std::vector<std::tuple<Point, Point, EncryptedNum> >
+                minDistanceTuples =
+                dataServer.collectMinimalDistancesAndClosestPoints_WithThreads(
+                        points,
+                        means);
+
+        cout << " ---   Minimal Distances and Closest Means  ---" << endl;
+        for (const auto &tuple: minDistanceTuples) {
+            cout << " Point: ";
+            printPoint(std::get<0>(tuple), keysServer);
+            cout << " Closest mean: ";
+            printPoint(std::get<1>(tuple), keysServer);
+            long minDistance = keysServer.decryptNum(std::get<2>(tuple));
+            printNameVal(minDistance);
         }
-        cout << "   ---     --- " << endl;
+        cout << " --- --- --- --- ---" << endl;
+
+        ////    Calculate Threshold
+        EncryptedNum
+                threshold =
+                dataServer.calculateThreshold(
+                        minDistanceTuples,
+                        0);
+
+        printNameVal(keysServer.decryptNum(threshold));
+
+        std::tuple<
+                std::unordered_map<long, std::vector<std::pair<Point, CBit> > >,
+                //            std::vector<std::pair<Point, CBit> >,
+                std::vector<std::pair<Point, CBit> >
+        > groups = dataServer.choosePointsByDistance_WithThreads(
+                minDistanceTuples,
+                means,
+                threshold
+        );
+
+
+        cout << " === === === === === ===" << endl;
+        cout << " === FINAL PRINTOUT ===" << endl;
+        cout << " === === === === === ===" << endl;
         cout << endl;
-    }
-    cout << " --- --- --- --- ---" << endl;
-
-    ////    Calculate Eps-Net means
-    std::vector<std::tuple<Point, Slice> >
-            meanCellTuples = dataServer.calculateSlicesMeans_WithThreads(epsNet[DIM - 1]);
-
-    cout << " ---   Means  ---" << endl;
-    for (auto const &tup:meanCellTuples) {
-        cout << "The Mean is: ";
-        printPoint(std::get<0>(tup), keysServer);
+        cout << " ===   All Points  ===" << endl;
+        printPoints(points, keysServer);
+        cout << " === === === === ===" << endl;
         cout << endl;
-        std::get<1>(tup).printSlice(keysServer);
-    }
-    cout << " --- --- --- --- ---" << endl;
-
-    ////    Find Minimal Distances from Means and the Closest Mean
-    std::vector means = dataServer.collectMeans(meanCellTuples);
-    std::vector<std::tuple<Point, Point, EncryptedNum> >
-            minDistanceTuples =
-            dataServer.collectMinimalDistancesAndClosestPoints_WithThreads(
-                    points,
-                    means);
-
-    cout << " ---   Minimal Distances and Closest Means  ---" << endl;
-    for (const auto &tuple:minDistanceTuples) {
-        cout << " Point: ";
-        printPoint(std::get<0>(tuple), keysServer);
-        cout << " Closest mean: ";
-        printPoint(std::get<1>(tuple), keysServer);
-        long minDistance = keysServer.decryptNum(std::get<2>(tuple));
-        printNameVal(minDistance);
-    }
-    cout << " --- --- --- --- ---" << endl;
-
-    ////    Calculate Threshold
-    EncryptedNum
-            threshold =
-            dataServer.calculateThreshold(
-                    minDistanceTuples,
-                    0);
-
-    printNameVal(keysServer.decryptNum(threshold));
-
-    std::tuple<
-            std::unordered_map<long, std::vector<std::pair<Point, CBit> > >,
-            //            std::vector<std::pair<Point, CBit> >,
-            std::vector<std::pair<Point, CBit> >
-    > groups = dataServer.choosePointsByDistance_WithThreads(
-            minDistanceTuples,
-            means,
-            threshold
-    );
-
-
-    cout << " === === === === === ===" << endl;
-    cout << " === FINAL PRINTOUT ===" << endl;
-    cout << " === === === === === ===" << endl;
-    cout << endl;
-    cout << " ===   All Points  ===" << endl;
-    printPoints(points, keysServer);
-    cout << " === === === === ===" << endl;
-    cout << endl;
-    cout << " ===   Random Points  ===" << endl;
-    for (auto const &vec :randomPoints) printPoints(vec, keysServer);
-    cout << " === === === === ===" << endl;
-    cout << endl;
-    cout << " ===   Slices  ===" << endl;
-    for (int dim = 0; dim < DIM; ++dim) {
-        cout << "   ---   For dim " << dim << "  --- " << endl;
-        for (const Slice &slice: epsNet[dim]) slice.printSlice(keysServer);
+        cout << " ===   Random Points  ===" << endl;
+        for (auto const &vec: randomPoints) printPoints(vec, keysServer);
+        cout << " === === === === ===" << endl;
         cout << endl;
-    }
-    cout << " === === === === ===" << endl;
-    cout << endl;
-    cout << " ===   Means  ===" << endl;
-    for (auto const &tup:meanCellTuples) {
-        cout << "The Mean is: ";
-        printPoint(std::get<0>(tup), keysServer);
-        cout << endl;
-        std::get<1>(tup).printSlice(keysServer);
-    }
-    cout << " === === === === ===" << endl;
-    cout << endl;
-    cout << " ===   Minimal Distances and Closest Means  ===" << endl;
-    for (const auto &tuple:minDistanceTuples) {
-        cout << " Point: ";
-        printPoint(std::get<0>(tuple), keysServer);
-        cout << " Closest mean: ";
-        printPoint(std::get<1>(tuple), keysServer);
-        long minDistance = keysServer.decryptNum(std::get<2>(tuple));
-        printNameVal(minDistance);
-    }
-    cout << " === === === === ===" << endl;
-    cout << endl;
-    cout << " --- --- --- --- ---" << endl;
-
-    printNameVal(keysServer.decryptNum(threshold));
-
-    cout << " === Groups by Means === " << endl;
-    std::unordered_map<long, std::vector<std::pair<Point, CBit> > >
-            groups_by_means = std::get<0>(groups);
-    for (auto const &[meanI, points] : groups_by_means) {
-        printPoint(means[meanI], keysServer);
-        printNameVal(meanI) << "Close Points: ";
-        std::vector<Point> pointsGroup;
-        pointsGroup.reserve(points.size());
-        for (auto const &pair: points) {
-            cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
-            printPoint(pair.first, keysServer);
-            pointsGroup.emplace_back(pair.first);
+        cout << " ===   Slices  ===" << endl;
+        for (int dim = 0; dim < DIM; ++dim) {
+            cout << "   ---   For dim " << dim << "  --- " << endl;
+            for (const Slice &slice: epsNet[dim]) slice.printSlice(keysServer);
+            cout << endl;
         }
+        cout << " === === === === ===" << endl;
         cout << endl;
-        printNonEmptyPoints(pointsGroup, keysServer);
+        cout << " ===   Means  ===" << endl;
+        for (auto const &tup: meanCellTuples) {
+            cout << "The Mean is: ";
+            printPoint(std::get<0>(tup), keysServer);
+            cout << endl;
+            std::get<1>(tup).printSlice(keysServer);
+        }
+        cout << " === === === === ===" << endl;
         cout << endl;
+        cout << " ===   Minimal Distances and Closest Means  ===" << endl;
+        for (const auto &tuple: minDistanceTuples) {
+            cout << " Point: ";
+            printPoint(std::get<0>(tuple), keysServer);
+            cout << " Closest mean: ";
+            printPoint(std::get<1>(tuple), keysServer);
+            long minDistance = keysServer.decryptNum(std::get<2>(tuple));
+            printNameVal(minDistance);
+        }
+        cout << " === === === === ===" << endl;
+        cout << endl;
+        cout << " --- --- --- --- ---" << endl;
+
+        printNameVal(keysServer.decryptNum(threshold));
+
+        cout << " === Groups by Means === " << endl;
+        std::unordered_map<long, std::vector<std::pair<Point, CBit> > >
+                groups_by_means = std::get<0>(groups);
+        for (auto const &[meanI, points]: groups_by_means) {
+            printPoint(means[meanI], keysServer);
+            printNameVal(meanI) << "Close Points: ";
+            std::vector<Point> pointsGroup;
+            pointsGroup.reserve(points.size());
+            for (auto const &pair: points) {
+                cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
+                printPoint(pair.first, keysServer);
+                pointsGroup.emplace_back(pair.first);
+            }
+            cout << endl;
+            printNonEmptyPoints(pointsGroup, keysServer);
+            cout << endl;
 
 //        decAndWriteToFile(pointsGroup, IO_DIR + to_string(meanI) + "_" + CHOSEN_FILE, keysServer);
 
-    }
-    cout << " === === === === === " << endl << endl;
-    //
-    //    cout << " === Closest Points === " << endl;
-    //    for (auto const &pair : std::get<1>(groups)) {
-    //        cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
-    //        printPoint(pair.first, keysServer);
-    //    }
-    //    cout << endl << " === === === === === " << endl << endl;
-
-    cout << " === Farthest Points === " << endl;
-    std::vector<std::pair<Point, CBit> > farthest = std::get<1>(groups);
-    std::vector<Point> leftover;
-    leftover.reserve(points.size());
-    for (auto const &[point, isIn] : farthest) {
-        cout << "-" << keysServer.decryptCtxt(isIn) << "-";
-        printPoint(point, keysServer);
-        leftover.emplace_back(point);
-    }
-    leftover.shrink_to_fit();
-    cout << endl << " === === === === === " << endl << endl;
-
-
-    /**********   integration to coreset alg    ***********/
-    //  for each mean-group in groups
-    for (auto const &[meanI, points] : groups_by_means) {
-        std::vector<std::vector<double>> pointsGroup;
-        pointsGroup.reserve(points.size());
-        std::vector<Point> forClean;
-        // add all non-zero points
-        for (auto const &pair: points) {
-            const Point &currPoint(pair.first);
-            std::vector<long> tempPoint = decryptPoint(currPoint, keysServer);
-            std::vector<double> doublePoint(DIM);
-            long checkNull = 0;
-            for (const long &coordinate:decryptPoint(currPoint, keysServer)) {
-                checkNull += coordinate;
-                doublePoint.emplace_back(coordinate / CONVERSION_FACTOR);
-            }
-            if (checkNull) pointsGroup.emplace_back(doublePoint);
-            forClean.emplace_back(currPoint);
         }
-        pointsGroup.shrink_to_fit();
-        cout << "For Group of Points:\t";
-        printNonEmptyPoints(forClean, keysServer);
-cout << endl;
-        //      call yoni's alg with mean-group
-        cout << "Running 1-Mean Coreset Algorithm:" << endl;
-        auto t0_itr_rep = CLOCK::now();     //  for logging, profiling, DBG
-        runCoreset(pointsGroup, pointsGroup.size(), DIM, EPSILON);  // <|-------------
-        loggerMain.log(printDuration(t0_itr_rep, "runCoreset in iteration"));
+        cout << " === === === === === " << endl << endl;
+        //
+        //    cout << " === Closest Points === " << endl;
+        //    for (auto const &pair : std::get<1>(groups)) {
+        //        cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
+        //        printPoint(pair.first, keysServer);
+        //    }
+        //    cout << endl << " === === === === === " << endl << endl;
 
+        cout << " === Farthest Points === " << endl;
+        std::vector<std::pair<Point, CBit> > farthest = std::get<1>(groups);
+        std::vector<Point> leftover;
+        leftover.reserve(points.size());
+        for (auto const &[point, isIn]: farthest) {
+            cout << "-" << keysServer.decryptCtxt(isIn) << "-";
+            printPoint(point, keysServer);
+            leftover.emplace_back(point);
+        }
+        leftover.shrink_to_fit();
+        cout << endl << " === === === === === " << endl << endl;
+
+
+        /**********   integration to coreset alg    ***********/
+        //  for each mean-group in groups
+        for (auto const &[meanI, points]: groups_by_means) {
+            std::vector<std::vector<double>> pointsGroup;
+            pointsGroup.reserve(points.size());
+            std::vector<Point> forClean;
+            // add all non-zero points
+            for (auto const &pair: points) {
+                const Point &currPoint(pair.first);
+                std::vector<long> tempPoint = decryptPoint(currPoint, keysServer);
+                std::vector<double> doublePoint(DIM);
+                long checkNull = 0;
+                for (const long &coordinate: decryptPoint(currPoint, keysServer)) {
+                    checkNull += coordinate;
+                    doublePoint.emplace_back(coordinate / CONVERSION_FACTOR);
+                }
+                if (checkNull) pointsGroup.emplace_back(doublePoint);
+                forClean.emplace_back(currPoint);
+            }
+            pointsGroup.shrink_to_fit();
+            cout << "For Group of Points:\t";
+            printNonEmptyPoints(forClean, keysServer);
+            cout << endl;
+            //      call yoni's alg with mean-group
+            cout << "Running 1-Mean Coreset Algorithm:" << endl;
+            auto t0_itr_rep = CLOCK::now();     //  for logging, profiling, DBG
+            runCoreset(pointsGroup, pointsGroup.size(), DIM, EPSILON);  // <|-------------
+            loggerMain.log(printDuration(t0_itr_rep, "runCoreset in iteration"));
+
+        }
+
+        // CT for coreset.csv result for multiple iterations
+        auto t = time(nullptr);
+        auto tm = *localtime(&t);
+        std::ostringstream oss;
+        oss << std::put_time(&tm, "%Y_%m_%d_%H_%M_%S");
+        string timestamp = oss.str();
+        //    oss.flush();
+        oss.clear();
+        string filename = IO_DIR + timestamp + "_coreset.csv";
+        string prefix = IO_DIR + timestamp + "_iter_" + to_string(i) + "_";
+
+        cout << "WRITE TO FILES" << endl;
+        decAndWriteToFile(points, prefix + POINTS_FILE, keysServer);
+        decAndWriteToFile(points, prefix + POINTS_COPY_FILE, keysServer);
+        decAndWriteToFile(randomPoints[DIM - 1], prefix + RANDS_FILE, keysServer);
+        decAndWriteToFile(means, prefix + MEANS_FILE, keysServer);
+        decAndWriteToFile(leftover, prefix + LEFTOVER_FILE, keysServer);
+        for (auto const &[meanI, points]: groups_by_means) {
+            std::vector<Point> pointsGroup;
+            pointsGroup.reserve(points.size());
+            for (auto const &pair: points) pointsGroup.emplace_back(pair.first);
+            decAndWriteToFile(pointsGroup, prefix + to_string(meanI) + "_" + CHOSEN_FILE, keysServer);
+        }
+
+        // prepare for next iteration - clear fields
+        points = leftover;
+        leftover = std::vector<Point>();
+
+//        for (int dim = 0; dim < DIM; ++dim) randomPoints[dim].clear();
+//        means.clear();
+//        groups_by_means.clear();
+//        leftover.clear();
+//        cmpDict.clear(); //todo - consider not clearing and adding a check in init_dict - if entry exists (from prev iteration) then no need to cmp
+
+                dataServer.clearForNextIteration(points);
     }
-
-    // CT for coreset.csv result for multiple iterations
-    auto t = time(nullptr);
-    auto tm = *localtime(&t);
-    std::ostringstream oss;
-    oss << std::put_time(&tm, "%Y_%m_%d_%H_%M_%S");
-    string timestamp = oss.str();
-    //    oss.flush();
-    oss.clear();
-    string filename = IO_DIR + timestamp + "_coreset.csv";
-    string prefix = IO_DIR + timestamp+"_";
-
-    cout << "WRITE TO FILES" << endl;
-    decAndWriteToFile(points, prefix + POINTS_FILE, keysServer);
-    decAndWriteToFile(points, prefix + POINTS_COPY_FILE, keysServer);
-    decAndWriteToFile(randomPoints[DIM - 1], prefix + RANDS_FILE, keysServer);
-    decAndWriteToFile(means, prefix + MEANS_FILE, keysServer);
-    decAndWriteToFile(leftover, prefix + LEFTOVER_FILE, keysServer);
-    for (auto const &[meanI, points] : groups_by_means) {
-        std::vector<Point> pointsGroup;
-        pointsGroup.reserve(points.size());
-        for (auto const &pair: points) pointsGroup.emplace_back(pair.first);
-        decAndWriteToFile(pointsGroup, prefix + to_string(meanI) + "_" + CHOSEN_FILE, keysServer);
-    }
-
     //-----------------------------------------------------------
 
     logger.log(printDuration(t0_main, "Main"));
@@ -326,7 +343,7 @@ int main_without_threads() {
             randomPoints = dataServer.pickRandomPoints(points);//, (1 / EPSILON)-1);
 
     cout << " ---   Random Points  ---" << endl;
-    for (auto vec :randomPoints) printPoints(vec, keysServer);
+    for (auto vec: randomPoints) printPoints(vec, keysServer);
     cout << " --- --- --- --- ---" << endl;
 
     ////  Create points-comparing dict
@@ -343,7 +360,7 @@ int main_without_threads() {
     for (short dim = 0; dim < DIM; ++dim) {
         cout << "    ======   ";
         printNameVal(dim);
-        for (auto const&[point, map] : cmpDict[dim]) {
+        for (auto const&[point, map]: cmpDict[dim]) {
             printPoint(point, keysServer);
             for (auto const&[point2, val]: map) {
                 printPoint(point2, keysServer);
@@ -377,7 +394,7 @@ int main_without_threads() {
             meanCellTuples = dataServer.calculateSlicesMeans(epsNet[DIM - 1]);
 
     cout << " ---   Means  ---" << endl;
-    for (auto const &tup:meanCellTuples) {
+    for (auto const &tup: meanCellTuples) {
         cout << "The Mean is: ";
         printPoint(std::get<0>(tup), keysServer);
         cout << endl;
@@ -394,7 +411,7 @@ int main_without_threads() {
                     means);
 
     cout << " ---   Minimal Distances and Closest Means  ---" << endl;
-    for (const auto &tuple:minDistanceTuples) {
+    for (const auto &tuple: minDistanceTuples) {
         cout << " Point: ";
         printPoint(std::get<0>(tuple), keysServer);
         cout << " Closest mean: ";
@@ -433,7 +450,7 @@ int main_without_threads() {
     cout << " === === === === ===" << endl;
     cout << endl;
     cout << " ===   Random Points  ===" << endl;
-    for (auto const &vec :randomPoints) printPoints(vec, keysServer);
+    for (auto const &vec: randomPoints) printPoints(vec, keysServer);
     cout << " === === === === ===" << endl;
     cout << endl;
     cout << " ===   Slices  ===" << endl;
@@ -445,7 +462,7 @@ int main_without_threads() {
     cout << " === === === === ===" << endl;
     cout << endl;
     cout << " ===   Means  ===" << endl;
-    for (auto const &tup:meanCellTuples) {
+    for (auto const &tup: meanCellTuples) {
         cout << "The Mean is: ";
         printPoint(std::get<0>(tup), keysServer);
         cout << endl;
@@ -454,7 +471,7 @@ int main_without_threads() {
     cout << " === === === === ===" << endl;
     cout << endl;
     cout << " ===   Minimal Distances and Closest Means  ===" << endl;
-    for (const auto &tuple:minDistanceTuples) {
+    for (const auto &tuple: minDistanceTuples) {
         cout << " Point: ";
         printPoint(std::get<0>(tuple), keysServer);
         cout << " Closest mean: ";
@@ -469,7 +486,7 @@ int main_without_threads() {
     printNameVal(keysServer.decryptNum(threshold));
 
     cout << " === Groups by Means === " << endl;
-    for (auto const &[meanI, points] : std::get<0>(groups)) {
+    for (auto const &[meanI, points]: std::get<0>(groups)) {
         printNameVal(meanI) << "\tClose Points: ";
         for (auto const &pair: points) {
             cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
@@ -480,14 +497,14 @@ int main_without_threads() {
     cout << " === === === === === " << endl << endl;
 
     cout << " === Closest Points === " << endl;
-    for (auto const &pair : std::get<1>(groups)) {
+    for (auto const &pair: std::get<1>(groups)) {
         cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
         printPoint(pair.first, keysServer);
     }
     cout << endl << " === === === === === " << endl << endl;
 
     cout << " === Farthest Points === " << endl;
-    for (auto const &pair : std::get<2>(groups)) {
+    for (auto const &pair: std::get<2>(groups)) {
         cout << "-" << keysServer.decryptCtxt(pair.second) << "-";
         printPoint(pair.first, keysServer);
     }

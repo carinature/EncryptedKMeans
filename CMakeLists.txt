@@ -4,7 +4,7 @@ project(EncryptedKMeans)
 ## Use -std=c++17 as default.
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_SOURCE_DIR "/home/karina/CLionProjects/EncryptedKMeans")
+set(CMAKE_SOURCE_DIR "/home/carina/CLionProjects/EncryptedKMeans")
 # Includes Directory
 set(BASEPATH "${CMAKE_SOURCE_DIR}")
 include_directories("${BASEPATH}")
@@ -23,8 +23,8 @@ if (NOT json_POPULATED)
 endif ()
 
 # HElib
-find_package(helib 2.1.0 EXACT REQUIRED)
-#find_package(helib REQUIRED)
+#find_package(helib 2.1.0 EXACT REQUIRED)
+find_package(helib REQUIRED)
 
 add_executable(EncryptedKMeans
         main.cpp

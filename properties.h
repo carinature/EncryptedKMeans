@@ -21,7 +21,7 @@ static std::ofstream fcout("/home/karina/CLionProjects/EncryptedKMeans/fcout"); 
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
-static std::fstream config_json_file("/home/karina/CLionProjects/EncryptedKMeans/config.json");
+static std::fstream config_json_file("/home/carina/CLionProjects/EncryptedKMeans/config.json");
 static json jsonConfig = json::parse(config_json_file);
 
 /*

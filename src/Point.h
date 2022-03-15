@@ -247,7 +247,7 @@ public:
                     result_wrapper,
                     helib::CtPtrs_vectorCt(point.cCoordinates[dim]),
                     helib::CtPtrs_vectorCt(this->cCoordinates[dim]),
-                    OUT_SIZE,   // sizeLimit=0 means use as many bits as needed.
+                    0,   // sizeLimit=0 means use as many bits as needed.
                     &(KeysServer::unpackSlotEncoding) // Information needed for bootstrapping.
             );
             sum.pCoordinatesDBG[dim] += point.pCoordinatesDBG[dim];

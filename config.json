@@ -1,6 +1,6 @@
 {
   "data_properties": {
-    "number_of_points": 10,
+    "number_of_points": 64,
     "number_of_points_comment": "minimum 10. also, FIXED! - 40 points w/ epsilon 0.3 causes weird PubKey bug",
     "number_of_clients": 10,
     "number_of_threads": 3,
@@ -12,8 +12,10 @@
     "decimal_digits": 2,
     "conversion_factor": "pow(10, DECIMAL_DIGITS)",
     "conversion_factor_comment": "for conversion from double-type to long-type (helib compatibility)",
-    "bitSize": 5,
-    "bitSize_comment": "0 - 2^bitSize is the range of the numbers for encryption. if bigger the result will be the original number modulo the range",
+    "bitSize": 8,
+    "bitSize_comment": "minimum 5. 0 - 2^bitSize is the range of the numbers for encryption. if bigger the result will be the original number modulo the range",
+    "bitSizeHElib": 8,
+    "bitSizeHElib_comment": "minimum 5might influence errors and limitations on number of arith actions and rawModSwitch... ?",
     "TODO": "change bit size to 10, if floats will be represented as longs (helib might have a new option for floats",
     "N_Threads": 1
   },

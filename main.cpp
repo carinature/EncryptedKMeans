@@ -37,11 +37,15 @@ int main() {
     ////    Retrieve Data from Clients
     std::vector<Point> points = dataServer.retrievePoints_WithThreads(clients);
 
-    int num_of_iterarions = log(NUMBER_OF_POINTS);
+    int num_of_iterarions = log2(NUMBER_OF_POINTS)-1; //todo can be log (natural logarithm) ?
     printNameVal(num_of_iterarions);
 
     for (int i = 0; i < num_of_iterarions; ++i) {
-
+        cout << "=== === === === === === === === === ===" << endl;
+        cout << "=== === === === === === === === === ===" << endl;
+        cout << " ===   Iteration number "<<i<<"    ===" << endl;
+        cout << "=== === === === === === === === === ===" << endl;
+        cout << "=== === === === === === === === === ===" << endl <<endl;
         cout << " ---   Points  ---" << endl;
         printPoints(points, keysServer);
         cout << " --- --- --- --- ---" << endl;
